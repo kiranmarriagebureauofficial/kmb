@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Profile } from "./types";
+import { Profile, AgeBucket, AgeBucketConfig } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,9 +25,80 @@ export function formatDate(dateStr: string): string {
   }
 }
 
+export function formatDateTime(dateStr: string): string {
+  if (!dateStr) return '-';
+  try {
+    const d = new Date(dateStr);
+    return `${d.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })} ${d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+export function calculateDaysInStock(entryDateStr: string): number {
+  if (!entryDateStr) return 0;
+  const entry = new Date(entryDateStr).getTime();
+  const now = Date.now();
+  const diffDays = Math.floor((now - entry) / (1000 * 60 * 60 * 24));
+  return Math.max(0, diffDays);
+}
+
+export const DEFAULT_AGE_BUCKETS: AgeBucketConfig = {
+  newDays: 7,
+  recentDays: 30,
+  agingDays: 90,
+  oldDays: 180,
+};
+
+export function getAgeBucket(days: number, config = DEFAULT_AGE_BUCKETS): AgeBucket {
+  if (days <= config.newDays) return 'new';
+  if (days <= config.recentDays) return 'recent';
+  if (days <= config.agingDays) return 'aging';
+  if (days <= config.oldDays) return 'old';
+  return 'very_old';
+}
+
+export function getAgeBucketLabel(bucket: AgeBucket): { label: string; textUr: string; badgeClass: string } {
+  switch (bucket) {
+    case 'new':
+      return {
+        label: 'New (0-7d)',
+        textUr: 'نیا اندراج',
+        badgeClass: 'bg-[#D9A93F]/20 text-[#5A0A14] border border-[#D9A93F] font-bold',
+      };
+    case 'recent':
+      return {
+        label: 'Recent (8-30d)',
+        textUr: 'حالیہ',
+        badgeClass: 'bg-[#FFFDF8] text-[#5A0A14] border border-[#E9DDC3]',
+      };
+    case 'aging':
+      return {
+        label: 'Aging (31-90d)',
+        textUr: 'درمیانی مدت',
+        badgeClass: 'bg-[#FBF4E6] text-[#7B5E5E] border border-[#DECEAC]',
+      };
+    case 'old':
+      return {
+        label: 'Old Stock (91-180d)',
+        textUr: 'پرانا اسٹاک',
+        badgeClass: 'bg-[#FFFDF8] text-[#8E1B2B] border border-[#8E1B2B]/40 font-semibold',
+      };
+    case 'very_old':
+      return {
+        label: 'Stale (180d+)',
+        textUr: 'طویل زیر التوا',
+        badgeClass: 'bg-[#8E1B2B] text-[#FBF4E6] font-bold',
+      };
+  }
+}
+
 export function maskCNIC(cnic?: string): string {
   if (!cnic) return 'N/A';
-  // Standard Pakistani CNIC format: 35202-1234567-1 -> 35202-*******-1
   const clean = cnic.replace(/[^0-9]/g, '');
   if (clean.length === 13) {
     return `${clean.substring(0, 5)}-*******-${clean.substring(12, 13)}`;
@@ -49,8 +120,8 @@ export function generateWhatsAppLink(phone: string, text: string): string {
 }
 
 export function buildWhatsAppShareSummary(profile: Profile, bureauInfo: { name: string; phone: string }): string {
-  return `*Proposal Summary - ${bureauInfo.name}*
-*Profile Ref:* ${profile.formNo}
+  return `*Proposal Profile - ${bureauInfo.name}*
+*Inventory Ref:* ${profile.formNo}
 
 *Candidate Details:*
 • *Gender:* ${profile.gender}

@@ -38,8 +38,8 @@ export default function RequestsInboxPage() {
   }, []);
 
   const handleApprove = (id: string, formNo: string) => {
-    store.updateProfileStatus(id, 'active');
-    alert(`Submission ${formNo} approved! It has now entered the active matching engine.`);
+    store.updateProfileStatus(id, 'available');
+    alert(`Submission ${formNo} approved! It has now entered the active inventory stock.`);
   };
 
   const handleRejectConfirm = () => {
@@ -229,3 +229,4 @@ export default function RequestsInboxPage() {
     </div>
   );
 }
+

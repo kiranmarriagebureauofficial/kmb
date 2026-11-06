@@ -51,7 +51,9 @@ export default function PremiumRishtayDirectoryPage() {
         if (!cityMatch) return false;
       }
       if (filterPremiumMemberOnly) {
-        if (!p.profileA.premiumMember && !p.profileB.premiumMember) return false;
+        const isAPremium = p.profileA.isPremium || p.profileA.premiumMember;
+        const isBPremium = p.profileB.isPremium || p.profileB.premiumMember;
+        if (!isAPremium && !isBPremium) return false;
       }
       return true;
     });
@@ -236,3 +238,4 @@ export default function PremiumRishtayDirectoryPage() {
     </div>
   );
 }
+

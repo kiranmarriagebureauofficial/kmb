@@ -187,6 +187,44 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
+        {/* Section 1B: Online Registration Link & Stock Settings */}
+        <div className="bg-[#FFFDF8] rounded-2xl border border-[#E9DDC3] p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-2 border-b border-[#E9DDC3] pb-3 text-[#5A0A14]">
+            <ShieldCheck className="w-5 h-5 text-[#D9A93F]" />
+            <h2 className="font-serif text-base font-bold">
+              1B. Online Registration Portal & Stock Velocity Settings
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="p-3 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] flex items-center justify-between">
+              <div>
+                <span className="font-bold text-[#5A0A14] block">Enable Public Registration Link (/register)</span>
+                <span className="text-[11px] text-[#7B5E5E]">When disabled, families visiting the link see an office notice</span>
+              </div>
+              <input
+                type="checkbox"
+                checked={settings.enableOnlineRegistrationLink !== false}
+                onChange={(e) => setSettings({ ...settings, enableOnlineRegistrationLink: e.target.checked })}
+                className="w-5 h-5 text-[#5A0A14] accent-[#5A0A14]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-[#5A0A14] mb-1">Old Stock Alert Threshold (Days Sitting Unmatched)</label>
+              <input
+                type="number"
+                min={30}
+                max={365}
+                value={settings.oldStockAlertDays || 90}
+                onChange={(e) => setSettings({ ...settings, oldStockAlertDays: parseInt(e.target.value, 10) || 90 })}
+                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] text-[#2A0A0F] font-bold"
+              />
+              <span className="text-[10px] text-[#7B5E5E] mt-1 block">Profiles older than this trigger Old Stock KPI alerts</span>
+            </div>
+          </div>
+        </div>
+
         {/* Section 2: Fee Defaults */}
         <div className="bg-[#FFFDF8] rounded-2xl border border-[#E9DDC3] p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-[#E9DDC3] pb-3 text-[#5A0A14]">
@@ -538,3 +576,4 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+

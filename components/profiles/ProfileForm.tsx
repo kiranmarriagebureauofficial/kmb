@@ -135,7 +135,7 @@ export function ProfileForm({
         }
       } else {
         // Create new
-        const status = isPublic ? 'pending_approval' : 'active';
+        const status = isPublic ? 'pending_approval' : 'available';
         const created = store.addProfile({
           ...(formData as any),
           status,
@@ -974,3 +974,4 @@ export function ProfileForm({
     </div>
   );
 }
+

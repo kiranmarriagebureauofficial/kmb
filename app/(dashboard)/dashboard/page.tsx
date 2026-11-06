@@ -1,14 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { store } from '@/lib/db/store';
 import { Profile, Invoice, Proposal } from '@/lib/types';
-import { formatPKR, formatDate } from '@/lib/utils';
+import { formatPKR, formatDate, calculateDaysInStock, getAgeBucket, getAgeBucketLabel } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { 
-  Users, 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  Legend, 
+  PieChart, 
+  Pie, 
+  Cell 
+} from 'recharts';
+import { 
+  Boxes, 
   Inbox, 
   Star, 
   HeartHandshake, 
@@ -20,17 +32,22 @@ import {
   Copy, 
   Check, 
   ArrowRight,
-  ShieldAlert,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Phone,
+  Eye,
+  FileSpreadsheet
 } from 'lucide-react';
 
-export default function DashboardPage() {
+function DashboardContent() {
+  const [mounted, setMounted] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const update = () => {
       setProfiles(store.getProfiles());
       setInvoices(store.getInvoices());
@@ -41,31 +58,22 @@ export default function DashboardPage() {
     return unsub;
   }, []);
 
-  // Compute metrics
-  const activeProfiles = profiles.filter(p => p.status === 'active');
-  const activeMale = activeProfiles.filter(p => p.gender === 'Male').length;
-  const activeFemale = activeProfiles.filter(p => p.gender === 'Female').length;
-  const pendingRequests = profiles.filter(p => p.status === 'pending_approval');
-  const premiumMembers = profiles.filter(p => p.premiumMember && p.status === 'active');
-  const premiumMatches = store.getAllPremiumMatches();
-  const finalizedRishtas = proposals.filter(p => p.status === 'finalized');
+  // Inventory stats
+  const stats = useMemo(() => {
+    return store.getInventoryStats();
+  }, [profiles, invoices, proposals]);
 
-  // Financial totals
-  const totalIncome = invoices.reduce((sum, inv) => sum + inv.amountPaid, 0);
-  const totalOutstanding = invoices.reduce((sum, inv) => sum + inv.balance, 0);
+  // Old stock profiles (91+ days)
+  const oldStockList = useMemo(() => {
+    return store.getOldStockProfiles(91).slice(0, 5);
+  }, [profiles]);
 
-  // Income by type (maroon & gold charts)
-  const incomeByType = {
-    registration: invoices
-      .filter(i => i.invoiceType === 'registration')
-      .reduce((s, i) => s + i.amountPaid, 0),
-    premium: invoices
-      .filter(i => i.invoiceType === 'premium')
-      .reduce((s, i) => s + i.amountPaid, 0),
-    success: invoices
-      .filter(i => i.invoiceType === 'success')
-      .reduce((s, i) => s + i.amountPaid, 0),
-  };
+  // Recently added profiles (5 latest)
+  const recentStockList = useMemo(() => {
+    return [...profiles]
+      .sort((a, b) => new Date(b.entryDate || b.createdAt).getTime() - new Date(a.entryDate || a.createdAt).getTime())
+      .slice(0, 5);
+  }, [profiles]);
 
   const copyRegLink = () => {
     navigator.clipboard.writeText(`${window.location.origin}/register`);
@@ -75,14 +83,14 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Welcome & Quick Actions Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-6 rounded-2xl border border-[#E9DDC3] shadow-sm">
+      {/* Welcome & Operations Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs">
         <div>
-          <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
-            Bureau Operations Control
+          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+            Bureau Operations Control & ERP Ledger
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
-            Welcome to Kiran Marriage Bureau Dashboard
+            Rishta Stock & Matchmaking Central
           </h1>
           <p className="text-xs text-[#7B5E5E]">
             Verified matchmaking, real-time compatibility audit, and fee management for Lahore.
@@ -102,255 +110,437 @@ export default function DashboardPage() {
             onClick={copyRegLink}
             icon={copied ? <Check className="w-3.5 h-3.5 text-[#D9A93F]" /> : <Copy className="w-3.5 h-3.5 text-[#5A0A14]" />}
           >
-            {copied ? 'Link Copied!' : 'Copy Form Link'}
+            {copied ? 'Link Copied!' : 'Copy Online Form Link'}
           </Button>
 
-          <Link href="/invoices">
-            <Button size="sm" variant="accent" icon={<Receipt className="w-3.5 h-3.5 text-[#420610]" />}>
-              Invoices
+          <Link href="/invoices?new=1">
+            <Button size="sm" variant="accent" icon={<Receipt className="w-3.5 h-3.5 text-[#5A0A14]" />}>
+              New Invoice
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Pending Requests Alert Banner if any */}
-      {pendingRequests.length > 0 && (
-        <div className="p-4 rounded-xl bg-[#FFFDF8] border-2 border-[#D9A93F] flex items-center justify-between gap-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#D9A93F]/20 text-[#5A0A14] flex items-center justify-center shrink-0">
-              <Inbox className="w-5 h-5 text-[#5A0A14]" />
-            </div>
+      {/* KPI Tiles (Dense ERP Style) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+        {/* Tile 1: Total Stock */}
+        <Link
+          href="/inventory?status=available"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+              Total Available Stock
+            </span>
+            <Boxes className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+              {stats.totalStock}
+            </span>
+            <span className="text-xs text-[#7B5E5E] font-medium">
+              ({stats.maleStock}M / {stats.femaleStock}F)
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            Click to inspect active inventory →
+          </span>
+        </Link>
+
+        {/* Tile 2: New This Week / Month */}
+        <Link
+          href="/inventory?bucket=new"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+              New Arrivals (0-7d)
+            </span>
+            <Clock className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+              {stats.newThisWeek}
+            </span>
+            <span className="text-xs text-[#7B5E5E]">
+              +{stats.newThisMonth} this month
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            View recent intake →
+          </span>
+        </Link>
+
+        {/* Tile 3: Old Stock Alert */}
+        <Link
+          href="/reports"
+          className={`p-4 rounded-xl border shadow-xs transition-all group ${
+            stats.totalOldStock > 0
+              ? 'bg-[#FFFDF8] border-[#8E1B2B]/40 hover:border-[#8E1B2B]'
+              : 'bg-[#FFFDF8] border-[#E9DDC3]'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E1B2B]">
+              Old Stock Alert (91+d)
+            </span>
+            <AlertCircle className="w-4 h-4 text-[#8E1B2B]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#8E1B2B]">
+              {stats.totalOldStock}
+            </span>
+            <span className="text-xs text-[#7B5E5E]">
+              ({stats.veryOldStock} stale 180d+)
+            </span>
+          </div>
+          <span className="text-[10px] text-[#8E1B2B] font-medium mt-1 block">
+            Action required: follow-up →
+          </span>
+        </Link>
+
+        {/* Tile 4: Premium Rishtay */}
+        <Link
+          href="/premium"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#D9A93F] shadow-xs hover:border-[#B08626] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#B08626] flex items-center gap-1">
+              <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+              Premium Members
+            </span>
+            <Star className="w-4 h-4 text-[#D9A93F]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+              {stats.premiumProfilesCount}
+            </span>
+            <span className="text-xs text-[#D9A93F] font-bold">
+              Priority matching
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            Inspect VIP candidates →
+          </span>
+        </Link>
+
+        {/* Tile 5: Online Requests Inbox */}
+        <Link
+          href="/requests"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+              Pending Online Requests
+            </span>
+            <Inbox className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+              {stats.pendingRequestsCount}
+            </span>
+            <span className="text-xs text-[#7B5E5E]">
+              Awaiting review
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            Review online submissions →
+          </span>
+        </Link>
+
+        {/* Tile 6: Engaged & Married */}
+        <Link
+          href="/proposals"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+              Rishta Done & Engaged
+            </span>
+            <HeartHandshake className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+              {stats.finalizedRishtay}
+            </span>
+            <span className="text-xs text-[#7B5E5E]">
+              {stats.engagedCount} currently engaged
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            View completed marriages →
+          </span>
+        </Link>
+
+        {/* Tile 7: Revenue Collected */}
+        <Link
+          href="/invoices"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+              Revenue Collected
+            </span>
+            <Receipt className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+          </div>
+          <div className="mt-2">
+            <span className="font-serif text-2xl font-bold text-[#5A0A14] truncate block">
+              {formatPKR(stats.totalRevenue)}
+            </span>
+          </div>
+          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+            View payment history →
+          </span>
+        </Link>
+
+        {/* Tile 8: Outstanding Balance */}
+        <Link
+          href="/invoices"
+          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#8E1B2B] transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E1B2B]">
+              Receivables Outstanding
+            </span>
+            <Receipt className="w-4 h-4 text-[#8E1B2B]" />
+          </div>
+          <div className="mt-2">
+            <span className="font-serif text-2xl font-bold text-[#8E1B2B] truncate block">
+              {formatPKR(stats.outstandingBalance)}
+            </span>
+          </div>
+          <span className="text-[10px] text-[#8E1B2B] font-medium mt-1 block">
+            Unpaid client invoices →
+          </span>
+        </Link>
+      </div>
+
+      {/* Recharts Analytics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Chart 1: Stock by Age Bucket (Stacked Bar) */}
+        <div className="lg:col-span-8 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-serif text-sm font-bold text-[#5A0A14]">
-                {pendingRequests.length} Online Registration Request(s) Awaiting Review
-              </h3>
+              <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+                Stock Breakdown by Age in Inventory
+              </h2>
               <p className="text-xs text-[#7B5E5E]">
-                New client submissions via public website. Review, verify, and approve to activate in matching engine.
+                Distribution of available proposals across shelf-life buckets (Male in Maroon, Female in Gold).
               </p>
             </div>
+            <Link
+              href="/reports"
+              className="text-xs font-semibold text-[#5A0A14] hover:underline flex items-center gap-1"
+            >
+              <span>Detailed Report</span>
+              <ArrowRight className="w-3 h-3 text-[#D9A93F]" />
+            </Link>
           </div>
 
-          <Link href="/requests">
-            <Button size="sm" variant="primary" icon={<ArrowRight className="w-3.5 h-3.5 text-[#D9A93F]" />}>
-              Review Inbox
-            </Button>
-          </Link>
-        </div>
-      )}
-
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Active Rishtas */}
-        <div className="p-5 rounded-2xl bg-[#FFFDF8] border border-[#E9DDC3] shadow-sm space-y-3">
-          <div className="flex items-center justify-between text-[#7B5E5E]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Rishtas</span>
-            <Users className="w-4 h-4 text-[#5A0A14]" />
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
-              {activeProfiles.length}
-            </span>
-            <span className="text-xs text-[#7B5E5E]">
-              {activeMale} Male • {activeFemale} Female
-            </span>
-          </div>
-          <div className="w-full bg-[#E9DDC3] h-1.5 rounded-full overflow-hidden flex">
-            <div
-              className="bg-[#5A0A14] h-full"
-              style={{ width: `${activeProfiles.length > 0 ? (activeMale / activeProfiles.length) * 100 : 50}%` }}
-              title={`Male: ${activeMale}`}
-            />
-            <div
-              className="bg-[#D9A93F] h-full"
-              style={{ width: `${activeProfiles.length > 0 ? (activeFemale / activeProfiles.length) * 100 : 50}%` }}
-              title={`Female: ${activeFemale}`}
-            />
+          <div className="h-64 w-full">
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.stockByAgeBucket} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <XAxis dataKey="label" tick={{ fill: '#7B5E5E', fontSize: 11 }} />
+                  <YAxis tick={{ fill: '#7B5E5E', fontSize: 11 }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#FFFDF8', borderColor: '#E9DDC3', borderRadius: '8px', fontSize: '11px' }}
+                    itemStyle={{ color: '#5A0A14' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '11px', color: '#5A0A14' }} />
+                  <Bar dataKey="male" name="Male Stock" stackId="a" fill="#5A0A14" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="female" name="Female Stock" stackId="a" fill="#D9A93F" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-xs text-[#7B5E5E]">
+                Loading inventory visualization...
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Premium Matches */}
-        <div className="p-5 rounded-2xl bg-[#FFFDF8] border border-[#D9A93F] shadow-sm space-y-3">
-          <div className="flex items-center justify-between text-[#B08626]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Premium Rishtay (75%+)</span>
-            <Star className="w-4 h-4 fill-[#D9A93F] text-[#D9A93F]" />
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="font-serif text-3xl font-bold text-[#B08626]">
-              {premiumMatches.length}
-            </span>
-            <span className="text-xs text-[#7B5E5E]">
-              {premiumMembers.length} VIP Clients
-            </span>
-          </div>
-          <Link href="/premium" className="text-xs font-bold text-[#5A0A14] hover:text-[#B08626] flex items-center gap-1">
-            <span>Browse 75%+ Matches</span>
-            <ArrowRight className="w-3 h-3 text-[#D9A93F]" />
-          </Link>
-        </div>
-
-        {/* Proposals in Progress */}
-        <div className="p-5 rounded-2xl bg-[#FFFDF8] border border-[#E9DDC3] shadow-sm space-y-3">
-          <div className="flex items-center justify-between text-[#7B5E5E]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Proposals & Sittings</span>
-            <HeartHandshake className="w-4 h-4 text-[#5A0A14]" />
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
-              {proposals.length}
-            </span>
-            <span className="text-xs text-[#7B5E5E]">
-              {finalizedRishtas.length} Completed
-            </span>
-          </div>
-          <Link href="/proposals" className="text-xs font-bold text-[#5A0A14] hover:text-[#B08626] flex items-center gap-1">
-            <span>Open Proposals Pipeline</span>
-            <ArrowRight className="w-3 h-3 text-[#D9A93F]" />
-          </Link>
-        </div>
-
-        {/* Revenue This Month */}
-        <div className="p-5 rounded-2xl bg-[#FFFDF8] border border-[#E9DDC3] shadow-sm space-y-3">
-          <div className="flex items-center justify-between text-[#7B5E5E]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Income Received</span>
-            <Receipt className="w-4 h-4 text-[#5A0A14]" />
-          </div>
-          <div className="space-y-0.5">
-            <span className="font-serif text-2xl font-bold text-[#5A0A14]">
-              {formatPKR(totalIncome)}
-            </span>
-            <p className="text-[11px] text-[#8E1B2B]">
-              Outstanding: {formatPKR(totalOutstanding)}
+        {/* Chart 2: Inventory by Top Castes */}
+        <div className="lg:col-span-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4 flex flex-col justify-between">
+          <div>
+            <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+              Top Castes in Circulation
+            </h2>
+            <p className="text-xs text-[#7B5E5E]">
+              Current stock volume grouped by family clan/caste.
             </p>
           </div>
-          <Link href="/invoices" className="text-xs font-bold text-[#5A0A14] hover:text-[#B08626] flex items-center gap-1">
-            <span>View Fee Records</span>
-            <ArrowRight className="w-3 h-3 text-[#D9A93F]" />
-          </Link>
+
+          <div className="space-y-2.5">
+            {stats.stockByCaste.map((item, idx) => {
+              const pct = stats.totalStock > 0 ? Math.round((item.count / stats.totalStock) * 100) : 0;
+              return (
+                <div key={idx} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="text-[#2A0A0F]">{item.caste}</span>
+                    <span className="text-[#5A0A14]">{item.count} ({pct}%)</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-[#FBF4E6] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#5A0A14] rounded-full"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="pt-2 border-t border-[#E9DDC3] flex items-center justify-between text-[11px] text-[#7B5E5E]">
+            <span>Lahore Bureau Database</span>
+            <Link href="/inventory" className="font-bold text-[#5A0A14] hover:underline">
+              Filter by caste →
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Two Column Layout: Charts & Follow-ups */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Financial Chart strictly in Maroon & Gold */}
-        <div className="lg:col-span-7 bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between border-b border-[#E9DDC3] pb-3">
-            <h2 className="font-serif text-base font-bold text-[#5A0A14]">
-              Revenue Breakdown by Matrimonial Service
-            </h2>
-            <span className="text-xs text-[#7B5E5E]">Strictly Maroon & Gold Palette</span>
+      {/* Two Operations Tables */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Table 1: Oldest Rishtas in Stock (Needs Attention) */}
+        <div className="bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-[#8E1B2B]" />
+              <h2 className="font-serif text-base font-bold text-[#8E1B2B]">
+                Oldest Rishtas Sitting Unmatched
+              </h2>
+            </div>
+            <Link
+              href="/reports"
+              className="text-xs font-semibold text-[#8E1B2B] hover:underline"
+            >
+              View all old stock →
+            </Link>
           </div>
 
-          <div className="space-y-4">
-            {/* Registration Fee Bar */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold text-[#2A0A0F]">Registration Fees</span>
-                <span className="font-mono font-bold text-[#5A0A14]">{formatPKR(incomeByType.registration)}</span>
-              </div>
-              <div className="w-full bg-[#E9DDC3] h-3 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#5A0A14] h-full rounded-full transition-all"
-                  style={{ width: `${totalIncome > 0 ? (incomeByType.registration / totalIncome) * 100 : 40}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Premium Membership Bar */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold text-[#2A0A0F]">Premium Membership Fees</span>
-                <span className="font-mono font-bold text-[#B08626]">{formatPKR(incomeByType.premium)}</span>
-              </div>
-              <div className="w-full bg-[#E9DDC3] h-3 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#D9A93F] h-full rounded-full transition-all"
-                  style={{ width: `${totalIncome > 0 ? (incomeByType.premium / totalIncome) * 100 : 50}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Success Fee Bar */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold text-[#2A0A0F]">Success Fees (Finalized Rishtas)</span>
-                <span className="font-mono font-bold text-[#7A1424]">{formatPKR(incomeByType.success)}</span>
-              </div>
-              <div className="w-full bg-[#E9DDC3] h-3 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#7A1424] h-full rounded-full transition-all"
-                  style={{ width: `${totalIncome > 0 ? (incomeByType.success / totalIncome) * 100 : 30}%` }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Summary Card */}
-          <div className="p-4 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] grid grid-cols-3 gap-2 text-center text-xs">
-            <div>
-              <span className="text-[10px] text-[#7B5E5E] uppercase block">Total Invoices</span>
-              <span className="font-bold text-[#5A0A14]">{invoices.length}</span>
-            </div>
-            <div>
-              <span className="text-[10px] text-[#7B5E5E] uppercase block">Fully Settled</span>
-              <span className="font-bold text-[#5A0A14]">{invoices.filter(i => i.status === 'paid').length}</span>
-            </div>
-            <div>
-              <span className="text-[10px] text-[#7B5E5E] uppercase block">Partially Paid</span>
-              <span className="font-bold text-[#B08626]">{invoices.filter(i => i.status === 'partial').length}</span>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-[#E9DDC3] text-[10px] uppercase font-bold text-[#7B5E5E]">
+                  <th className="py-2">Form No</th>
+                  <th className="py-2">Candidate</th>
+                  <th className="py-2">Days in Stock</th>
+                  <th className="py-2 text-center">Matches</th>
+                  <th className="py-2 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E9DDC3]/60">
+                {oldStockList.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-[#7B5E5E]">
+                      No profiles currently exceed 90 days in stock. Stock velocity is optimal!
+                    </td>
+                  </tr>
+                ) : (
+                  oldStockList.map(item => (
+                    <tr key={item.profile.id} className="hover:bg-[#FBF4E6]">
+                      <td className="py-2 font-serif font-bold text-[#5A0A14]">{item.profile.formNo}</td>
+                      <td className="py-2">
+                        <span className="font-semibold text-[#2A0A0F] block">{item.profile.name}</span>
+                        <span className="text-[10px] text-[#7B5E5E]">{item.profile.gender}, {item.profile.age}y • {item.profile.caste}</span>
+                      </td>
+                      <td className="py-2">
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#8E1B2B] text-[#FBF4E6]">
+                          {item.daysInStock} days
+                        </span>
+                      </td>
+                      <td className="py-2 text-center font-bold text-[#5A0A14]">
+                        {item.matchCount}
+                      </td>
+                      <td className="py-2 text-right">
+                        <Link
+                          href={`/profiles/${item.profile.id}/matches`}
+                          className="px-2 py-1 rounded bg-[#5A0A14] text-[#FBF4E6] text-[10px] font-semibold hover:bg-[#420610]"
+                        >
+                          Find Match
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
-        {/* Right Column: Upcoming Follow-ups & Reminders */}
-        <div className="lg:col-span-5 bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl p-6 shadow-sm space-y-4 flex flex-col justify-between">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#E9DDC3] pb-3">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#D9A93F]" />
-                <h2 className="font-serif text-base font-bold text-[#5A0A14]">
-                  Upcoming Family Follow-Ups
-                </h2>
-              </div>
-              <Link href="/proposals" className="text-xs text-[#5A0A14] hover:underline">
-                View All
-              </Link>
+        {/* Table 2: Recently Added Stock */}
+        <div className="bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Boxes className="w-4 h-4 text-[#5A0A14]" />
+              <h2 className="font-serif text-base font-bold text-[#5A0A14]">
+                Recently Added Rishtas
+              </h2>
             </div>
-
-            <div className="space-y-3">
-              {proposals.slice(0, 4).map(prop => (
-                <div
-                  key={prop.id}
-                  className="p-3 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] space-y-1 text-xs"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#5A0A14] truncate max-w-[200px]">
-                      {prop.profileAName} & {prop.profileBName}
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFDF8] border border-[#D9A93F] text-[#5A0A14] capitalize">
-                      {prop.status.replace('_', ' ')}
-                    </span>
-                  </div>
-
-                  <p className="text-[11px] text-[#7B5E5E] truncate">
-                    {prop.notes || 'Awaiting parental decision.'}
-                  </p>
-
-                  <div className="text-[10px] text-[#7B5E5E] flex items-center justify-between pt-1 border-t border-[#E9DDC3]/60">
-                    <span>Follow-up: {prop.followUpDate ? formatDate(prop.followUpDate) : 'Not set'}</span>
-                    <span>Handler: {prop.sentBy}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Link
+              href="/inventory"
+              className="text-xs font-semibold text-[#5A0A14] hover:underline"
+            >
+              View all stock →
+            </Link>
           </div>
 
-          <Link href="/proposals" className="block pt-2">
-            <Button size="sm" variant="secondary" className="w-full">
-              Open Full Proposal Pipeline
-            </Button>
-          </Link>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-[#E9DDC3] text-[10px] uppercase font-bold text-[#7B5E5E]">
+                  <th className="py-2">Form No</th>
+                  <th className="py-2">Candidate</th>
+                  <th className="py-2">City</th>
+                  <th className="py-2">Status</th>
+                  <th className="py-2 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E9DDC3]/60">
+                {recentStockList.map(p => (
+                  <tr key={p.id} className="hover:bg-[#FBF4E6]">
+                    <td className="py-2 font-serif font-bold text-[#5A0A14]">
+                      <div className="flex items-center gap-1">
+                        <span>{p.formNo}</span>
+                        {(p.isPremium || p.premiumMember) && (
+                          <Star className="w-2.5 h-2.5 fill-[#D9A93F] text-[#D9A93F]" />
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2">
+                      <span className="font-semibold text-[#2A0A0F] block">{p.name}</span>
+                      <span className="text-[10px] text-[#7B5E5E]">{p.gender}, {p.age}y • {p.caste}</span>
+                    </td>
+                    <td className="py-2 text-[#7B5E5E]">{p.city}</td>
+                    <td className="py-2">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#FBF4E6] text-[#5A0A14] border border-[#E9DDC3] capitalize">
+                        {p.status}
+                      </span>
+                    </td>
+                    <td className="py-2 text-right">
+                      <Link
+                        href={`/profiles/${p.id}`}
+                        className="px-2 py-1 rounded border border-[#5A0A14] text-[#5A0A14] text-[10px] font-semibold hover:bg-[#FBF4E6]"
+                      >
+                        Inspect
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Stock Operations Dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

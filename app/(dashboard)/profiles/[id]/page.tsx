@@ -26,7 +26,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 
-export default function ProfileDetailPage() {
+function ProfileDetailContent() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
@@ -383,7 +383,7 @@ export default function ProfileDetailPage() {
                       </span>
                     </div>
                     <p className="text-[10px] text-[#7B5E5E]">
-                      Sent on {formatDate(pr.sentDate)} by {pr.sentBy}
+                      Sent on {formatDate(pr.sentDate || pr.createdAt)} by {pr.sentBy || 'Staff'}
                     </p>
                   </div>
                 ))}
@@ -393,5 +393,13 @@ export default function ProfileDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProfileDetailPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading candidate profile...</div>}>
+      <ProfileDetailContent />
+    </Suspense>
   );
 }

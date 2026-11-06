@@ -45,3 +45,4 @@ export function LanguageToggle({ className = '', variant = 'ivory' }: LanguageTo
     </button>
   );
 }
+

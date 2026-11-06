@@ -43,13 +43,14 @@ export function Badge({
   // 3. Status Badges strictly inside palette (No green, no red!)
   if (status) {
     switch (status) {
+      case 'available':
       case 'active':
         return (
           <span
             className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FFFDF8] text-[#5A0A14] border border-[#D9A93F] select-none ${className}`}
           >
             <Check className="w-3 h-3 text-[#D9A93F] stroke-[2.5]" />
-            <span>Active</span>
+            <span>Available</span>
           </span>
         );
       case 'pending_approval':
@@ -110,3 +111,4 @@ export function Badge({
     </span>
   );
 }
+

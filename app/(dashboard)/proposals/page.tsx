@@ -156,9 +156,9 @@ export default function ProposalsLogPage() {
                 <div>
                   <span className="text-[10px] uppercase font-bold text-[#7B5E5E] block">Sent Information</span>
                   <p className="text-[#2A0A0F]">
-                    Date: <strong>{formatDate(prop.sentDate)}</strong>
+                    Date: <strong>{formatDate(prop.sentDate || prop.createdAt)}</strong>
                   </p>
-                  <p className="text-[#7B5E5E]">Handled By: {prop.sentBy}</p>
+                  <p className="text-[#7B5E5E]">Handled By: {prop.sentBy || 'Staff'}</p>
                 </div>
 
                 <div>
@@ -232,3 +232,4 @@ export default function ProposalsLogPage() {
     </div>
   );
 }
+

@@ -216,3 +216,4 @@ To deploy to Supabase:
    - Go to **Fee & Invoices** (`/invoices`).
    - Click **Receipt** on any invoice.
    - Toggle between **A4 Standard**, **A5 Slip**, or **80mm Thermal** and click **Print Receipt**.
+

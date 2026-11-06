@@ -325,3 +325,4 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
     </div>
   );
 }
+

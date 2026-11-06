@@ -23,7 +23,7 @@ import {
   Eye
 } from 'lucide-react';
 
-export default function InvoicesManagementPage() {
+function InvoicesManagementContent() {
   const searchParams = useSearchParams();
   const shouldOpenNew = searchParams.get('new') === '1';
 
@@ -332,5 +332,13 @@ export default function InvoicesManagementPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function InvoicesPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading invoices & fee manager...</div>}>
+      <InvoicesManagementContent />
+    </Suspense>
   );
 }

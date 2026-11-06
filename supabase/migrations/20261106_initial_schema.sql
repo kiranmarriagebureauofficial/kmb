@@ -221,3 +221,4 @@ CREATE POLICY "Admin only can delete profiles" ON public.profiles
 -- Public Registration policy (allows public to submit with status = 'pending_approval' only)
 CREATE POLICY "Public online registration submission" ON public.profiles
     FOR INSERT TO anon WITH CHECK (status = 'pending_approval');
+

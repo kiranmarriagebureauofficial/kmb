@@ -20,14 +20,21 @@ export type Maslak =
   | 'Shia'
   | 'Any / No Preference';
 
-export type ProfileStatus = 
-  | 'active'
-  | 'pending_approval'
-  | 'on_hold'
-  | 'engaged'
-  | 'married'
-  | 'closed'
-  | 'rejected';
+// Stock Status (Inventory ERP Lifecycle)
+export type StockStatus = 
+  | 'available'       // In stock, participating in matching
+  | 'on_hold'         // Temporarily paused, excluded from matching
+  | 'engaged'         // Rishta fixed / engaged, excluded from matching
+  | 'married'         // Finished / closed, excluded from matching
+  | 'pending_approval'// Online submission, not yet in inventory stock
+  | 'rejected'
+  | 'active'          // legacy alias for available
+  | 'closed';         // legacy alias for married/finalized
+
+// Backward compatibility alias
+export type ProfileStatus = StockStatus;
+
+export type AgeBucket = 'new' | 'recent' | 'aging' | 'old' | 'very_old';
 
 export type UserRole = 'admin' | 'staff';
 
@@ -48,10 +55,12 @@ export interface PartnerPreferences {
 export interface Profile {
   id: string;
   formNo: string; // e.g. "KMB-0001"
-  dateApplied: string; // YYYY-MM-DD
-  appliedBy: string; // e.g. "Father", "Mother", "Self"
+  entryDate: string; // YYYY-MM-DD when stock item arrived
+  dateApplied: string; // legacy alias
+  appliedBy: string; // e.g. "Father", "Mother", "Self", "Bureau Staff"
+  lastActivityAt: string; // ISO string when last proposal/edit occurred
   
-  // Personal
+  // Personal Details
   name: string;
   gender: Gender;
   age: number;
@@ -66,11 +75,11 @@ export interface Profile {
   city: string;
   societyName?: string; // e.g. "DHA Phase 5", "Bahria Town", "Gulberg"
   
-  // Education & Professional
-  degree: string; // e.g. "BS Computer Science (FAST-NUCES)"
+  // Educational & Professional
+  degree: string;
   educationLevel: EducationLevel;
-  profession: string; // e.g. "Software Architect"
-  designation?: string; // e.g. "Principal Engineer"
+  profession: string;
+  designation?: string;
   experienceYears?: number;
   businessNameAddress?: string;
   monthlyIncome: number; // in PKR
@@ -85,36 +94,42 @@ export interface Profile {
   sistersCount: number;
   marriedSiblingsCount: number;
   religion: Religion;
-  caste: string; // e.g. "Arain", "Rajput", "Mughal", "Sheikh", "Butt"
+  caste: string; // e.g. "Arain", "Rajput", "Sheikh"
   maslak: Maslak;
   
-  // Contact (Staff/Admin only)
+  // Contact (Admin / Staff internal only)
   phone: string;
   whatsapp: string;
   guardianName?: string;
   guardianPhone?: string;
   address: string;
-  cnic?: string; // e.g. "35202-xxxxxxx-x" (Admin only or masked)
+  cnic?: string; // e.g. "35202-xxxxxxx-x"
   photoUrl?: string;
   
   // Preferences
   preferences: PartnerPreferences;
   
-  // Status & Membership
-  status: ProfileStatus;
+  // Inventory Stock Status & VIP Membership
+  status: StockStatus;
   rejectionReason?: string;
   premiumMember: boolean;
+  isPremium?: boolean;
+  area?: string;
+  educationDetail?: string;
+  familyDetails?: any;
+  contactPerson?: string;
+  notes?: string;
   premiumStartDate?: string;
   premiumEndDate?: string;
   
-  // Internal remarks
+  // Internal Remarks (never shared)
   remarks?: string;
   
   createdAt: string;
   updatedAt: string;
 }
 
-export type MatchTier = 'matches' | 'premium';
+export type MatchTier = 'matches' | 'premium' | 'standard';
 
 export interface MatchBreakdownItem {
   key: string;
@@ -124,6 +139,8 @@ export interface MatchBreakdownItem {
   details?: string;
   scoreContribution: number;
   maxScore: number;
+  criteria?: string;
+  score?: number;
 }
 
 export interface MatchResult {
@@ -141,6 +158,7 @@ export interface MatchResult {
 }
 
 export type ProposalStatus = 
+  | 'sent'
   | 'waiting'
   | 'interested'
   | 'not_interested'
@@ -154,11 +172,13 @@ export interface Proposal {
   profileBId: string;
   profileAName: string;
   profileBName: string;
-  sentDate: string;
-  sentBy: string; // Staff user name
+  sentDate?: string;
+  sentBy?: string; // Staff user name
   status: ProposalStatus;
+  matchScore?: number;
   followUpDate?: string;
   notes?: string;
+  timeline?: any[];
   createdAt: string;
   updatedAt: string;
 }
@@ -256,6 +276,13 @@ export interface MatchingSettings {
   };
 }
 
+export interface AgeBucketConfig {
+  newDays: number;     // e.g. 7
+  recentDays: number;  // e.g. 30
+  agingDays: number;   // e.g. 90
+  oldDays: number;     // e.g. 180
+}
+
 export interface BureauSettings {
   bureauName: string;
   bureauTaglineEn: string;
@@ -267,6 +294,9 @@ export interface BureauSettings {
   email: string;
   invoicePrefix: string;
   defaultLanguage: 'en' | 'ur';
+  enableOnlineRegistrationLink: boolean; // toggle public /register
+  oldStockAlertDays: number; // e.g. 60 or 90 days without activity
+  ageBuckets: AgeBucketConfig;
   feeDefaults: {
     registrationFee: number;
     premiumMembershipFee: number;
@@ -275,13 +305,20 @@ export interface BureauSettings {
   matching: MatchingSettings;
 }
 
-export interface AuditLogEntry {
+export interface ActivityLogEntry {
   id: string;
   timestamp: string;
   actorName: string;
   actorRole: UserRole;
-  action: 'create' | 'edit' | 'delete' | 'approve' | 'reject' | 'payment' | 'status_change';
-  entity: 'profile' | 'invoice' | 'proposal' | 'settings' | 'staff';
+  action: 'create' | 'edit' | 'delete' | 'approve' | 'reject' | 'payment' | 'status_change' | 'proposal';
+  entity: 'rishta' | 'invoice' | 'proposal' | 'settings' | 'staff' | 'profile';
   entityId: string;
+  entityName?: string;
+  fieldChanged?: string;
+  oldValue?: string;
+  newValue?: string;
   details: string;
 }
+
+// Backward compatibility alias
+export type AuditLogEntry = ActivityLogEntry;

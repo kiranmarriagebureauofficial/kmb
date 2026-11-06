@@ -147,11 +147,12 @@ export default function LoginPage() {
 
         {/* Card Footer */}
         <div className="p-3 bg-[#FBF4E6] border-t border-[#E9DDC3] text-center text-[11px] text-[#7B5E5E]">
-          <Link href="/" className="hover:text-[#5A0A14] transition-colors">
-            ← Return to Public Website
+          <Link href="/register" className="hover:text-[#5A0A14] font-medium transition-colors">
+            Open Standalone Online Registration Form (/register) →
           </Link>
         </div>
       </div>
     </div>
   );
 }
+

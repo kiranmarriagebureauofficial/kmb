@@ -31,11 +31,14 @@ export function EntrySidePanel({
         const allActive = store.getActiveProfiles();
         
         // Construct a synthetic profile from the current form values
+        const nowIso = new Date().toISOString();
         const candidateProfile: Profile = {
           id: savedProfileId || 'draft-profile',
           formNo: currentFormValues.formNo || 'DRAFT',
-          dateApplied: currentFormValues.dateApplied || new Date().toISOString().split('T')[0],
+          entryDate: currentFormValues.entryDate || currentFormValues.dateApplied || nowIso.split('T')[0],
+          dateApplied: currentFormValues.dateApplied || nowIso.split('T')[0],
           appliedBy: currentFormValues.appliedBy || 'Self',
+          lastActivityAt: nowIso,
           name: currentFormValues.name || 'Candidate',
           gender: currentFormValues.gender || 'Male',
           age: Number(currentFormValues.age) || 28,
@@ -60,7 +63,7 @@ export function EntrySidePanel({
           phone: currentFormValues.phone || '+92 300 0000000',
           whatsapp: currentFormValues.whatsapp || '+92 300 0000000',
           address: currentFormValues.address || 'Lahore',
-          status: 'active', // synthetic active for preview calculation
+          status: 'available', // synthetic available for preview calculation
           premiumMember: !!currentFormValues.premiumMember,
           preferences: currentFormValues.preferences || {
             ageMin: 22,
@@ -216,3 +219,4 @@ export function EntrySidePanel({
     </aside>
   );
 }
+

@@ -77,10 +77,12 @@ export function checkHardFilters(
 ): { passes: boolean; failures: string[] } {
   const failures: string[] = [];
 
-  // 1. Status: only active profiles participate in matching
+  // 1. Status: only available/active stock participates in matching
   if (filters.onlyActiveStatus) {
-    if (a.status !== 'active' || b.status !== 'active') {
-      failures.push('One or both profiles are not active');
+    const isAActive = a.status === 'available' || (a.status as any) === 'active';
+    const isBActive = b.status === 'available' || (b.status as any) === 'active';
+    if (!isAActive || !isBActive) {
+      failures.push('One or both profiles are not available in stock');
     }
   }
 
@@ -474,3 +476,4 @@ export function calculateMatchesForProfile(
     return b.finalScore - a.finalScore;
   });
 }
+

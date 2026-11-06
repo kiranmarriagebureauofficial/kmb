@@ -108,3 +108,4 @@ export function runMatchingEngineTests() {
 if (typeof require !== 'undefined' && require.main === module) {
   runMatchingEngineTests();
 }
+

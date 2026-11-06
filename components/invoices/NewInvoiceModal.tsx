@@ -317,3 +317,4 @@ export function NewInvoiceModal({
     </div>
   );
 }
+

@@ -38,3 +38,4 @@ export function Divider({ className = '', variant = 'flourish' }: DividerProps) 
     </div>
   );
 }
+

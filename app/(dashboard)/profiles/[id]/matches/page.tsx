@@ -10,7 +10,7 @@ import { ProposalModal } from '@/components/proposals/ProposalModal';
 import { Button } from '@/components/ui/Button';
 import { Sparkles, Star, Users, ArrowLeft, RefreshCw } from 'lucide-react';
 
-export default function ProfileMatchesPage() {
+function ProfileMatchesContent() {
   const params = useParams();
   const id = params?.id as string;
 
@@ -150,5 +150,13 @@ export default function ProfileMatchesPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function ProfileMatchesPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading compatibility matches...</div>}>
+      <ProfileMatchesContent />
+    </Suspense>
   );
 }

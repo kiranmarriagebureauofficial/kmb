@@ -6,7 +6,7 @@ import { store } from '@/lib/db/store';
 import { Profile } from '@/lib/types';
 import { ProfileForm } from '@/components/profiles/ProfileForm';
 
-export default function EditProfilePage() {
+function EditProfileContent() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
@@ -61,5 +61,13 @@ export default function EditProfilePage() {
 
       <ProfileForm initialData={profile} isPublic={false} />
     </div>
+  );
+}
+
+export default function EditProfilePage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading editor...</div>}>
+      <EditProfileContent />
+    </Suspense>
   );
 }

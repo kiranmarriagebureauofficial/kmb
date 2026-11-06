@@ -308,3 +308,4 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
     </div>
   );
 }
+
