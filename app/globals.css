@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maroon: #5A0A14;
+  --color-maroon-dark: #420610;
+  --color-maroon-light: #7A1424;
+  --color-maroon-danger: #8E1B2B;
+  --color-maroon-text: #2A0A0F;
+  --color-maroon-muted: #7B5E5E;
+
+  --color-gold: #D9A93F;
+  --color-gold-light: #EBCB7C;
+  --color-gold-dark: #B08626;
+
+  --color-ivory: #FBF4E6;
+  --color-ivory-card: #FFFDF8;
+  --color-ivory-border: #E9DDC3;
+  --color-ivory-track: #DECEAC;
+
+  --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-urdu: "Noto Nastaliq Urdu", serif;
+}
+
+:root {
+  --maroon: #5A0A14;
+  --maroon-dark: #420610;
+  --maroon-light: #7A1424;
+  --maroon-danger: #8E1B2B;
+  --maroon-text: #2A0A0F;
+  --maroon-muted: #7B5E5E;
+
+  --gold: #D9A93F;
+  --gold-light: #EBCB7C;
+  --gold-dark: #B08626;
+
+  --ivory: #FBF4E6;
+  --ivory-card: #FFFDF8;
+  --ivory-border: #E9DDC3;
+  --ivory-track: #DECEAC;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--maroon-text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Urdu styling */
+[dir="rtl"] {
+  font-family: "Noto Nastaliq Urdu", Inter, system-ui, sans-serif;
+  line-height: 1.8;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4 {
+  line-height: 1.7;
+}
+
+.font-serif {
+  font-family: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+}
+
+.font-urdu {
+  font-family: "Noto Nastaliq Urdu", serif;
+}
+
+/* Print optimizations */
+@media print {
+  body {
+    background-color: #FFFFFF !important;
+    color: #2A0A0F !important;
+    font-size: 11pt;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  @page {
+    margin: 1cm;
+    size: auto;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+/* Subtle paisley ornamental background utility */
+.bg-ornament {
+  background-image: radial-gradient(circle at 50% 50%, rgba(217, 169, 63, 0.08) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FBF4E6;
+}
+::-webkit-scrollbar-thumb {
+  background: #E9DDC3;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D9A93F;
+}

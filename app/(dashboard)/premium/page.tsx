@@ -1,0 +1,238 @@
+'use client';
+
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { store } from '@/lib/db/store';
+import { Profile, MatchResult } from '@/lib/types';
+import { MatchRing } from '@/components/ui/MatchRing';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { ProposalModal } from '@/components/proposals/ProposalModal';
+import { ProfileComparisonModal } from '@/components/matches/ProfileComparisonModal';
+import { buildWhatsAppShareSummary, generateWhatsAppLink } from '@/lib/utils';
+import { 
+  Star, 
+  Sparkles, 
+  Filter, 
+  MapPin, 
+  Share2, 
+  ArrowLeftRight, 
+  HeartHandshake, 
+  Eye, 
+  Crown,
+  CalendarCheck
+} from 'lucide-react';
+import { COMMON_CITIES } from '@/lib/i18n';
+
+export default function PremiumRishtayDirectoryPage() {
+  const [pairs, setPairs] = useState<{ profileA: Profile; profileB: Profile; match: MatchResult }[]>([]);
+  const [filterCity, setFilterCity] = useState<string>('All');
+  const [filterPremiumMemberOnly, setFilterPremiumMemberOnly] = useState<boolean>(false);
+  const [activeComparison, setActiveComparison] = useState<{ a: Profile; b: Profile; m: MatchResult } | null>(null);
+  const [activeProposal, setActiveProposal] = useState<{ a: Profile; b: Profile } | null>(null);
+
+  const settings = store.getSettings();
+
+  useEffect(() => {
+    const update = () => {
+      setPairs(store.getAllPremiumMatches());
+    };
+    update();
+    const unsub = store.subscribe(update);
+    return unsub;
+  }, []);
+
+  const filteredPairs = useMemo(() => {
+    return pairs.filter(p => {
+      if (filterCity !== 'All') {
+        const cityMatch =
+          p.profileA.city.toLowerCase() === filterCity.toLowerCase() ||
+          p.profileB.city.toLowerCase() === filterCity.toLowerCase();
+        if (!cityMatch) return false;
+      }
+      if (filterPremiumMemberOnly) {
+        if (!p.profileA.premiumMember && !p.profileB.premiumMember) return false;
+      }
+      return true;
+    });
+  }, [pairs, filterCity, filterPremiumMemberOnly]);
+
+  const handleShareSummary = (partner: Profile) => {
+    const summary = buildWhatsAppShareSummary(partner, {
+      name: settings.bureauName,
+      phone: settings.whatsapp,
+    });
+    const waUrl = generateWhatsAppLink('', summary);
+    window.open(waUrl, '_blank');
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-[#FFFDF8] border-2 border-[#D9A93F] p-6 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#D9A93F] text-[#420610]">
+            <Crown className="w-3.5 h-3.5 fill-[#420610]" />
+            <span>Bureau-Wide 75%+ Compatibility Directory</span>
+          </div>
+          <h1 className="font-serif text-2xl font-bold text-[#5A0A14]">
+            Premium Rishtay Pairs ({filteredPairs.length})
+          </h1>
+          <p className="text-xs text-[#7B5E5E]">
+            All verified male & female profiles across Lahore & Pakistan achieving 75%+ two-way compatibility.
+          </p>
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex items-center gap-3 text-xs flex-wrap">
+          <div>
+            <label className="block text-[10px] uppercase font-bold text-[#7B5E5E] mb-1">Location</label>
+            <select
+              value={filterCity}
+              onChange={(e) => setFilterCity(e.target.value)}
+              className="px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+            >
+              <option value="All">All Cities</option>
+              {COMMON_CITIES.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="pt-4">
+            <label className="flex items-center gap-2 cursor-pointer font-bold text-[#5A0A14]">
+              <input
+                type="checkbox"
+                checked={filterPremiumMemberOnly}
+                onChange={(e) => setFilterPremiumMemberOnly(e.target.checked)}
+                className="w-4 h-4 text-[#D9A93F] rounded border-[#E9DDC3]"
+              />
+              <span className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-[#D9A93F] fill-[#D9A93F]" />
+                <span>VIP Clients Only</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Pairs List */}
+      {filteredPairs.length === 0 ? (
+        <div className="p-12 text-center bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl space-y-3">
+          <Star className="w-10 h-10 text-[#D9A93F] mx-auto fill-[#D9A93F]" />
+          <h3 className="font-serif text-base font-bold text-[#5A0A14]">
+            No 75%+ Premium Match Pairs Found with Selected Filters
+          </h3>
+          <p className="text-xs text-[#7B5E5E]">
+            Try changing the city filter to "All Cities" or register new compatible profiles.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {filteredPairs.map(({ profileA, profileB, match }) => (
+            <div
+              key={match.id}
+              className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all border-l-4 border-l-[#D9A93F] grid grid-cols-1 lg:grid-cols-12 gap-4 items-center"
+            >
+              {/* Groom Party A */}
+              <div className="lg:col-span-4 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-serif font-bold text-sm text-[#2A0A0F]">
+                    {profileA.name}
+                  </span>
+                  <span className="text-[10px] font-mono text-[#7B5E5E] bg-[#FBF4E6] px-1 py-0.5 rounded">
+                    {profileA.formNo}
+                  </span>
+                  {profileA.premiumMember && (
+                    <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+                  )}
+                </div>
+                <p className="text-xs text-[#7B5E5E]">
+                  {profileA.age} Yrs • {profileA.height} • <strong className="text-[#5A0A14]">{profileA.caste}</strong> • {profileA.maslak}
+                </p>
+                <p className="text-xs text-[#2A0A0F] truncate">{profileA.profession} ({profileA.degree})</p>
+                <p className="text-[11px] text-[#7B5E5E] flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-[#D9A93F]" />
+                  <span>{profileA.city} ({profileA.societyName || 'Lahore'})</span>
+                </p>
+              </div>
+
+              {/* Match Score & Compatibility Badge */}
+              <div className="lg:col-span-3 flex flex-col items-center justify-center text-center p-3 bg-[#FBF4E6] rounded-xl border border-[#D9A93F]/40 space-y-1">
+                <MatchRing score={match.finalScore} size={54} strokeWidth={5} />
+                <Badge tier="premium" className="text-[10px]" />
+                <span className="text-[10px] text-[#7B5E5E]">
+                  A: {match.scoreAB}% ↔ B: {match.scoreBA}%
+                </span>
+              </div>
+
+              {/* Bride Party B */}
+              <div className="lg:col-span-3 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-serif font-bold text-sm text-[#2A0A0F]">
+                    {profileB.name}
+                  </span>
+                  <span className="text-[10px] font-mono text-[#7B5E5E] bg-[#FBF4E6] px-1 py-0.5 rounded">
+                    {profileB.formNo}
+                  </span>
+                  {profileB.premiumMember && (
+                    <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+                  )}
+                </div>
+                <p className="text-xs text-[#7B5E5E]">
+                  {profileB.age} Yrs • {profileB.height} • <strong className="text-[#5A0A14]">{profileB.caste}</strong> • {profileB.maslak}
+                </p>
+                <p className="text-xs text-[#2A0A0F] truncate">{profileB.profession} ({profileB.degree})</p>
+                <p className="text-[11px] text-[#7B5E5E] flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-[#D9A93F]" />
+                  <span>{profileB.city} ({profileB.societyName || 'Lahore'})</span>
+                </p>
+              </div>
+
+              {/* Actions Column */}
+              <div className="lg:col-span-2 flex flex-col sm:flex-row lg:flex-col gap-2 justify-end">
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setActiveProposal({ a: profileA, b: profileB })}
+                  icon={<HeartHandshake className="w-3.5 h-3.5 text-[#D9A93F]" />}
+                >
+                  Initiate Proposal
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setActiveComparison({ a: profileA, b: profileB, m: match })}
+                  icon={<ArrowLeftRight className="w-3.5 h-3.5 text-[#5A0A14]" />}
+                >
+                  Compare
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Comparison Modal */}
+      {activeComparison && (
+        <ProfileComparisonModal
+          profileA={activeComparison.a}
+          profileB={activeComparison.b}
+          match={activeComparison.m}
+          onClose={() => setActiveComparison(null)}
+        />
+      )}
+
+      {/* Proposal Modal */}
+      {activeProposal && (
+        <ProposalModal
+          profileA={activeProposal.a}
+          profileB={activeProposal.b}
+          onClose={() => setActiveProposal(null)}
+          onSuccess={() => alert('Proposal created and tracked!')}
+        />
+      )}
+    </div>
+  );
+}
