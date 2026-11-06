@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Invoice, PaymentMethod } from '@/lib/types';
@@ -63,41 +63,41 @@ export function RecordPaymentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#2A0A0F]/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#2C2526]/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
         {/* Header */}
-        <div className="bg-[#5A0A14] text-[#FBF4E6] p-4 flex items-center justify-between border-b border-[#D9A93F]">
+        <div className="bg-[#800F2F] text-[#F8F5F0] p-4 flex items-center justify-between border-b border-[#D4AF37]">
           <div className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-[#D9A93F]" />
+            <CreditCard className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
               Record Client Fee Payment
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#420610] text-[#E9DDC3]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-[#660A22] text-[#E5DFD5]">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
-          <div className="p-3 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] space-y-1">
+          <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-1">
             <div className="flex justify-between">
-              <span className="text-[#7B5E5E]">Invoice Number:</span>
-              <span className="font-mono font-bold text-[#5A0A14]">{invoice.invoiceNumber}</span>
+              <span className="text-[#6E6466]">Invoice Number:</span>
+              <span className="font-mono font-bold text-[#800F2F]">{invoice.invoiceNumber}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[#7B5E5E]">Client Name:</span>
+              <span className="text-[#6E6466]">Client Name:</span>
               <span className="font-semibold">{invoice.clientName}</span>
             </div>
-            <div className="flex justify-between border-t border-[#E9DDC3] pt-1">
-              <span className="text-[#7B5E5E]">Outstanding Balance:</span>
-              <span className="font-bold text-[#8E1B2B]">{formatPKR(invoice.balance)}</span>
+            <div className="flex justify-between border-t border-[#E5DFD5] pt-1">
+              <span className="text-[#6E6466]">Outstanding Balance:</span>
+              <span className="font-bold text-[#A3182E]">{formatPKR(invoice.balance)}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Payment Amount (PKR) *
               </label>
               <input
@@ -108,12 +108,12 @@ export function RecordPaymentModal({
                 step={500}
                 value={amount}
                 onChange={(e) => setAmount(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-mono text-right font-bold text-[#5A0A14]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right font-bold text-[#800F2F]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Payment Date *
               </label>
               <input
@@ -121,20 +121,20 @@ export function RecordPaymentModal({
                 required
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Payment Method *
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-medium"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
               >
                 <option value="Cash">Cash</option>
                 <option value="Bank Transfer">Bank Transfer</option>
@@ -144,7 +144,7 @@ export function RecordPaymentModal({
             </div>
 
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Receipt Number *
               </label>
               <input
@@ -152,13 +152,13 @@ export function RecordPaymentModal({
                 required
                 value={receiptNumber}
                 onChange={(e) => setReceiptNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-mono"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-[#5A0A14] mb-1">
+            <label className="block font-semibold text-[#800F2F] mb-1">
               Received By (Staff Member) *
             </label>
             <input
@@ -166,12 +166,12 @@ export function RecordPaymentModal({
               required
               value={receivedBy}
               onChange={(e) => setReceivedBy(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+              className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-[#5A0A14] mb-1">
+            <label className="block font-semibold text-[#800F2F] mb-1">
               Payment Remarks / Reference Note
             </label>
             <input
@@ -179,11 +179,11 @@ export function RecordPaymentModal({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Bank online transaction ID or cash desk slip"
-              className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+              className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             />
           </div>
 
-          <div className="pt-3 border-t border-[#E9DDC3] flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
             <Button type="button" variant="secondary" onClick={onClose}>
               Cancel
             </Button>
@@ -191,7 +191,7 @@ export function RecordPaymentModal({
               type="submit"
               variant="primary"
               disabled={saving}
-              icon={<Check className="w-4 h-4 text-[#D9A93F]" />}
+              icon={<Check className="w-4 h-4 text-[#D4AF37]" />}
             >
               {saving ? 'Recording...' : 'Record Payment & Issue Receipt'}
             </Button>

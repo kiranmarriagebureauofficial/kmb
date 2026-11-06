@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -46,9 +46,9 @@ export function BrandLogo({
 
   if (hasError) {
     return (
-      <div className={`flex flex-col items-center justify-center font-serif font-bold text-[#D9A93F] text-center ${className}`}>
+      <div className={`flex flex-col items-center justify-center font-serif font-bold text-[#D4AF37] text-center ${className}`}>
         <span className="text-xl tracking-wider">KIRAN</span>
-        <span className="text-[10px] uppercase tracking-widest text-[#E9DDC3]">
+        <span className="text-[10px] uppercase tracking-widest text-[#E5DFD5]">
           Marriage Bureau
         </span>
       </div>

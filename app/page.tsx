@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,10 +17,10 @@ export default function RootPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#5A0A14] flex items-center justify-center text-[#FBF4E6]">
+    <div className="min-h-screen bg-[#800F2F] flex items-center justify-center text-[#F8F5F0]">
       <div className="text-center space-y-2">
-        <div className="w-8 h-8 border-2 border-[#D9A93F] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="font-serif text-sm tracking-wider text-[#E9DDC3]">
+        <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="font-serif text-sm tracking-wider text-[#E5DFD5]">
           Loading Kiran Marriage Bureau ERP...
         </p>
       </div>

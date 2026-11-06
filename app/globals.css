@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-maroon: #5A0A14;
-  --color-maroon-dark: #420610;
-  --color-maroon-light: #7A1424;
-  --color-maroon-danger: #8E1B2B;
-  --color-maroon-text: #2A0A0F;
-  --color-maroon-muted: #7B5E5E;
+  --color-maroon: #800F2F;
+  --color-maroon-dark: #660A22;
+  --color-maroon-light: #96163A;
+  --color-maroon-danger: #A3182E;
+  --color-maroon-text: #2C2526;
+  --color-maroon-muted: #6E6466;
 
-  --color-gold: #D9A93F;
-  --color-gold-light: #EBCB7C;
-  --color-gold-dark: #B08626;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F0D58A;
+  --color-gold-dark: #B88B22;
 
-  --color-ivory: #FBF4E6;
-  --color-ivory-card: #FFFDF8;
-  --color-ivory-border: #E9DDC3;
-  --color-ivory-track: #DECEAC;
+  --color-ivory: #F8F5F0;
+  --color-ivory-card: #FFFFFF;
+  --color-ivory-border: #E5DFD5;
+  --color-ivory-track: #D8D0C3;
 
   --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
   --font-sans: Inter, system-ui, -apple-system, sans-serif;
@@ -23,21 +23,21 @@
 }
 
 :root {
-  --maroon: #5A0A14;
-  --maroon-dark: #420610;
-  --maroon-light: #7A1424;
-  --maroon-danger: #8E1B2B;
-  --maroon-text: #2A0A0F;
-  --maroon-muted: #7B5E5E;
+  --maroon: #800F2F;
+  --maroon-dark: #660A22;
+  --maroon-light: #96163A;
+  --maroon-danger: #A3182E;
+  --maroon-text: #2C2526;
+  --maroon-muted: #6E6466;
 
-  --gold: #D9A93F;
-  --gold-light: #EBCB7C;
-  --gold-dark: #B08626;
+  --gold: #D4AF37;
+  --gold-light: #F0D58A;
+  --gold-dark: #B88B22;
 
-  --ivory: #FBF4E6;
-  --ivory-card: #FFFDF8;
-  --ivory-border: #E9DDC3;
-  --ivory-track: #DECEAC;
+  --ivory: #F8F5F0;
+  --ivory-card: #FFFFFF;
+  --ivory-border: #E5DFD5;
+  --ivory-track: #D8D0C3;
 }
 
 body {
@@ -73,7 +73,7 @@ body {
 @media print {
   body {
     background-color: #FFFFFF !important;
-    color: #2A0A0F !important;
+    color: #2C2526 !important;
     font-size: 11pt;
   }
 
@@ -109,7 +109,7 @@ body {
 
 /* Subtle paisley ornamental background utility */
 .bg-ornament {
-  background-image: radial-gradient(circle at 50% 50%, rgba(217, 169, 63, 0.08) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.12) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
 }
 
@@ -119,12 +119,12 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FBF4E6;
+  background: #F8F5F0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E9DDC3;
+  background: #E5DFD5;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D9A93F;
+  background: #D4AF37;
 }

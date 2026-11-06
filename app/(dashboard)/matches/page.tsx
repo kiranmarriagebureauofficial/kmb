@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -91,26 +91,26 @@ function MatchesContent() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-sm">
         <div>
-          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
             Two-Way Algorithmic Matchmaking
           </span>
-          <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+          <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
             Match Central
           </h1>
-          <p className="text-xs text-[#7B5E5E]">
+          <p className="text-xs text-[#6E6466]">
             Mutual compatibility scoring across Lahore inventory. Only scores 50%+ are shown.
           </p>
         </div>
 
         {/* Profile Selector */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-[#5A0A14] shrink-0">Select Candidate:</span>
+          <span className="text-xs font-bold text-[#800F2F] shrink-0">Select Candidate:</span>
           <select
             value={selectedProfileId}
             onChange={(e) => setSelectedProfileId(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs font-semibold text-[#5A0A14] focus:outline-none min-w-[220px]"
+            className="px-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F] focus:outline-none min-w-[220px]"
           >
             <option value="">-- Choose Candidate --</option>
             {profiles.map(p => (
@@ -123,8 +123,8 @@ function MatchesContent() {
       </div>
 
       {proposalSentSuccess && (
-        <div className="p-3 bg-[#D9A93F]/20 text-[#5A0A14] border border-[#D9A93F] rounded-xl flex items-center gap-2 text-xs font-bold">
-          <CheckCircle className="w-4 h-4 text-[#D9A93F]" />
+        <div className="p-3 bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37] rounded-xl flex items-center gap-2 text-xs font-bold">
+          <CheckCircle className="w-4 h-4 text-[#D4AF37]" />
           <span>{proposalSentSuccess}</span>
         </div>
       )}
@@ -133,9 +133,9 @@ function MatchesContent() {
       {selectedProfile ? (
         <div className="space-y-4">
           {/* Candidate Summary Bar */}
-          <div className="p-4 bg-[#5A0A14] text-[#FBF4E6] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D9A93F]">
+          <div className="p-4 bg-[#800F2F] text-[#F8F5F0] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D4AF37]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#420610] text-[#D9A93F] font-serif font-bold text-base flex items-center justify-center border border-[#D9A93F]/50">
+              <div className="w-10 h-10 rounded-full bg-[#660A22] text-[#D4AF37] font-serif font-bold text-base flex items-center justify-center border border-[#D4AF37]/50">
                 {selectedProfile.name.charAt(0)}
               </div>
               <div>
@@ -143,14 +143,14 @@ function MatchesContent() {
                   <h2 className="font-serif text-lg font-bold">
                     {selectedProfile.name}
                   </h2>
-                  <span className="text-xs px-2 py-0.5 rounded bg-[#420610] text-[#D9A93F] font-serif font-bold">
+                  <span className="text-xs px-2 py-0.5 rounded bg-[#660A22] text-[#D4AF37] font-serif font-bold">
                     {selectedProfile.formNo}
                   </span>
                   {(selectedProfile.isPremium || selectedProfile.premiumMember) && (
-                    <Star className="w-3.5 h-3.5 fill-[#D9A93F] text-[#D9A93F]" />
+                    <Star className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
                   )}
                 </div>
-                <p className="text-xs text-[#E9DDC3]">
+                <p className="text-xs text-[#E5DFD5]">
                   {selectedProfile.gender} • {selectedProfile.age} yrs • {selectedProfile.height} • {selectedProfile.caste} ({selectedProfile.maslak}) • {selectedProfile.city}
                 </p>
               </div>
@@ -158,12 +158,12 @@ function MatchesContent() {
 
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <span className="text-[10px] text-[#E9DDC3] uppercase block font-semibold">Compatible Matches</span>
-                <span className="font-serif text-2xl font-bold text-[#D9A93F]">{profileMatches.length}</span>
+                <span className="text-[10px] text-[#E5DFD5] uppercase block font-semibold">Compatible Matches</span>
+                <span className="font-serif text-2xl font-bold text-[#D4AF37]">{profileMatches.length}</span>
               </div>
               <button
                 onClick={() => setSelectedProfileId('')}
-                className="px-3 py-1.5 rounded-lg bg-[#420610] hover:bg-[#32040B] text-xs text-[#E9DDC3] border border-[#D9A93F]/30"
+                className="px-3 py-1.5 rounded-lg bg-[#660A22] hover:bg-[#52061A] text-xs text-[#E5DFD5] border border-[#D4AF37]/30"
               >
                 Clear
               </button>
@@ -171,40 +171,40 @@ function MatchesContent() {
           </div>
 
           {/* Filters for Matches */}
-          <div className="flex items-center justify-between gap-4 flex-wrap bg-[#FFFDF8] p-3 rounded-xl border border-[#E9DDC3] text-xs">
+          <div className="flex items-center justify-between gap-4 flex-wrap bg-[#FFFFFF] p-3 rounded-xl border border-[#E5DFD5] text-xs">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-[#7B5E5E]">Filter Tier:</span>
+              <span className="font-bold text-[#6E6466]">Filter Tier:</span>
               <button
                 onClick={() => setTierFilter('all')}
-                className={`px-3 py-1 rounded-lg font-semibold ${tierFilter === 'all' ? 'bg-[#5A0A14] text-[#FBF4E6]' : 'bg-[#FBF4E6] text-[#5A0A14]'}`}
+                className={`px-3 py-1 rounded-lg font-semibold ${tierFilter === 'all' ? 'bg-[#800F2F] text-[#F8F5F0]' : 'bg-[#F8F5F0] text-[#800F2F]'}`}
               >
                 All (50%+)
               </button>
               <button
                 onClick={() => setTierFilter('premium')}
-                className={`px-3 py-1 rounded-lg font-semibold flex items-center gap-1 ${tierFilter === 'premium' ? 'bg-[#D9A93F] text-[#5A0A14]' : 'bg-[#FBF4E6] text-[#5A0A14]'}`}
+                className={`px-3 py-1 rounded-lg font-semibold flex items-center gap-1 ${tierFilter === 'premium' ? 'bg-[#D4AF37] text-[#800F2F]' : 'bg-[#F8F5F0] text-[#800F2F]'}`}
               >
                 <Star className="w-3 h-3 fill-current" />
                 <span>Premium (75%+)</span>
               </button>
               <button
                 onClick={() => setTierFilter('standard')}
-                className={`px-3 py-1 rounded-lg font-semibold ${tierFilter === 'standard' ? 'bg-[#5A0A14] text-[#FBF4E6]' : 'bg-[#FBF4E6] text-[#5A0A14]'}`}
+                className={`px-3 py-1 rounded-lg font-semibold ${tierFilter === 'standard' ? 'bg-[#800F2F] text-[#F8F5F0]' : 'bg-[#F8F5F0] text-[#800F2F]'}`}
               >
                 Standard (50-74%)
               </button>
             </div>
 
-            <div className="text-[#7B5E5E] text-xs">
-              Showing <span className="font-bold text-[#5A0A14]">{profileMatches.length}</span> compatible proposals
+            <div className="text-[#6E6466] text-xs">
+              Showing <span className="font-bold text-[#800F2F]">{profileMatches.length}</span> compatible proposals
             </div>
           </div>
 
           {/* Matches Grid */}
           {profileMatches.length === 0 ? (
-            <div className="p-12 text-center bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] space-y-2">
-              <p className="font-serif text-lg font-bold text-[#5A0A14]">No compatible matches found above 50%</p>
-              <p className="text-xs text-[#7B5E5E]">Try adjusting partner preferences (e.g. age range, caste flexibility, or location) in the candidate's profile.</p>
+            <div className="p-12 text-center bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] space-y-2">
+              <p className="font-serif text-lg font-bold text-[#800F2F]">No compatible matches found above 50%</p>
+              <p className="text-xs text-[#6E6466]">Try adjusting partner preferences (e.g. age range, caste flexibility, or location) in the candidate's profile.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -215,25 +215,25 @@ function MatchesContent() {
                 return (
                   <div
                     key={partner.id}
-                    className="p-5 bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl shadow-xs space-y-4 hover:border-[#D9A93F] transition-colors"
+                    className="p-5 bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl shadow-xs space-y-4 hover:border-[#D4AF37] transition-colors"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-serif font-bold text-[#5A0A14] text-base">
+                          <span className="font-serif font-bold text-[#800F2F] text-base">
                             {partner.name}
                           </span>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#FBF4E6] font-bold text-[#7B5E5E] border border-[#E9DDC3]">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#F8F5F0] font-bold text-[#6E6466] border border-[#E5DFD5]">
                             {partner.formNo}
                           </span>
                           {(partner.isPremium || partner.premiumMember) && (
-                            <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+                            <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
                           )}
                         </div>
-                        <p className="text-xs text-[#7B5E5E] mt-0.5">
+                        <p className="text-xs text-[#6E6466] mt-0.5">
                           {partner.age} yrs • {partner.height} • {partner.caste} ({partner.maslak})
                         </p>
-                        <p className="text-xs text-[#5A0A14] font-medium mt-0.5">
+                        <p className="text-xs text-[#800F2F] font-medium mt-0.5">
                           {partner.profession} • {partner.city} • {formatPKR(partner.monthlyIncome || 0)}/mo
                         </p>
                       </div>
@@ -242,18 +242,18 @@ function MatchesContent() {
                       <div className="flex flex-col items-center">
                         <div className={`w-14 h-14 rounded-full flex flex-col items-center justify-center border-2 ${
                           isPremiumTier 
-                            ? 'border-[#D9A93F] bg-[#D9A93F]/15 text-[#5A0A14]' 
-                            : 'border-[#5A0A14] bg-[#5A0A14]/10 text-[#5A0A14]'
+                            ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-[#800F2F]' 
+                            : 'border-[#800F2F] bg-[#800F2F]/10 text-[#800F2F]'
                         }`}>
                           <span className="font-serif font-bold text-base leading-none">
                             {m.finalScore}%
                           </span>
-                          <span className="text-[8px] uppercase font-bold tracking-wider text-[#7B5E5E]">
+                          <span className="text-[8px] uppercase font-bold tracking-wider text-[#6E6466]">
                             Match
                           </span>
                         </div>
                         {isPremiumTier && (
-                          <span className="text-[9px] font-bold text-[#B08626] uppercase mt-1 flex items-center gap-0.5">
+                          <span className="text-[9px] font-bold text-[#B88B22] uppercase mt-1 flex items-center gap-0.5">
                             <Star className="w-2.5 h-2.5 fill-current" />
                             Premium
                           </span>
@@ -262,14 +262,14 @@ function MatchesContent() {
                     </div>
 
                     {/* Criteria Breakdown */}
-                    <div className="grid grid-cols-2 gap-2 text-[11px] p-2.5 bg-[#FBF4E6] rounded-lg border border-[#E9DDC3]">
+                    <div className="grid grid-cols-2 gap-2 text-[11px] p-2.5 bg-[#F8F5F0] rounded-lg border border-[#E5DFD5]">
                       {m.breakdown.slice(0, 6).map((item, bIdx) => {
                         const scoreVal = item.scoreContribution ?? item.score ?? 0;
                         const labelText = item.labelEn || item.criteria || item.key;
                         return (
                           <div key={bIdx} className="flex items-center justify-between">
-                            <span className="text-[#7B5E5E] truncate pr-1">{labelText}:</span>
-                            <span className={`font-bold ${scoreVal >= item.maxScore * 0.75 ? 'text-[#5A0A14]' : 'text-[#7B5E5E]'}`}>
+                            <span className="text-[#6E6466] truncate pr-1">{labelText}:</span>
+                            <span className={`font-bold ${scoreVal >= item.maxScore * 0.75 ? 'text-[#800F2F]' : 'text-[#6E6466]'}`}>
                               {scoreVal}/{item.maxScore}
                             </span>
                           </div>
@@ -278,10 +278,10 @@ function MatchesContent() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#E9DDC3]">
+                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#E5DFD5]">
                       <Link
                         href={`/profiles/${partner.id}`}
-                        className="text-xs font-semibold text-[#5A0A14] hover:underline flex items-center gap-1"
+                        className="text-xs font-semibold text-[#800F2F] hover:underline flex items-center gap-1"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>View Biodata</span>
@@ -292,7 +292,7 @@ function MatchesContent() {
                           size="sm"
                           variant="accent"
                           onClick={() => sendProposal(m, partner)}
-                          icon={<HeartHandshake className="w-3.5 h-3.5 text-[#5A0A14]" />}
+                          icon={<HeartHandshake className="w-3.5 h-3.5 text-[#800F2F]" />}
                         >
                           Send Proposal
                         </Button>
@@ -307,11 +307,11 @@ function MatchesContent() {
       ) : (
         /* Mode B: Bureau-Wide Suggested Pairings */
         <div className="space-y-4">
-          <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-            <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+            <h2 className="font-serif text-lg font-bold text-[#800F2F]">
               Bureau Recommended High-Compatibility Pairs (75%+)
             </h2>
-            <p className="text-xs text-[#7B5E5E]">
+            <p className="text-xs text-[#6E6466]">
               Algorithmic suggestions between active male and female rishtas in your current Lahore inventory.
             </p>
           </div>
@@ -320,54 +320,54 @@ function MatchesContent() {
             {bureauTopPairs.slice(0, 10).map((pair, idx) => (
               <div
                 key={idx}
-                className="p-5 bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl shadow-xs space-y-4 hover:border-[#D9A93F] transition-colors"
+                className="p-5 bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl shadow-xs space-y-4 hover:border-[#D4AF37] transition-colors"
               >
                 {/* Score Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-[#E9DDC3]">
+                <div className="flex items-center justify-between pb-3 border-b border-[#E5DFD5]">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#D9A93F]/20 text-[#5A0A14] border border-[#D9A93F]">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37]">
                       ★ Premium Pair
                     </span>
-                    <span className="text-xs text-[#7B5E5E]">
+                    <span className="text-xs text-[#6E6466]">
                       {pair.profileA.caste} ↔ {pair.profileB.caste}
                     </span>
                   </div>
 
-                  <div className="w-12 h-12 rounded-full border-2 border-[#D9A93F] bg-[#D9A93F]/15 flex items-center justify-center font-serif font-bold text-sm text-[#5A0A14]">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#D4AF37] bg-[#D4AF37]/15 flex items-center justify-center font-serif font-bold text-sm text-[#800F2F]">
                     {pair.match.finalScore}%
                   </div>
                 </div>
 
                 {/* Candidate Side-by-Side Comparison */}
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-[#FBF4E6] rounded-lg border border-[#E9DDC3] space-y-1">
-                    <span className="text-[10px] font-bold text-[#D9A93F] uppercase block">Groom</span>
-                    <p className="font-bold text-[#5A0A14]">{pair.profileA.name}</p>
-                    <p className="text-[11px] text-[#7B5E5E]">{pair.profileA.age}y • {pair.profileA.height}</p>
-                    <p className="text-[11px] text-[#7B5E5E]">{pair.profileA.profession}</p>
-                    <p className="text-[11px] text-[#5A0A14] font-medium">{formatPKR(pair.profileA.monthlyIncome || 0)}</p>
+                  <div className="p-3 bg-[#F8F5F0] rounded-lg border border-[#E5DFD5] space-y-1">
+                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase block">Groom</span>
+                    <p className="font-bold text-[#800F2F]">{pair.profileA.name}</p>
+                    <p className="text-[11px] text-[#6E6466]">{pair.profileA.age}y • {pair.profileA.height}</p>
+                    <p className="text-[11px] text-[#6E6466]">{pair.profileA.profession}</p>
+                    <p className="text-[11px] text-[#800F2F] font-medium">{formatPKR(pair.profileA.monthlyIncome || 0)}</p>
                   </div>
 
-                  <div className="p-3 bg-[#FBF4E6] rounded-lg border border-[#E9DDC3] space-y-1">
-                    <span className="text-[10px] font-bold text-[#D9A93F] uppercase block">Bride</span>
-                    <p className="font-bold text-[#5A0A14]">{pair.profileB.name}</p>
-                    <p className="text-[11px] text-[#7B5E5E]">{pair.profileB.age}y • {pair.profileB.height}</p>
-                    <p className="text-[11px] text-[#7B5E5E]">{pair.profileB.educationLevel}</p>
-                    <p className="text-[11px] text-[#7B5E5E]">{pair.profileB.city}</p>
+                  <div className="p-3 bg-[#F8F5F0] rounded-lg border border-[#E5DFD5] space-y-1">
+                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase block">Bride</span>
+                    <p className="font-bold text-[#800F2F]">{pair.profileB.name}</p>
+                    <p className="text-[11px] text-[#6E6466]">{pair.profileB.age}y • {pair.profileB.height}</p>
+                    <p className="text-[11px] text-[#6E6466]">{pair.profileB.educationLevel}</p>
+                    <p className="text-[11px] text-[#6E6466]">{pair.profileB.city}</p>
                   </div>
                 </div>
 
                 {/* Action button */}
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-[11px] text-[#7B5E5E]">
+                  <span className="text-[11px] text-[#6E6466]">
                     Sect: {pair.profileA.maslak}
                   </span>
                   <Link
                     href={`/profiles/${pair.profileA.id}/matches`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#5A0A14] text-[#FBF4E6] text-xs font-semibold hover:bg-[#420610]"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#800F2F] text-[#F8F5F0] text-xs font-semibold hover:bg-[#660A22]"
                   >
                     <span>View Full Match Breakdown</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#D9A93F]" />
+                    <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
                   </Link>
                 </div>
               </div>
@@ -381,7 +381,7 @@ function MatchesContent() {
 
 export default function MatchesPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Match Central...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Match Central...</div>}>
       <MatchesContent />
     </Suspense>
   );

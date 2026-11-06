@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from "clsx";
+﻿import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Profile, AgeBucket, AgeBucketConfig } from "./types";
 
@@ -68,31 +68,31 @@ export function getAgeBucketLabel(bucket: AgeBucket): { label: string; textUr: s
       return {
         label: 'New (0-7d)',
         textUr: 'نیا اندراج',
-        badgeClass: 'bg-[#D9A93F]/20 text-[#5A0A14] border border-[#D9A93F] font-bold',
+        badgeClass: 'bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37] font-bold',
       };
     case 'recent':
       return {
         label: 'Recent (8-30d)',
         textUr: 'حالیہ',
-        badgeClass: 'bg-[#FFFDF8] text-[#5A0A14] border border-[#E9DDC3]',
+        badgeClass: 'bg-[#FFFFFF] text-[#800F2F] border border-[#E5DFD5]',
       };
     case 'aging':
       return {
         label: 'Aging (31-90d)',
         textUr: 'درمیانی مدت',
-        badgeClass: 'bg-[#FBF4E6] text-[#7B5E5E] border border-[#DECEAC]',
+        badgeClass: 'bg-[#F8F5F0] text-[#6E6466] border border-[#D8D0C3]',
       };
     case 'old':
       return {
         label: 'Old Stock (91-180d)',
         textUr: 'پرانا اسٹاک',
-        badgeClass: 'bg-[#FFFDF8] text-[#8E1B2B] border border-[#8E1B2B]/40 font-semibold',
+        badgeClass: 'bg-[#FFFFFF] text-[#A3182E] border border-[#A3182E]/40 font-semibold',
       };
     case 'very_old':
       return {
         label: 'Stale (180d+)',
         textUr: 'طویل زیر التوا',
-        badgeClass: 'bg-[#8E1B2B] text-[#FBF4E6] font-bold',
+        badgeClass: 'bg-[#A3182E] text-[#F8F5F0] font-bold',
       };
   }
 }

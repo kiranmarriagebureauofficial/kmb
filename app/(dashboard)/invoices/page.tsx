@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -86,27 +86,27 @@ function InvoicesManagementContent() {
     switch (status) {
       case 'paid':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FFFDF8] text-[#5A0A14] border border-[#D9A93F]">
-            <Check className="w-3 h-3 text-[#D9A93F] stroke-[3]" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FFFFFF] text-[#800F2F] border border-[#D4AF37]">
+            <Check className="w-3 h-3 text-[#D4AF37] stroke-[3]" />
             <span>Fully Settled</span>
           </span>
         );
       case 'partial':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FBF4E6] text-[#B08626] border border-[#D9A93F]">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#F8F5F0] text-[#B88B22] border border-[#D4AF37]">
             <span>Partially Paid</span>
           </span>
         );
       case 'unpaid':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FFFDF8] text-[#8E1B2B] border border-[#8E1B2B]/40">
-            <AlertCircle className="w-3 h-3 text-[#8E1B2B]" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FFFFFF] text-[#A3182E] border border-[#A3182E]/40">
+            <AlertCircle className="w-3 h-3 text-[#A3182E]" />
             <span>Unpaid</span>
           </span>
         );
       case 'cancelled':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FBF4E6] text-[#7B5E5E] line-through border border-[#E9DDC3]">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#F8F5F0] text-[#6E6466] line-through border border-[#E5DFD5]">
             <span>Cancelled</span>
           </span>
         );
@@ -116,15 +116,15 @@ function InvoicesManagementContent() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-[#FFFDF8] p-5 rounded-2xl border border-[#E9DDC3] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E5DFD5] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+          <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
             Fee Accounting & Cash Desk
           </span>
-          <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+          <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
             Client Invoices & Fee Ledger ({filteredInvoices.length})
           </h1>
-          <p className="text-xs text-[#7B5E5E]">
+          <p className="text-xs text-[#6E6466]">
             Automated sequential numbering (INV-2026-XXXX). Generates A4, A5, and 80mm POS thermal receipts.
           </p>
         </div>
@@ -133,7 +133,7 @@ function InvoicesManagementContent() {
           size="sm"
           variant="primary"
           onClick={() => setShowNewModal(true)}
-          icon={<Plus className="w-3.5 h-3.5 text-[#D9A93F]" />}
+          icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
         >
           Create New Invoice
         </Button>
@@ -141,31 +141,31 @@ function InvoicesManagementContent() {
 
       {/* Aggregate Financial Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl bg-[#FFFDF8] border border-[#E9DDC3] shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#7B5E5E]">Total Billed (Net)</span>
-          <p className="font-serif text-2xl font-bold text-[#5A0A14]">{formatPKR(totalBilled)}</p>
+        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E5DFD5] shadow-sm text-xs space-y-1">
+          <span className="text-[10px] uppercase font-bold text-[#6E6466]">Total Billed (Net)</span>
+          <p className="font-serif text-2xl font-bold text-[#800F2F]">{formatPKR(totalBilled)}</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#FFFDF8] border border-[#D9A93F] shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#B08626]">Collected Revenue</span>
-          <p className="font-serif text-2xl font-bold text-[#B08626]">{formatPKR(totalCollected)}</p>
+        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#D4AF37] shadow-sm text-xs space-y-1">
+          <span className="text-[10px] uppercase font-bold text-[#B88B22]">Collected Revenue</span>
+          <p className="font-serif text-2xl font-bold text-[#B88B22]">{formatPKR(totalCollected)}</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#FFFDF8] border border-[#8E1B2B]/40 shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#8E1B2B]">Outstanding Balance Due</span>
-          <p className="font-serif text-2xl font-bold text-[#8E1B2B]">{formatPKR(totalOutstanding)}</p>
+        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#A3182E]/40 shadow-sm text-xs space-y-1">
+          <span className="text-[10px] uppercase font-bold text-[#A3182E]">Outstanding Balance Due</span>
+          <p className="font-serif text-2xl font-bold text-[#A3182E]">{formatPKR(totalOutstanding)}</p>
         </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex-1 min-w-[200px]">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by invoice number or client name..."
-            className="w-full px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] text-[#2A0A0F]"
+            className="w-full px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
           />
         </div>
 
@@ -174,7 +174,7 @@ function InvoicesManagementContent() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+              className="px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             >
               <option value="All">All Fee Types</option>
               <option value="registration">Registration Fee</option>
@@ -188,7 +188,7 @@ function InvoicesManagementContent() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+              className="px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             >
               <option value="All">All Payment Statuses</option>
               <option value="paid">Fully Settled</option>
@@ -201,10 +201,10 @@ function InvoicesManagementContent() {
       </div>
 
       {/* Invoices Table */}
-      <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-[#5A0A14] text-[#FBF4E6] uppercase font-serif tracking-wider">
+            <thead className="bg-[#800F2F] text-[#F8F5F0] uppercase font-serif tracking-wider">
               <tr>
                 <th className="p-3.5">Invoice #</th>
                 <th className="p-3.5">Client & Phone</th>
@@ -216,49 +216,49 @@ function InvoicesManagementContent() {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E9DDC3]">
+            <tbody className="divide-y divide-[#E5DFD5]">
               {filteredInvoices.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-[#7B5E5E]">
+                  <td colSpan={8} className="p-8 text-center text-[#6E6466]">
                     No invoices match your filter criteria.
                   </td>
                 </tr>
               ) : (
                 filteredInvoices.map(inv => (
-                  <tr key={inv.id} className="hover:bg-[#FBF4E6]/60 transition-colors">
+                  <tr key={inv.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
                     {/* Invoice # */}
-                    <td className="p-3.5 font-mono font-bold text-[#5A0A14] whitespace-nowrap">
+                    <td className="p-3.5 font-mono font-bold text-[#800F2F] whitespace-nowrap">
                       {inv.invoiceNumber}
-                      <span className="text-[10px] text-[#7B5E5E] block font-sans font-normal">
+                      <span className="text-[10px] text-[#6E6466] block font-sans font-normal">
                         {formatDate(inv.date)}
                       </span>
                     </td>
 
                     {/* Client */}
                     <td className="p-3.5">
-                      <div className="font-bold text-[#2A0A0F] text-sm">{inv.clientName}</div>
-                      <div className="text-[11px] text-[#7B5E5E]">{inv.clientPhone}</div>
+                      <div className="font-bold text-[#2C2526] text-sm">{inv.clientName}</div>
+                      <div className="text-[11px] text-[#6E6466]">{inv.clientPhone}</div>
                     </td>
 
                     {/* Category */}
                     <td className="p-3.5 whitespace-nowrap">
-                      <span className="capitalize font-semibold text-[#5A0A14]">
+                      <span className="capitalize font-semibold text-[#800F2F]">
                         {inv.invoiceType} Fee
                       </span>
                     </td>
 
                     {/* Total */}
-                    <td className="p-3.5 text-right font-mono font-bold text-[#2A0A0F] whitespace-nowrap">
+                    <td className="p-3.5 text-right font-mono font-bold text-[#2C2526] whitespace-nowrap">
                       {formatPKR(inv.total)}
                     </td>
 
                     {/* Paid */}
-                    <td className="p-3.5 text-right font-mono font-semibold text-[#B08626] whitespace-nowrap">
+                    <td className="p-3.5 text-right font-mono font-semibold text-[#B88B22] whitespace-nowrap">
                       {formatPKR(inv.amountPaid)}
                     </td>
 
                     {/* Balance */}
-                    <td className="p-3.5 text-right font-mono font-bold text-[#8E1B2B] whitespace-nowrap">
+                    <td className="p-3.5 text-right font-mono font-bold text-[#A3182E] whitespace-nowrap">
                       {formatPKR(inv.balance)}
                     </td>
 
@@ -272,7 +272,7 @@ function InvoicesManagementContent() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setSelectedReceipt(inv)}
-                          className="p-1.5 rounded-lg bg-[#5A0A14] hover:bg-[#420610] text-[#D9A93F] text-[11px] font-semibold flex items-center gap-1 px-2.5 shadow-sm"
+                          className="p-1.5 rounded-lg bg-[#800F2F] hover:bg-[#660A22] text-[#D4AF37] text-[11px] font-semibold flex items-center gap-1 px-2.5 shadow-sm"
                           title="Print Receipt (A4, A5, Thermal 80mm)"
                         >
                           <Printer className="w-3 h-3" />
@@ -282,10 +282,10 @@ function InvoicesManagementContent() {
                         {inv.balance > 0 && inv.status !== 'cancelled' && (
                           <button
                             onClick={() => setPaymentInvoice(inv)}
-                            className="p-1.5 rounded-lg bg-[#FFFDF8] border border-[#D9A93F] hover:bg-[#FBF4E6] text-[#5A0A14] text-[11px] font-semibold flex items-center gap-1 px-2"
+                            className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#D4AF37] hover:bg-[#F8F5F0] text-[#800F2F] text-[11px] font-semibold flex items-center gap-1 px-2"
                             title="Record partial or full payment"
                           >
-                            <CreditCard className="w-3 h-3 text-[#D9A93F]" />
+                            <CreditCard className="w-3 h-3 text-[#D4AF37]" />
                             <span>Pay</span>
                           </button>
                         )}
@@ -293,7 +293,7 @@ function InvoicesManagementContent() {
                         {isAdmin && inv.status !== 'cancelled' && (
                           <button
                             onClick={() => handleCancelInvoice(inv.id, inv.invoiceNumber)}
-                            className="p-1.5 rounded-lg bg-[#FFFDF8] border border-[#8E1B2B]/30 hover:bg-[#8E1B2B] hover:text-white text-[#8E1B2B]"
+                            className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#A3182E]/30 hover:bg-[#A3182E] hover:text-white text-[#A3182E]"
                             title="Cancel Invoice (Admin Only)"
                           >
                             <X className="w-3.5 h-3.5" />
@@ -337,7 +337,7 @@ function InvoicesManagementContent() {
 
 export default function InvoicesPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading invoices & fee manager...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading invoices & fee manager...</div>}>
       <InvoicesManagementContent />
     </Suspense>
   );

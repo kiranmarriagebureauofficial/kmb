@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -84,22 +84,22 @@ function DashboardContent() {
   return (
     <div className="space-y-6">
       {/* Welcome & Operations Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs">
         <div>
-          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
             Bureau Operations Control & ERP Ledger
           </span>
-          <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+          <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
             Rishta Stock & Matchmaking Central
           </h1>
-          <p className="text-xs text-[#7B5E5E]">
+          <p className="text-xs text-[#6E6466]">
             Verified matchmaking, real-time compatibility audit, and fee management for Lahore.
           </p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           <Link href="/profiles/new">
-            <Button size="sm" variant="primary" icon={<Plus className="w-3.5 h-3.5 text-[#D9A93F]" />}>
+            <Button size="sm" variant="primary" icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}>
               Add Rishta
             </Button>
           </Link>
@@ -108,13 +108,13 @@ function DashboardContent() {
             size="sm"
             variant="secondary"
             onClick={copyRegLink}
-            icon={copied ? <Check className="w-3.5 h-3.5 text-[#D9A93F]" /> : <Copy className="w-3.5 h-3.5 text-[#5A0A14]" />}
+            icon={copied ? <Check className="w-3.5 h-3.5 text-[#D4AF37]" /> : <Copy className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
             {copied ? 'Link Copied!' : 'Copy Online Form Link'}
           </Button>
 
           <Link href="/invoices?new=1">
-            <Button size="sm" variant="accent" icon={<Receipt className="w-3.5 h-3.5 text-[#5A0A14]" />}>
+            <Button size="sm" variant="accent" icon={<Receipt className="w-3.5 h-3.5 text-[#800F2F]" />}>
               New Invoice
             </Button>
           </Link>
@@ -126,23 +126,23 @@ function DashboardContent() {
         {/* Tile 1: Total Stock */}
         <Link
           href="/inventory?status=available"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#D4AF37] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
               Total Available Stock
             </span>
-            <Boxes className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+            <Boxes className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+            <span className="font-serif text-3xl font-bold text-[#800F2F]">
               {stats.totalStock}
             </span>
-            <span className="text-xs text-[#7B5E5E] font-medium">
+            <span className="text-xs text-[#6E6466] font-medium">
               ({stats.maleStock}M / {stats.femaleStock}F)
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             Click to inspect active inventory →
           </span>
         </Link>
@@ -150,23 +150,23 @@ function DashboardContent() {
         {/* Tile 2: New This Week / Month */}
         <Link
           href="/inventory?bucket=new"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#D4AF37] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
               New Arrivals (0-7d)
             </span>
-            <Clock className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+            <Clock className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+            <span className="font-serif text-3xl font-bold text-[#800F2F]">
               {stats.newThisWeek}
             </span>
-            <span className="text-xs text-[#7B5E5E]">
+            <span className="text-xs text-[#6E6466]">
               +{stats.newThisMonth} this month
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             View recent intake →
           </span>
         </Link>
@@ -176,25 +176,25 @@ function DashboardContent() {
           href="/reports"
           className={`p-4 rounded-xl border shadow-xs transition-all group ${
             stats.totalOldStock > 0
-              ? 'bg-[#FFFDF8] border-[#8E1B2B]/40 hover:border-[#8E1B2B]'
-              : 'bg-[#FFFDF8] border-[#E9DDC3]'
+              ? 'bg-[#FFFFFF] border-[#A3182E]/40 hover:border-[#A3182E]'
+              : 'bg-[#FFFFFF] border-[#E5DFD5]'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E1B2B]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#A3182E]">
               Old Stock Alert (91+d)
             </span>
-            <AlertCircle className="w-4 h-4 text-[#8E1B2B]" />
+            <AlertCircle className="w-4 h-4 text-[#A3182E]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#8E1B2B]">
+            <span className="font-serif text-3xl font-bold text-[#A3182E]">
               {stats.totalOldStock}
             </span>
-            <span className="text-xs text-[#7B5E5E]">
+            <span className="text-xs text-[#6E6466]">
               ({stats.veryOldStock} stale 180d+)
             </span>
           </div>
-          <span className="text-[10px] text-[#8E1B2B] font-medium mt-1 block">
+          <span className="text-[10px] text-[#A3182E] font-medium mt-1 block">
             Action required: follow-up →
           </span>
         </Link>
@@ -202,24 +202,24 @@ function DashboardContent() {
         {/* Tile 4: Premium Rishtay */}
         <Link
           href="/premium"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#D9A93F] shadow-xs hover:border-[#B08626] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#D4AF37] shadow-xs hover:border-[#B88B22] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#B08626] flex items-center gap-1">
-              <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#B88B22] flex items-center gap-1">
+              <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
               Premium Members
             </span>
-            <Star className="w-4 h-4 text-[#D9A93F]" />
+            <Star className="w-4 h-4 text-[#D4AF37]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+            <span className="font-serif text-3xl font-bold text-[#800F2F]">
               {stats.premiumProfilesCount}
             </span>
-            <span className="text-xs text-[#D9A93F] font-bold">
+            <span className="text-xs text-[#D4AF37] font-bold">
               Priority matching
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             Inspect VIP candidates →
           </span>
         </Link>
@@ -227,23 +227,23 @@ function DashboardContent() {
         {/* Tile 5: Online Requests Inbox */}
         <Link
           href="/requests"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#D4AF37] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
               Pending Online Requests
             </span>
-            <Inbox className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+            <Inbox className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+            <span className="font-serif text-3xl font-bold text-[#800F2F]">
               {stats.pendingRequestsCount}
             </span>
-            <span className="text-xs text-[#7B5E5E]">
+            <span className="text-xs text-[#6E6466]">
               Awaiting review
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             Review online submissions →
           </span>
         </Link>
@@ -251,23 +251,23 @@ function DashboardContent() {
         {/* Tile 6: Engaged & Married */}
         <Link
           href="/proposals"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#D4AF37] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
               Rishta Done & Engaged
             </span>
-            <HeartHandshake className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+            <HeartHandshake className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-serif text-3xl font-bold text-[#5A0A14]">
+            <span className="font-serif text-3xl font-bold text-[#800F2F]">
               {stats.finalizedRishtay}
             </span>
-            <span className="text-xs text-[#7B5E5E]">
+            <span className="text-xs text-[#6E6466]">
               {stats.engagedCount} currently engaged
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             View completed marriages →
           </span>
         </Link>
@@ -275,20 +275,20 @@ function DashboardContent() {
         {/* Tile 7: Revenue Collected */}
         <Link
           href="/invoices"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#D9A93F] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#D4AF37] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#7B5E5E]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
               Revenue Collected
             </span>
-            <Receipt className="w-4 h-4 text-[#5A0A14] group-hover:text-[#D9A93F]" />
+            <Receipt className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
           <div className="mt-2">
-            <span className="font-serif text-2xl font-bold text-[#5A0A14] truncate block">
+            <span className="font-serif text-2xl font-bold text-[#800F2F] truncate block">
               {formatPKR(stats.totalRevenue)}
             </span>
           </div>
-          <span className="text-[10px] text-[#B08626] font-medium mt-1 block">
+          <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
             View payment history →
           </span>
         </Link>
@@ -296,20 +296,20 @@ function DashboardContent() {
         {/* Tile 8: Outstanding Balance */}
         <Link
           href="/invoices"
-          className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] shadow-xs hover:border-[#8E1B2B] transition-all group"
+          className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] shadow-xs hover:border-[#A3182E] transition-all group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E1B2B]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#A3182E]">
               Receivables Outstanding
             </span>
-            <Receipt className="w-4 h-4 text-[#8E1B2B]" />
+            <Receipt className="w-4 h-4 text-[#A3182E]" />
           </div>
           <div className="mt-2">
-            <span className="font-serif text-2xl font-bold text-[#8E1B2B] truncate block">
+            <span className="font-serif text-2xl font-bold text-[#A3182E] truncate block">
               {formatPKR(stats.outstandingBalance)}
             </span>
           </div>
-          <span className="text-[10px] text-[#8E1B2B] font-medium mt-1 block">
+          <span className="text-[10px] text-[#A3182E] font-medium mt-1 block">
             Unpaid client invoices →
           </span>
         </Link>
@@ -318,22 +318,22 @@ function DashboardContent() {
       {/* Recharts Analytics Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Chart 1: Stock by Age Bucket (Stacked Bar) */}
-        <div className="lg:col-span-8 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+        <div className="lg:col-span-8 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+              <h2 className="font-serif text-lg font-bold text-[#800F2F]">
                 Stock Breakdown by Age in Inventory
               </h2>
-              <p className="text-xs text-[#7B5E5E]">
+              <p className="text-xs text-[#6E6466]">
                 Distribution of available proposals across shelf-life buckets (Male in Maroon, Female in Gold).
               </p>
             </div>
             <Link
               href="/reports"
-              className="text-xs font-semibold text-[#5A0A14] hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-[#800F2F] hover:underline flex items-center gap-1"
             >
               <span>Detailed Report</span>
-              <ArrowRight className="w-3 h-3 text-[#D9A93F]" />
+              <ArrowRight className="w-3 h-3 text-[#D4AF37]" />
             </Link>
           </div>
 
@@ -341,19 +341,19 @@ function DashboardContent() {
             {mounted ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.stockByAgeBucket} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="label" tick={{ fill: '#7B5E5E', fontSize: 11 }} />
-                  <YAxis tick={{ fill: '#7B5E5E', fontSize: 11 }} />
+                  <XAxis dataKey="label" tick={{ fill: '#6E6466', fontSize: 11 }} />
+                  <YAxis tick={{ fill: '#6E6466', fontSize: 11 }} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#FFFDF8', borderColor: '#E9DDC3', borderRadius: '8px', fontSize: '11px' }}
-                    itemStyle={{ color: '#5A0A14' }}
+                    contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E5DFD5', borderRadius: '8px', fontSize: '11px' }}
+                    itemStyle={{ color: '#800F2F' }}
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', color: '#5A0A14' }} />
-                  <Bar dataKey="male" name="Male Stock" stackId="a" fill="#5A0A14" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="female" name="Female Stock" stackId="a" fill="#D9A93F" radius={[4, 4, 0, 0]} />
+                  <Legend wrapperStyle={{ fontSize: '11px', color: '#800F2F' }} />
+                  <Bar dataKey="male" name="Male Stock" stackId="a" fill="#800F2F" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="female" name="Female Stock" stackId="a" fill="#D4AF37" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-[#7B5E5E]">
+              <div className="h-full flex items-center justify-center text-xs text-[#6E6466]">
                 Loading inventory visualization...
               </div>
             )}
@@ -361,12 +361,12 @@ function DashboardContent() {
         </div>
 
         {/* Chart 2: Inventory by Top Castes */}
-        <div className="lg:col-span-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+            <h2 className="font-serif text-lg font-bold text-[#800F2F]">
               Top Castes in Circulation
             </h2>
-            <p className="text-xs text-[#7B5E5E]">
+            <p className="text-xs text-[#6E6466]">
               Current stock volume grouped by family clan/caste.
             </p>
           </div>
@@ -377,12 +377,12 @@ function DashboardContent() {
               return (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="text-[#2A0A0F]">{item.caste}</span>
-                    <span className="text-[#5A0A14]">{item.count} ({pct}%)</span>
+                    <span className="text-[#2C2526]">{item.caste}</span>
+                    <span className="text-[#800F2F]">{item.count} ({pct}%)</span>
                   </div>
-                  <div className="h-1.5 w-full bg-[#FBF4E6] rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-[#F8F5F0] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#5A0A14] rounded-full"
+                      className="h-full bg-[#800F2F] rounded-full"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -391,9 +391,9 @@ function DashboardContent() {
             })}
           </div>
 
-          <div className="pt-2 border-t border-[#E9DDC3] flex items-center justify-between text-[11px] text-[#7B5E5E]">
+          <div className="pt-2 border-t border-[#E5DFD5] flex items-center justify-between text-[11px] text-[#6E6466]">
             <span>Lahore Bureau Database</span>
-            <Link href="/inventory" className="font-bold text-[#5A0A14] hover:underline">
+            <Link href="/inventory" className="font-bold text-[#800F2F] hover:underline">
               Filter by caste →
             </Link>
           </div>
@@ -403,17 +403,17 @@ function DashboardContent() {
       {/* Two Operations Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Table 1: Oldest Rishtas in Stock (Needs Attention) */}
-        <div className="bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+        <div className="bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-[#8E1B2B]" />
-              <h2 className="font-serif text-base font-bold text-[#8E1B2B]">
+              <AlertCircle className="w-4 h-4 text-[#A3182E]" />
+              <h2 className="font-serif text-base font-bold text-[#A3182E]">
                 Oldest Rishtas Sitting Unmatched
               </h2>
             </div>
             <Link
               href="/reports"
-              className="text-xs font-semibold text-[#8E1B2B] hover:underline"
+              className="text-xs font-semibold text-[#A3182E] hover:underline"
             >
               View all old stock →
             </Link>
@@ -422,7 +422,7 @@ function DashboardContent() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#E9DDC3] text-[10px] uppercase font-bold text-[#7B5E5E]">
+                <tr className="border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#6E6466]">
                   <th className="py-2">Form No</th>
                   <th className="py-2">Candidate</th>
                   <th className="py-2">Days in Stock</th>
@@ -430,33 +430,33 @@ function DashboardContent() {
                   <th className="py-2 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]/60">
+              <tbody className="divide-y divide-[#E5DFD5]/60">
                 {oldStockList.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-6 text-center text-[#7B5E5E]">
+                    <td colSpan={5} className="py-6 text-center text-[#6E6466]">
                       No profiles currently exceed 90 days in stock. Stock velocity is optimal!
                     </td>
                   </tr>
                 ) : (
                   oldStockList.map(item => (
-                    <tr key={item.profile.id} className="hover:bg-[#FBF4E6]">
-                      <td className="py-2 font-serif font-bold text-[#5A0A14]">{item.profile.formNo}</td>
+                    <tr key={item.profile.id} className="hover:bg-[#F8F5F0]">
+                      <td className="py-2 font-serif font-bold text-[#800F2F]">{item.profile.formNo}</td>
                       <td className="py-2">
-                        <span className="font-semibold text-[#2A0A0F] block">{item.profile.name}</span>
-                        <span className="text-[10px] text-[#7B5E5E]">{item.profile.gender}, {item.profile.age}y • {item.profile.caste}</span>
+                        <span className="font-semibold text-[#2C2526] block">{item.profile.name}</span>
+                        <span className="text-[10px] text-[#6E6466]">{item.profile.gender}, {item.profile.age}y • {item.profile.caste}</span>
                       </td>
                       <td className="py-2">
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#8E1B2B] text-[#FBF4E6]">
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#A3182E] text-[#F8F5F0]">
                           {item.daysInStock} days
                         </span>
                       </td>
-                      <td className="py-2 text-center font-bold text-[#5A0A14]">
+                      <td className="py-2 text-center font-bold text-[#800F2F]">
                         {item.matchCount}
                       </td>
                       <td className="py-2 text-right">
                         <Link
                           href={`/profiles/${item.profile.id}/matches`}
-                          className="px-2 py-1 rounded bg-[#5A0A14] text-[#FBF4E6] text-[10px] font-semibold hover:bg-[#420610]"
+                          className="px-2 py-1 rounded bg-[#800F2F] text-[#F8F5F0] text-[10px] font-semibold hover:bg-[#660A22]"
                         >
                           Find Match
                         </Link>
@@ -470,17 +470,17 @@ function DashboardContent() {
         </div>
 
         {/* Table 2: Recently Added Stock */}
-        <div className="bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4">
+        <div className="bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Boxes className="w-4 h-4 text-[#5A0A14]" />
-              <h2 className="font-serif text-base font-bold text-[#5A0A14]">
+              <Boxes className="w-4 h-4 text-[#800F2F]" />
+              <h2 className="font-serif text-base font-bold text-[#800F2F]">
                 Recently Added Rishtas
               </h2>
             </div>
             <Link
               href="/inventory"
-              className="text-xs font-semibold text-[#5A0A14] hover:underline"
+              className="text-xs font-semibold text-[#800F2F] hover:underline"
             >
               View all stock →
             </Link>
@@ -489,7 +489,7 @@ function DashboardContent() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#E9DDC3] text-[10px] uppercase font-bold text-[#7B5E5E]">
+                <tr className="border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#6E6466]">
                   <th className="py-2">Form No</th>
                   <th className="py-2">Candidate</th>
                   <th className="py-2">City</th>
@@ -497,31 +497,31 @@ function DashboardContent() {
                   <th className="py-2 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]/60">
+              <tbody className="divide-y divide-[#E5DFD5]/60">
                 {recentStockList.map(p => (
-                  <tr key={p.id} className="hover:bg-[#FBF4E6]">
-                    <td className="py-2 font-serif font-bold text-[#5A0A14]">
+                  <tr key={p.id} className="hover:bg-[#F8F5F0]">
+                    <td className="py-2 font-serif font-bold text-[#800F2F]">
                       <div className="flex items-center gap-1">
                         <span>{p.formNo}</span>
                         {(p.isPremium || p.premiumMember) && (
-                          <Star className="w-2.5 h-2.5 fill-[#D9A93F] text-[#D9A93F]" />
+                          <Star className="w-2.5 h-2.5 fill-[#D4AF37] text-[#D4AF37]" />
                         )}
                       </div>
                     </td>
                     <td className="py-2">
-                      <span className="font-semibold text-[#2A0A0F] block">{p.name}</span>
-                      <span className="text-[10px] text-[#7B5E5E]">{p.gender}, {p.age}y • {p.caste}</span>
+                      <span className="font-semibold text-[#2C2526] block">{p.name}</span>
+                      <span className="text-[10px] text-[#6E6466]">{p.gender}, {p.age}y • {p.caste}</span>
                     </td>
-                    <td className="py-2 text-[#7B5E5E]">{p.city}</td>
+                    <td className="py-2 text-[#6E6466]">{p.city}</td>
                     <td className="py-2">
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#FBF4E6] text-[#5A0A14] border border-[#E9DDC3] capitalize">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] text-[#800F2F] border border-[#E5DFD5] capitalize">
                         {p.status}
                       </span>
                     </td>
                     <td className="py-2 text-right">
                       <Link
                         href={`/profiles/${p.id}`}
-                        className="px-2 py-1 rounded border border-[#5A0A14] text-[#5A0A14] text-[10px] font-semibold hover:bg-[#FBF4E6]"
+                        className="px-2 py-1 rounded border border-[#800F2F] text-[#800F2F] text-[10px] font-semibold hover:bg-[#F8F5F0]"
                       >
                         Inspect
                       </Link>
@@ -539,7 +539,7 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Stock Operations Dashboard...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Stock Operations Dashboard...</div>}>
       <DashboardContent />
     </Suspense>
   );

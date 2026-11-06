@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { store } from '@/lib/db/store';
@@ -164,26 +164,26 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
   return (
     <div className="space-y-6">
       {/* Page Title */}
-      <div className="bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-sm">
-        <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+      <div className="bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-sm">
+        <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
           Data Migration & Disaster Recovery
         </span>
-        <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+        <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
           Import / Export & Backup Manager
         </h1>
-        <p className="text-xs text-[#7B5E5E]">
+        <p className="text-xs text-[#6E6466]">
           Bulk migrate legacy rishta spreadsheets into the ERP system, scan duplicate phone numbers, or download an encrypted system backup.
         </p>
       </div>
 
       {importResult && (
-        <div className="p-4 bg-[#D9A93F]/20 border border-[#D9A93F] rounded-xl flex items-center justify-between text-xs text-[#5A0A14]">
+        <div className="p-4 bg-[#D4AF37]/20 border border-[#D4AF37] rounded-xl flex items-center justify-between text-xs text-[#800F2F]">
           <div className="flex items-center gap-2 font-bold">
-            <CheckCircle className="w-5 h-5 text-[#D9A93F]" />
+            <CheckCircle className="w-5 h-5 text-[#D4AF37]" />
             <span>Import Completed: {importResult.added} new rishtas added to stock!</span>
           </div>
           {importResult.skipped > 0 && (
-            <span className="text-[#8E1B2B] font-semibold">
+            <span className="text-[#A3182E] font-semibold">
               ({importResult.skipped} duplicate phone numbers were skipped)
             </span>
           )}
@@ -192,31 +192,31 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Module 1: CSV Bulk Importer */}
-        <div className="bg-[#FFFDF8] p-6 rounded-xl border border-[#E9DDC3] shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="bg-[#FFFFFF] p-6 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4 flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-5 h-5 text-[#5A0A14]" />
-                <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+                <FileSpreadsheet className="w-5 h-5 text-[#800F2F]" />
+                <h2 className="font-serif text-lg font-bold text-[#800F2F]">
                   Bulk CSV / Excel Importer
                 </h2>
               </div>
               <button
                 onClick={downloadSampleTemplate}
-                className="text-xs font-semibold text-[#5A0A14] hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-[#800F2F] hover:underline flex items-center gap-1"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Sample Template</span>
               </button>
             </div>
 
-            <p className="text-xs text-[#7B5E5E]">
+            <p className="text-xs text-[#6E6466]">
               Upload a .csv file or paste tabular data with columns: Name, Gender, Age, Height, City, Caste, Maslak, Education, Profession, Income, Phone.
             </p>
 
-            <div className="p-4 bg-[#FBF4E6] border border-dashed border-[#D9A93F] rounded-xl text-center space-y-2">
-              <Upload className="w-6 h-6 text-[#5A0A14] mx-auto" />
-              <label className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-[#5A0A14] text-[#FBF4E6] text-xs font-semibold hover:bg-[#420610]">
+            <div className="p-4 bg-[#F8F5F0] border border-dashed border-[#D4AF37] rounded-xl text-center space-y-2">
+              <Upload className="w-6 h-6 text-[#800F2F] mx-auto" />
+              <label className="inline-block cursor-pointer px-4 py-1.5 rounded-lg bg-[#800F2F] text-[#F8F5F0] text-xs font-semibold hover:bg-[#660A22]">
                 <span>Choose CSV File</span>
                 <input
                   type="file"
@@ -225,7 +225,7 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
                   className="hidden"
                 />
               </label>
-              <span className="text-[11px] text-[#7B5E5E] block">or paste CSV text directly below:</span>
+              <span className="text-[11px] text-[#6E6466] block">or paste CSV text directly below:</span>
             </div>
 
             <textarea
@@ -233,36 +233,36 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
               value={csvText}
               onChange={(e) => handleParseCsv(e.target.value)}
               placeholder="Name,Gender,Age,Height,City,Caste,Maslak,Education,Profession,Monthly Income,Marital Status,Phone..."
-              className="w-full p-2.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs font-mono text-[#2A0A0F] focus:outline-none"
+              className="w-full p-2.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-mono text-[#2C2526] focus:outline-none"
             />
 
             {/* Parsed summary preview */}
             {parsedRows.length > 0 && (
-              <div className="p-3 bg-[#FFFDF8] border border-[#E9DDC3] rounded-lg space-y-2 text-xs">
+              <div className="p-3 bg-[#FFFFFF] border border-[#E5DFD5] rounded-lg space-y-2 text-xs">
                 <div className="flex items-center justify-between font-bold">
-                  <span className="text-[#5A0A14]">Parsed Records: {parsedRows.length} candidates</span>
+                  <span className="text-[#800F2F]">Parsed Records: {parsedRows.length} candidates</span>
                   {duplicateCount > 0 ? (
-                    <span className="text-[#8E1B2B] flex items-center gap-1">
+                    <span className="text-[#A3182E] flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5" />
                       {duplicateCount} duplicate phones detected!
                     </span>
                   ) : (
-                    <span className="text-[#5A0A14] flex items-center gap-1 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-[#D9A93F]" />
+                    <span className="text-[#800F2F] flex items-center gap-1 font-semibold">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#D4AF37]" />
                       Zero duplicates
                     </span>
                   )}
                 </div>
 
-                <div className="max-h-32 overflow-y-auto divide-y divide-[#E9DDC3] text-[11px]">
+                <div className="max-h-32 overflow-y-auto divide-y divide-[#E5DFD5] text-[11px]">
                   {parsedRows.slice(0, 5).map((r, i) => (
                     <div key={i} className="py-1 flex items-center justify-between">
-                      <span className="font-semibold text-[#2A0A0F]">{r.name} ({r.gender}, {r.age}y, {r.caste})</span>
-                      <span className="text-[#7B5E5E]">{r.phone}</span>
+                      <span className="font-semibold text-[#2C2526]">{r.name} ({r.gender}, {r.age}y, {r.caste})</span>
+                      <span className="text-[#6E6466]">{r.phone}</span>
                     </div>
                   ))}
                   {parsedRows.length > 5 && (
-                    <div className="py-1 text-[#7B5E5E] text-center italic">
+                    <div className="py-1 text-[#6E6466] text-center italic">
                       + {parsedRows.length - 5} more records...
                     </div>
                   )}
@@ -271,14 +271,14 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
             )}
           </div>
 
-          <div className="pt-3 border-t border-[#E9DDC3]">
+          <div className="pt-3 border-t border-[#E5DFD5]">
             <Button
               size="md"
               variant="primary"
               disabled={parsedRows.length === 0 || isProcessing}
               onClick={executeImport}
               className="w-full"
-              icon={<Upload className="w-4 h-4 text-[#D9A93F]" />}
+              icon={<Upload className="w-4 h-4 text-[#D4AF37]" />}
             >
               {isProcessing ? 'Importing Stock...' : `Commit Import (${parsedRows.length} Profiles)`}
             </Button>
@@ -286,42 +286,42 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
         </div>
 
         {/* Module 2: System Backup & Full Export */}
-        <div className="bg-[#FFFDF8] p-6 rounded-xl border border-[#E9DDC3] shadow-xs space-y-5 flex flex-col justify-between">
+        <div className="bg-[#FFFFFF] p-6 rounded-xl border border-[#E5DFD5] shadow-xs space-y-5 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Database className="w-5 h-5 text-[#5A0A14]" />
-              <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+              <Database className="w-5 h-5 text-[#800F2F]" />
+              <h2 className="font-serif text-lg font-bold text-[#800F2F]">
                 Bureau Backup & Data Archival
               </h2>
             </div>
 
-            <p className="text-xs text-[#7B5E5E]">
+            <p className="text-xs text-[#6E6466]">
               Generate complete offline archives of all bureau operations. Full backups include profiles, proposals, invoices, settings, and the immutable audit ledger.
             </p>
 
             {/* Quick Export Cards */}
             <div className="space-y-2.5">
-              <div className="p-3.5 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] flex items-center justify-between">
+              <div className="p-3.5 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-xs text-[#5A0A14] block">Full System Backup (JSON)</span>
-                  <span className="text-[11px] text-[#7B5E5E]">Profiles, invoices, proposals, settings, staff</span>
+                  <span className="font-bold text-xs text-[#800F2F] block">Full System Backup (JSON)</span>
+                  <span className="text-[11px] text-[#6E6466]">Profiles, invoices, proposals, settings, staff</span>
                 </div>
                 <Button
                   size="sm"
                   variant="primary"
                   onClick={downloadFullBackupJSON}
-                  icon={<Download className="w-3.5 h-3.5 text-[#D9A93F]" />}
+                  icon={<Download className="w-3.5 h-3.5 text-[#D4AF37]" />}
                 >
                   Download JSON
                 </Button>
               </div>
 
-              <div className="p-3.5 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] flex items-center justify-between">
+              <div className="p-3.5 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-xs text-[#5A0A14] block">Restore from Backup (JSON)</span>
-                  <span className="text-[11px] text-[#7B5E5E]">Upload previously saved system backup file</span>
+                  <span className="font-bold text-xs text-[#800F2F] block">Restore from Backup (JSON)</span>
+                  <span className="text-[11px] text-[#6E6466]">Upload previously saved system backup file</span>
                 </div>
-                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#FFFDF8] text-[#5A0A14] border border-[#5A0A14] text-xs font-semibold hover:bg-[#FAF6EC]">
+                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] text-xs font-semibold hover:bg-[#FAF7F2]">
                   <span>Upload Backup</span>
                   <input
                     type="file"
@@ -334,7 +334,7 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
             </div>
           </div>
 
-          <div className="p-3 bg-[#D9A93F]/15 rounded-lg border border-[#D9A93F]/40 text-[11px] text-[#5A0A14] space-y-1">
+          <div className="p-3 bg-[#D4AF37]/15 rounded-lg border border-[#D4AF37]/40 text-[11px] text-[#800F2F] space-y-1">
             <span className="font-bold block">★ Security & Privacy Notice:</span>
             <p>Exported backups contain unmasked client contact information and CNIC details. Store backups in secure, encrypted storage only.</p>
           </div>
@@ -346,7 +346,7 @@ Zainab Bibi,Female,26,5'4",Lahore,Rajput,Sunni / Hanafi,Bachelors,Lecturer,80000
 
 export default function ImportExportPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Import/Export...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Import/Export...</div>}>
       <ImportExportContent />
     </Suspense>
   );

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 
@@ -28,8 +28,8 @@ export function MatchRing({
 
   // 75%+ is gold, 50-74% is maroon
   const isPremium = score >= 75;
-  const ringColor = isPremium ? '#D9A93F' : '#5A0A14';
-  const trackColor = '#DECEAC'; // ivory-dark track
+  const ringColor = isPremium ? '#D4AF37' : '#800F2F';
+  const trackColor = '#D8D0C3'; // ivory-dark track
 
   return (
     <div
@@ -73,7 +73,7 @@ export function MatchRing({
             className="font-serif font-bold leading-none tracking-tight"
             style={{
               fontSize: Math.max(10, Math.round(size * 0.28)),
-              color: isPremium ? '#B08626' : '#5A0A14',
+              color: isPremium ? '#B88B22' : '#800F2F',
             }}
           >
             {score}%

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -23,7 +23,7 @@ function EditProfileContent() {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-xs text-[#7B5E5E]">
+      <div className="p-8 text-center text-xs text-[#6E6466]">
         Loading profile...
       </div>
     );
@@ -32,12 +32,12 @@ function EditProfileContent() {
   if (!profile) {
     return (
       <div className="p-8 text-center space-y-4">
-        <h2 className="font-serif text-xl font-bold text-[#5A0A14]">
+        <h2 className="font-serif text-xl font-bold text-[#800F2F]">
           Profile Not Found
         </h2>
         <button
           onClick={() => router.push('/profiles')}
-          className="text-xs text-[#5A0A14] underline font-semibold"
+          className="text-xs text-[#800F2F] underline font-semibold"
         >
           Return to All Rishtas
         </button>
@@ -47,14 +47,14 @@ function EditProfileContent() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#FFFDF8] p-5 rounded-2xl border border-[#E9DDC3] shadow-sm">
-        <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+      <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E5DFD5] shadow-sm">
+        <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
           Edit Client Information
         </span>
-        <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+        <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
           Editing Profile: {profile.name} ({profile.formNo})
         </h1>
-        <p className="text-xs text-[#7B5E5E]">
+        <p className="text-xs text-[#6E6466]">
           Update details, qualifications, or partner preferences. The live side panel evaluates matches dynamically.
         </p>
       </div>
@@ -66,7 +66,7 @@ function EditProfileContent() {
 
 export default function EditProfilePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading editor...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading editor...</div>}>
       <EditProfileContent />
     </Suspense>
   );

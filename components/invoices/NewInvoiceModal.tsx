@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { InvoiceType, PaymentMethod } from '@/lib/types';
@@ -124,17 +124,17 @@ export function NewInvoiceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#2A0A0F]/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto flex flex-col">
+    <div className="fixed inset-0 z-50 bg-[#2C2526]/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto flex flex-col">
         {/* Header */}
-        <div className="bg-[#5A0A14] text-[#FBF4E6] p-4 flex items-center justify-between border-b border-[#D9A93F]">
+        <div className="bg-[#800F2F] text-[#F8F5F0] p-4 flex items-center justify-between border-b border-[#D4AF37]">
           <div className="flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-[#D9A93F]" />
+            <Receipt className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
               Generate New Client Fee Invoice
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#420610] text-[#E9DDC3]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-[#660A22] text-[#E5DFD5]">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -142,14 +142,14 @@ export function NewInvoiceModal({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-[#5A0A14] mb-1">
+            <label className="block font-semibold text-[#800F2F] mb-1">
               Select Client / Profile *
             </label>
             <select
               required
               value={selectedProfileId}
               onChange={(e) => setSelectedProfileId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-medium"
+              className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
             >
               {profiles.map(p => (
                 <option key={p.id} value={p.id}>
@@ -161,13 +161,13 @@ export function NewInvoiceModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Fee Category *
               </label>
               <select
                 value={invoiceType}
                 onChange={(e) => handleTypeChange(e.target.value as InvoiceType)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-medium"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
               >
                 <option value="registration">Registration Fee</option>
                 <option value="premium">Premium Membership Fee</option>
@@ -177,7 +177,7 @@ export function NewInvoiceModal({
             </div>
 
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Invoice Date *
               </label>
               <input
@@ -185,7 +185,7 @@ export function NewInvoiceModal({
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
               />
             </div>
           </div>
@@ -193,13 +193,13 @@ export function NewInvoiceModal({
           {/* Line Items */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="font-semibold text-[#5A0A14]">
+              <label className="font-semibold text-[#800F2F]">
                 Invoice Line Items
               </label>
               <button
                 type="button"
                 onClick={addItem}
-                className="text-[11px] text-[#5A0A14] hover:text-[#D9A93F] font-bold flex items-center gap-1"
+                className="text-[11px] text-[#800F2F] hover:text-[#D4AF37] font-bold flex items-center gap-1"
               >
                 <Plus className="w-3 h-3" />
                 <span>+ Add Item</span>
@@ -215,7 +215,7 @@ export function NewInvoiceModal({
                     value={it.description}
                     onChange={(e) => updateItem(it.id, 'description', e.target.value)}
                     placeholder="Description"
-                    className="flex-1 px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6]"
+                    className="flex-1 px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
                   />
                   <input
                     type="number"
@@ -224,13 +224,13 @@ export function NewInvoiceModal({
                     step={1000}
                     value={it.amount}
                     onChange={(e) => updateItem(it.id, 'amount', parseInt(e.target.value, 10))}
-                    className="w-28 px-3 py-1.5 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-mono text-right"
+                    className="w-28 px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right"
                   />
                   {items.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeItem(it.id)}
-                      className="p-1.5 text-[#8E1B2B] hover:bg-[#FBF4E6] rounded"
+                      className="p-1.5 text-[#A3182E] hover:bg-[#F8F5F0] rounded"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -242,7 +242,7 @@ export function NewInvoiceModal({
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             <div>
-              <label className="block font-semibold text-[#5A0A14] mb-1">
+              <label className="block font-semibold text-[#800F2F] mb-1">
                 Discount (PKR)
               </label>
               <input
@@ -250,24 +250,24 @@ export function NewInvoiceModal({
                 min={0}
                 value={discount}
                 onChange={(e) => setDiscount(parseInt(e.target.value, 10) || 0)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-[#FBF4E6] font-mono text-right"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right"
               />
             </div>
 
-            <div className="p-2.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-right">
-              <span className="text-[10px] uppercase font-bold text-[#7B5E5E] block">Net Payable</span>
-              <span className="font-serif font-bold text-base text-[#5A0A14]">{formatPKR(total)}</span>
+            <div className="p-2.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-right">
+              <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Net Payable</span>
+              <span className="font-serif font-bold text-base text-[#800F2F]">{formatPKR(total)}</span>
             </div>
           </div>
 
           {/* Initial Payment Section */}
-          <div className="p-3 bg-[#FBF4E6] rounded-xl border border-[#D9A93F]/40 space-y-3">
-            <span className="font-bold text-[#5A0A14] block">
+          <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#D4AF37]/40 space-y-3">
+            <span className="font-bold text-[#800F2F] block">
               Record Initial Payment (Optional)
             </span>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-[#7B5E5E] mb-1">
+                <label className="block font-semibold text-[#6E6466] mb-1">
                   Amount Received Now:
                 </label>
                 <input
@@ -277,18 +277,18 @@ export function NewInvoiceModal({
                   value={initialPayment}
                   onChange={(e) => setInitialPayment(parseInt(e.target.value, 10) || 0)}
                   placeholder="0"
-                  className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-white font-mono text-right font-bold text-[#5A0A14]"
+                  className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-white font-mono text-right font-bold text-[#800F2F]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#7B5E5E] mb-1">
+                <label className="block font-semibold text-[#6E6466] mb-1">
                   Payment Method:
                 </label>
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#E9DDC3] bg-white font-medium"
+                  className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-white font-medium"
                 >
                   <option value="Cash">Cash</option>
                   <option value="Bank Transfer">Bank Transfer</option>
@@ -299,7 +299,7 @@ export function NewInvoiceModal({
             </div>
           </div>
 
-          <div className="pt-3 border-t border-[#E9DDC3] flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
             <Button type="button" variant="secondary" onClick={onClose}>
               Cancel
             </Button>
@@ -307,7 +307,7 @@ export function NewInvoiceModal({
               type="submit"
               variant="primary"
               disabled={saving}
-              icon={<Receipt className="w-4 h-4 text-[#D9A93F]" />}
+              icon={<Receipt className="w-4 h-4 text-[#D4AF37]" />}
             >
               {saving ? 'Creating...' : 'Create & Issue Invoice'}
             </Button>

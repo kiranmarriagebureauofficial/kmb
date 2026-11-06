@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -304,37 +304,37 @@ function InventoryContent() {
       case 'available':
       case 'active' as any:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#D9A93F]/20 text-[#5A0A14] border border-[#D9A93F]/50">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37]/50">
             Available
           </span>
         );
       case 'on_hold':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FBF4E6] text-[#7B5E5E] border border-[#E9DDC3]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] text-[#6E6466] border border-[#E5DFD5]">
             On Hold
           </span>
         );
       case 'engaged':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#5A0A14] text-[#FBF4E6]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#800F2F] text-[#F8F5F0]">
             Engaged
           </span>
         );
       case 'married':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#420610] text-[#D9A93F] border border-[#D9A93F]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#660A22] text-[#D4AF37] border border-[#D4AF37]">
             Married
           </span>
         );
       case 'pending_approval':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFDF8] text-[#B08626] border border-[#D9A93F]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFFFF] text-[#B88B22] border border-[#D4AF37]">
             Pending Approval
           </span>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#8E1B2B]/10 text-[#8E1B2B] border border-[#8E1B2B]/30">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#A3182E]/10 text-[#A3182E] border border-[#A3182E]/30">
             Rejected
           </span>
         );
@@ -346,17 +346,17 @@ function InventoryContent() {
   return (
     <div className="space-y-4">
       {/* Top Banner & Stats Overview */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-4 rounded-xl border border-[#E9DDC3] shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-4 rounded-xl border border-[#E5DFD5] shadow-sm">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+            <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
               Stock Ledger & Profiles
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-[#5A0A14] text-[#FBF4E6] font-bold">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-[#800F2F] text-[#F8F5F0] font-bold">
               {filteredProfiles.length} in view
             </span>
           </div>
-          <h1 className="font-serif text-xl font-bold text-[#5A0A14] mt-0.5">
+          <h1 className="font-serif text-xl font-bold text-[#800F2F] mt-0.5">
             Rishta Stock Inventory
           </h1>
         </div>
@@ -366,7 +366,7 @@ function InventoryContent() {
             size="sm"
             variant="secondary"
             onClick={exportSelectedCSV}
-            icon={<Download className="w-3.5 h-3.5 text-[#5A0A14]" />}
+            icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
             Export CSV
           </Button>
@@ -375,7 +375,7 @@ function InventoryContent() {
             <Button
               size="sm"
               variant="secondary"
-              icon={<Upload className="w-3.5 h-3.5 text-[#5A0A14]" />}
+              icon={<Upload className="w-3.5 h-3.5 text-[#800F2F]" />}
             >
               Import CSV
             </Button>
@@ -385,7 +385,7 @@ function InventoryContent() {
             <Button
               size="sm"
               variant="primary"
-              icon={<Plus className="w-3.5 h-3.5 text-[#D9A93F]" />}
+              icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
             >
               Add New Rishta
             </Button>
@@ -395,7 +395,7 @@ function InventoryContent() {
 
       {/* Age Bucket Quick Filters */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-        <span className="text-[11px] font-bold text-[#7B5E5E] shrink-0 mr-1 uppercase">
+        <span className="text-[11px] font-bold text-[#6E6466] shrink-0 mr-1 uppercase">
           Age in Stock:
         </span>
         {[
@@ -411,8 +411,8 @@ function InventoryContent() {
             onClick={() => setSelectedBucket(b.key)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${
               selectedBucket === b.key
-                ? 'bg-[#5A0A14] text-[#FBF4E6] border-[#5A0A14] shadow-xs'
-                : 'bg-[#FFFDF8] text-[#5A0A14] border-[#E9DDC3] hover:border-[#D9A93F]'
+                ? 'bg-[#800F2F] text-[#F8F5F0] border-[#800F2F] shadow-xs'
+                : 'bg-[#FFFFFF] text-[#800F2F] border-[#E5DFD5] hover:border-[#D4AF37]'
             }`}
           >
             {b.label}
@@ -421,17 +421,17 @@ function InventoryContent() {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-[#FFFDF8] p-3 rounded-xl border border-[#E9DDC3] space-y-3 shadow-xs">
+      <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E5DFD5] space-y-3 shadow-xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
           {/* Search bar */}
           <div className="col-span-1 sm:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-[#7B5E5E] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#6E6466] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by Form No, Name, Phone, Caste, City..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs text-[#2A0A0F] focus:border-[#D9A93F] focus:outline-none placeholder-[#7B5E5E]"
+              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:border-[#D4AF37] focus:outline-none placeholder-[#6E6466]"
             />
           </div>
 
@@ -440,7 +440,7 @@ function InventoryContent() {
             <select
               value={filterGender}
               onChange={(e) => setFilterGender(e.target.value)}
-              className="w-full px-2.5 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs text-[#2A0A0F] focus:outline-none"
+              className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">All Genders</option>
               <option value="Male">Male Candidates</option>
@@ -453,7 +453,7 @@ function InventoryContent() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-2.5 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs text-[#2A0A0F] focus:outline-none"
+              className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">All Statuses</option>
               <option value="available">Available (In Stock)</option>
@@ -470,7 +470,7 @@ function InventoryContent() {
             <select
               value={filterCity}
               onChange={(e) => setFilterCity(e.target.value)}
-              className="w-full px-2.5 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs text-[#2A0A0F] focus:outline-none"
+              className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">All Cities</option>
               {COMMON_CITIES.map(c => (
@@ -484,7 +484,7 @@ function InventoryContent() {
             <select
               value={filterCaste}
               onChange={(e) => setFilterCaste(e.target.value)}
-              className="w-full px-2.5 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs text-[#2A0A0F] focus:outline-none"
+              className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">All Castes</option>
               {COMMON_CASTES.map(c => (
@@ -495,27 +495,27 @@ function InventoryContent() {
         </div>
 
         {/* Secondary Filters & Toggles */}
-        <div className="flex items-center justify-between gap-3 flex-wrap pt-1 border-t border-[#E9DDC3]/60 text-xs">
+        <div className="flex items-center justify-between gap-3 flex-wrap pt-1 border-t border-[#E5DFD5]/60 text-xs">
           <div className="flex items-center gap-4 flex-wrap">
-            <label className="flex items-center gap-1.5 cursor-pointer text-[#5A0A14] font-medium">
+            <label className="flex items-center gap-1.5 cursor-pointer text-[#800F2F] font-medium">
               <input
                 type="checkbox"
                 checked={filterPremiumOnly}
                 onChange={(e) => setFilterPremiumOnly(e.target.checked)}
-                className="rounded accent-[#D9A93F]"
+                className="rounded accent-[#D4AF37]"
               />
-              <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+              <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
               <span>Premium Rishtay Only</span>
             </label>
 
-            <label className="flex items-center gap-1.5 cursor-pointer text-[#5A0A14] font-medium">
+            <label className="flex items-center gap-1.5 cursor-pointer text-[#800F2F] font-medium">
               <input
                 type="checkbox"
                 checked={filterHasMatchesOnly}
                 onChange={(e) => setFilterHasMatchesOnly(e.target.checked)}
-                className="rounded accent-[#5A0A14]"
+                className="rounded accent-[#800F2F]"
               />
-              <Sparkles className="w-3 h-3 text-[#D9A93F]" />
+              <Sparkles className="w-3 h-3 text-[#D4AF37]" />
               <span>Has Matches Available</span>
             </label>
 
@@ -532,7 +532,7 @@ function InventoryContent() {
                   setFilterPremiumOnly(false);
                   setFilterHasMatchesOnly(false);
                 }}
-                className="text-[#8E1B2B] hover:underline font-semibold flex items-center gap-1"
+                className="text-[#A3182E] hover:underline font-semibold flex items-center gap-1"
               >
                 <X className="w-3 h-3" />
                 <span>Reset Filters</span>
@@ -542,12 +542,12 @@ function InventoryContent() {
 
           {/* Sort & Column Chooser */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-[11px] text-[#7B5E5E]">
+            <div className="flex items-center gap-1 text-[11px] text-[#6E6466]">
               <span>Sort:</span>
               <select
                 value={sortField}
                 onChange={(e) => setSortField(e.target.value as any)}
-                className="bg-[#FBF4E6] border border-[#E9DDC3] px-2 py-0.5 rounded text-[11px] text-[#2A0A0F]"
+                className="bg-[#F8F5F0] border border-[#E5DFD5] px-2 py-0.5 rounded text-[11px] text-[#2C2526]"
               >
                 <option value="daysInStock">Days in Stock</option>
                 <option value="entryDate">Entry Date</option>
@@ -556,7 +556,7 @@ function InventoryContent() {
               </select>
               <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="p-1 rounded hover:bg-[#FBF4E6] text-[#5A0A14]"
+                className="p-1 rounded hover:bg-[#F8F5F0] text-[#800F2F]"
                 title="Toggle sort direction"
               >
                 <ArrowUpDown className="w-3 h-3" />
@@ -565,7 +565,7 @@ function InventoryContent() {
 
             <button
               onClick={() => setShowColumnChooser(!showColumnChooser)}
-              className="p-1 rounded border border-[#E9DDC3] hover:border-[#D9A93F] text-[#5A0A14] flex items-center gap-1 text-[11px] px-2"
+              className="p-1 rounded border border-[#E5DFD5] hover:border-[#D4AF37] text-[#800F2F] flex items-center gap-1 text-[11px] px-2"
             >
               <SlidersHorizontal className="w-3 h-3" />
               <span>Columns</span>
@@ -575,15 +575,15 @@ function InventoryContent() {
 
         {/* Column chooser popup */}
         {showColumnChooser && (
-          <div className="p-3 bg-[#FBF4E6] border border-[#E9DDC3] rounded-lg flex items-center gap-4 flex-wrap text-xs text-[#2A0A0F]">
-            <span className="font-bold text-[#5A0A14]">Visible Columns:</span>
+          <div className="p-3 bg-[#F8F5F0] border border-[#E5DFD5] rounded-lg flex items-center gap-4 flex-wrap text-xs text-[#2C2526]">
+            <span className="font-bold text-[#800F2F]">Visible Columns:</span>
             {Object.keys(visibleColumns).map(col => (
               <label key={col} className="flex items-center gap-1 cursor-pointer capitalize">
                 <input
                   type="checkbox"
                   checked={(visibleColumns as any)[col]}
                   onChange={(e) => setVisibleColumns(prev => ({ ...prev, [col]: e.target.checked }))}
-                  className="rounded accent-[#5A0A14]"
+                  className="rounded accent-[#800F2F]"
                 />
                 <span>{col.replace(/([A-Z])/g, ' $1')}</span>
               </label>
@@ -594,23 +594,23 @@ function InventoryContent() {
 
       {/* Bulk Action Bar */}
       {selectedIds.length > 0 && (
-        <div className="p-2.5 bg-[#5A0A14] text-[#FBF4E6] rounded-xl flex items-center justify-between gap-4 text-xs shadow-md">
+        <div className="p-2.5 bg-[#800F2F] text-[#F8F5F0] rounded-xl flex items-center justify-between gap-4 text-xs shadow-md">
           <div className="flex items-center gap-3">
-            <span className="font-bold text-[#D9A93F]">{selectedIds.length} profiles selected</span>
+            <span className="font-bold text-[#D4AF37]">{selectedIds.length} profiles selected</span>
             <button
               onClick={() => setSelectedIds([])}
-              className="text-xs text-[#E9DDC3] hover:underline"
+              className="text-xs text-[#E5DFD5] hover:underline"
             >
               Deselect All
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-[#E9DDC3]">Change Status:</span>
+            <span className="text-[11px] text-[#E5DFD5]">Change Status:</span>
             <select
               value={bulkStatus}
               onChange={(e) => setBulkStatus(e.target.value as StockStatus)}
-              className="px-2 py-1 rounded bg-[#420610] text-[#FBF4E6] border border-[#D9A93F] text-xs"
+              className="px-2 py-1 rounded bg-[#660A22] text-[#F8F5F0] border border-[#D4AF37] text-xs"
             >
               <option value="available">Available</option>
               <option value="on_hold">On Hold</option>
@@ -636,20 +636,20 @@ function InventoryContent() {
       )}
 
       {/* High Density Data Table */}
-      <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl shadow-xs overflow-x-auto">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl shadow-xs overflow-x-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="bg-[#5A0A14] text-[#FBF4E6] border-b border-[#420610] sticky top-0 z-10 text-[11px] tracking-wider uppercase font-semibold">
+            <tr className="bg-[#800F2F] text-[#F8F5F0] border-b border-[#660A22] sticky top-0 z-10 text-[11px] tracking-wider uppercase font-semibold">
               <th className="p-2.5 text-center w-8">
                 <button
                   onClick={handleSelectAll}
-                  className="hover:text-[#D9A93F]"
+                  className="hover:text-[#D4AF37]"
                   title="Select All"
                 >
                   {selectedIds.length === filteredProfiles.length && filteredProfiles.length > 0 ? (
-                    <CheckSquare className="w-4 h-4 text-[#D9A93F]" />
+                    <CheckSquare className="w-4 h-4 text-[#D4AF37]" />
                   ) : (
-                    <Square className="w-4 h-4 text-[#E9DDC3]" />
+                    <Square className="w-4 h-4 text-[#E5DFD5]" />
                   )}
                 </button>
               </th>
@@ -668,10 +668,10 @@ function InventoryContent() {
               {visibleColumns.actions && <th className="p-2.5 text-right">Actions</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E9DDC3]/60">
+          <tbody className="divide-y divide-[#E5DFD5]/60">
             {filteredProfiles.length === 0 ? (
               <tr>
-                <td colSpan={14} className="p-8 text-center text-xs text-[#7B5E5E]">
+                <td colSpan={14} className="p-8 text-center text-xs text-[#6E6466]">
                   No rishtas found matching the selected inventory criteria.
                 </td>
               </tr>
@@ -686,9 +686,9 @@ function InventoryContent() {
                 return (
                   <tr
                     key={p.id}
-                    className={`transition-colors hover:bg-[#FBF4E6] cursor-pointer ${
-                      idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'
-                    } ${isSelected ? 'bg-[#D9A93F]/15' : ''}`}
+                    className={`transition-colors hover:bg-[#F8F5F0] cursor-pointer ${
+                      idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'
+                    } ${isSelected ? 'bg-[#D4AF37]/15' : ''}`}
                     onClick={() => setActiveDrawerProfile(p)}
                   >
                     {/* Checkbox */}
@@ -700,20 +700,20 @@ function InventoryContent() {
                       }}
                     >
                       {isSelected ? (
-                        <CheckSquare className="w-4 h-4 text-[#5A0A14]" />
+                        <CheckSquare className="w-4 h-4 text-[#800F2F]" />
                       ) : (
-                        <Square className="w-4 h-4 text-[#7B5E5E]" />
+                        <Square className="w-4 h-4 text-[#6E6466]" />
                       )}
                     </td>
 
                     {/* Form No */}
                     {visibleColumns.formNo && (
-                      <td className="p-2.5 font-serif font-bold text-[#5A0A14] whitespace-nowrap">
+                      <td className="p-2.5 font-serif font-bold text-[#800F2F] whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
                           <span>{p.formNo}</span>
                           {(p.isPremium || p.premiumMember) && (
                             <span title="Premium Member">
-                              <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+                              <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
                             </span>
                           )}
                         </div>
@@ -727,7 +727,7 @@ function InventoryContent() {
                           <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] ${bucketInfo.badgeClass}`}>
                             {daysInStock}d • {bucketInfo.label}
                           </span>
-                          <span className="text-[9px] text-[#7B5E5E] mt-0.5">
+                          <span className="text-[9px] text-[#6E6466] mt-0.5">
                             {formatDate(p.entryDate || p.createdAt)}
                           </span>
                         </div>
@@ -737,9 +737,9 @@ function InventoryContent() {
                     {/* Candidate Name & Gender */}
                     {visibleColumns.candidate && (
                       <td className="p-2.5">
-                        <div className="font-semibold text-[#2A0A0F] flex items-center gap-1">
+                        <div className="font-semibold text-[#2C2526] flex items-center gap-1">
                           <span>{p.name}</span>
-                          <span className={`text-[10px] px-1 rounded ${p.gender === 'Male' ? 'bg-[#5A0A14]/10 text-[#5A0A14]' : 'bg-[#D9A93F]/20 text-[#5A0A14]'}`}>
+                          <span className={`text-[10px] px-1 rounded ${p.gender === 'Male' ? 'bg-[#800F2F]/10 text-[#800F2F]' : 'bg-[#D4AF37]/20 text-[#800F2F]'}`}>
                             {p.gender === 'Male' ? 'M' : 'F'}
                           </span>
                         </div>
@@ -748,33 +748,33 @@ function InventoryContent() {
 
                     {/* Age / Height */}
                     {visibleColumns.ageHeight && (
-                      <td className="p-2.5 whitespace-nowrap text-[#7B5E5E]">
+                      <td className="p-2.5 whitespace-nowrap text-[#6E6466]">
                         {p.age} yrs • {p.height}
                       </td>
                     )}
 
                     {/* Marital Status */}
                     {visibleColumns.maritalStatus && (
-                      <td className="p-2.5 whitespace-nowrap text-[#2A0A0F]">
+                      <td className="p-2.5 whitespace-nowrap text-[#2C2526]">
                         {p.maritalStatus}
                       </td>
                     )}
 
                     {/* Location */}
                     {visibleColumns.location && (
-                      <td className="p-2.5 whitespace-nowrap text-[#7B5E5E]">
-                        <span className="font-medium text-[#2A0A0F]">{p.city}</span>
-                        {p.area && <span className="text-[10px] text-[#7B5E5E] block">{p.area}</span>}
+                      <td className="p-2.5 whitespace-nowrap text-[#6E6466]">
+                        <span className="font-medium text-[#2C2526]">{p.city}</span>
+                        {p.area && <span className="text-[10px] text-[#6E6466] block">{p.area}</span>}
                       </td>
                     )}
 
                     {/* Education & Job */}
                     {visibleColumns.educationJob && (
                       <td className="p-2.5">
-                        <span className="font-medium text-[#2A0A0F] block truncate max-w-[140px]" title={p.profession}>
+                        <span className="font-medium text-[#2C2526] block truncate max-w-[140px]" title={p.profession}>
                           {p.profession || 'Not specified'}
                         </span>
-                        <span className="text-[10px] text-[#7B5E5E] block">
+                        <span className="text-[10px] text-[#6E6466] block">
                           {p.educationLevel}
                         </span>
                       </td>
@@ -782,7 +782,7 @@ function InventoryContent() {
 
                     {/* Monthly Income */}
                     {visibleColumns.income && (
-                      <td className="p-2.5 whitespace-nowrap font-medium text-[#5A0A14]">
+                      <td className="p-2.5 whitespace-nowrap font-medium text-[#800F2F]">
                         {formatPKR(p.monthlyIncome || 0)}
                       </td>
                     )}
@@ -790,8 +790,8 @@ function InventoryContent() {
                     {/* Caste & Maslak */}
                     {visibleColumns.casteMaslak && (
                       <td className="p-2.5 whitespace-nowrap">
-                        <span className="font-semibold text-[#2A0A0F] block">{p.caste}</span>
-                        <span className="text-[10px] text-[#7B5E5E] block truncate max-w-[110px]" title={p.maslak}>
+                        <span className="font-semibold text-[#2C2526] block">{p.caste}</span>
+                        <span className="text-[10px] text-[#6E6466] block truncate max-w-[110px]" title={p.maslak}>
                           {p.maslak}
                         </span>
                       </td>
@@ -812,8 +812,8 @@ function InventoryContent() {
                             href={`/profiles/${p.id}/matches`}
                             className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold transition-transform hover:scale-105 ${
                               countMatches > 0
-                                ? 'bg-[#5A0A14] text-[#D9A93F]'
-                                : 'bg-[#E9DDC3] text-[#7B5E5E]'
+                                ? 'bg-[#800F2F] text-[#D4AF37]'
+                                : 'bg-[#E5DFD5] text-[#6E6466]'
                             }`}
                             title="Click to view full match compatibility details"
                           >
@@ -821,14 +821,14 @@ function InventoryContent() {
                             <span>{countMatches}</span>
                           </Link>
                         ) : (
-                          <span className="text-[10px] text-[#7B5E5E]">-</span>
+                          <span className="text-[10px] text-[#6E6466]">-</span>
                         )}
                       </td>
                     )}
 
                     {/* Last Activity */}
                     {visibleColumns.lastActivity && (
-                      <td className="p-2.5 whitespace-nowrap text-[10px] text-[#7B5E5E]">
+                      <td className="p-2.5 whitespace-nowrap text-[10px] text-[#6E6466]">
                         {p.lastActivityAt ? formatDate(p.lastActivityAt) : formatDate(p.updatedAt || p.createdAt)}
                       </td>
                     )}
@@ -839,7 +839,7 @@ function InventoryContent() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => setActiveDrawerProfile(p)}
-                            className="p-1 rounded hover:bg-[#E9DDC3] text-[#5A0A14]"
+                            className="p-1 rounded hover:bg-[#E5DFD5] text-[#800F2F]"
                             title="Open Detail Drawer"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -847,7 +847,7 @@ function InventoryContent() {
 
                           <Link
                             href={`/profiles/${p.id}/edit`}
-                            className="p-1 rounded hover:bg-[#E9DDC3] text-[#5A0A14]"
+                            className="p-1 rounded hover:bg-[#E5DFD5] text-[#800F2F]"
                             title="Edit Profile"
                           >
                             <Edit className="w-3.5 h-3.5" />
@@ -856,7 +856,7 @@ function InventoryContent() {
                           {(p.status === 'available' || (p.status as any) === 'active') && (
                             <Link
                               href={`/profiles/${p.id}/matches`}
-                              className="p-1 rounded hover:bg-[#E9DDC3] text-[#B08626]"
+                              className="p-1 rounded hover:bg-[#E5DFD5] text-[#B88B22]"
                               title="Compatibility Matches"
                             >
                               <Sparkles className="w-3.5 h-3.5" />
@@ -880,99 +880,99 @@ function InventoryContent() {
           onClick={() => setActiveDrawerProfile(null)}
         >
           <div 
-            className="w-full max-w-lg bg-[#FFFDF8] h-full shadow-2xl border-l border-[#E9DDC3] flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
+            className="w-full max-w-lg bg-[#FFFFFF] h-full shadow-2xl border-l border-[#E5DFD5] flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
-            <div className="bg-[#5A0A14] text-[#FBF4E6] p-4 flex items-center justify-between border-b border-[#D9A93F]">
+            <div className="bg-[#800F2F] text-[#F8F5F0] p-4 flex items-center justify-between border-b border-[#D4AF37]">
               <div className="flex items-center gap-2">
-                <span className="font-serif text-lg font-bold text-[#D9A93F]">
+                <span className="font-serif text-lg font-bold text-[#D4AF37]">
                   {activeDrawerProfile.formNo}
                 </span>
                 {renderStatusBadge(activeDrawerProfile.status as StockStatus)}
                 {(activeDrawerProfile.isPremium || activeDrawerProfile.premiumMember) && (
-                  <Star className="w-3.5 h-3.5 fill-[#D9A93F] text-[#D9A93F]" />
+                  <Star className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
                 )}
               </div>
               <button
                 onClick={() => setActiveDrawerProfile(null)}
-                className="p-1 rounded text-[#E9DDC3] hover:text-[#D9A93F]"
+                className="p-1 rounded text-[#E5DFD5] hover:text-[#D4AF37]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Drawer Body */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs text-[#2A0A0F]">
+            <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs text-[#2C2526]">
               {/* Profile Main Overview */}
-              <div className="p-4 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] space-y-2">
+              <div className="p-4 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h2 className="font-serif text-xl font-bold text-[#5A0A14]">
+                    <h2 className="font-serif text-xl font-bold text-[#800F2F]">
                       {activeDrawerProfile.name}
                     </h2>
-                    <p className="text-[#7B5E5E] text-xs">
+                    <p className="text-[#6E6466] text-xs">
                       {activeDrawerProfile.gender} • {activeDrawerProfile.age} yrs • {activeDrawerProfile.height} • {activeDrawerProfile.maritalStatus}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-[#7B5E5E] block">Days in Stock:</span>
-                    <span className="font-bold text-[#5A0A14] text-sm">
+                    <span className="text-[10px] text-[#6E6466] block">Days in Stock:</span>
+                    <span className="font-bold text-[#800F2F] text-sm">
                       {calculateDaysInStock(activeDrawerProfile.entryDate || activeDrawerProfile.createdAt)} days
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#E9DDC3] grid grid-cols-2 gap-2 text-xs">
+                <div className="pt-2 border-t border-[#E5DFD5] grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-[#7B5E5E] block text-[10px]">Caste & Maslak</span>
+                    <span className="text-[#6E6466] block text-[10px]">Caste & Maslak</span>
                     <span className="font-semibold">{activeDrawerProfile.caste} ({activeDrawerProfile.maslak})</span>
                   </div>
                   <div>
-                    <span className="text-[#7B5E5E] block text-[10px]">City & Area</span>
+                    <span className="text-[#6E6466] block text-[10px]">City & Area</span>
                     <span className="font-semibold">{activeDrawerProfile.city} {activeDrawerProfile.area ? `(${activeDrawerProfile.area})` : ''}</span>
                   </div>
                   <div>
-                    <span className="text-[#7B5E5E] block text-[10px]">Education</span>
+                    <span className="text-[#6E6466] block text-[10px]">Education</span>
                     <span className="font-semibold">{activeDrawerProfile.educationLevel}</span>
                   </div>
                   <div>
-                    <span className="text-[#7B5E5E] block text-[10px]">Monthly Income</span>
-                    <span className="font-semibold text-[#5A0A14]">{formatPKR(activeDrawerProfile.monthlyIncome || 0)}</span>
+                    <span className="text-[#6E6466] block text-[10px]">Monthly Income</span>
+                    <span className="font-semibold text-[#800F2F]">{formatPKR(activeDrawerProfile.monthlyIncome || 0)}</span>
                   </div>
                 </div>
               </div>
 
               {/* Private Staff Contact Info (Confidential) */}
-              <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#D9A93F]/40 space-y-2">
-                <div className="flex items-center gap-1.5 text-[#5A0A14] font-bold">
-                  <Phone className="w-3.5 h-3.5 text-[#D9A93F]" />
+              <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#D4AF37]/40 space-y-2">
+                <div className="flex items-center gap-1.5 text-[#800F2F] font-bold">
+                  <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
                   <span>Confidential Client Contact (Staff Only)</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-[#7B5E5E] text-[10px] block">Candidate Phone</span>
-                    <a href={`tel:${activeDrawerProfile.phone}`} className="font-bold text-[#5A0A14] hover:underline">
+                    <span className="text-[#6E6466] text-[10px] block">Candidate Phone</span>
+                    <a href={`tel:${activeDrawerProfile.phone}`} className="font-bold text-[#800F2F] hover:underline">
                       {activeDrawerProfile.phone}
                     </a>
                   </div>
                   {activeDrawerProfile.guardianPhone && (
                     <div>
-                      <span className="text-[#7B5E5E] text-[10px] block">Guardian Phone</span>
-                      <a href={`tel:${activeDrawerProfile.guardianPhone}`} className="font-bold text-[#5A0A14] hover:underline">
+                      <span className="text-[#6E6466] text-[10px] block">Guardian Phone</span>
+                      <a href={`tel:${activeDrawerProfile.guardianPhone}`} className="font-bold text-[#800F2F] hover:underline">
                         {activeDrawerProfile.guardianPhone}
                       </a>
                     </div>
                   )}
                   {activeDrawerProfile.cnic && (
                     <div>
-                      <span className="text-[#7B5E5E] text-[10px] block">CNIC</span>
+                      <span className="text-[#6E6466] text-[10px] block">CNIC</span>
                       <span>{maskCNIC(activeDrawerProfile.cnic)}</span>
                     </div>
                   )}
                   {activeDrawerProfile.address && (
                     <div>
-                      <span className="text-[#7B5E5E] text-[10px] block">Residential Address</span>
+                      <span className="text-[#6E6466] text-[10px] block">Residential Address</span>
                       <span className="truncate block" title={activeDrawerProfile.address}>{activeDrawerProfile.address}</span>
                     </div>
                   )}
@@ -980,24 +980,24 @@ function InventoryContent() {
               </div>
 
               {/* Partner Preferences */}
-              <div className="p-3 bg-[#FBF4E6] rounded-xl border border-[#E9DDC3] space-y-1.5">
-                <span className="font-serif font-bold text-[#5A0A14] block">
+              <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-1.5">
+                <span className="font-serif font-bold text-[#800F2F] block">
                   Partner Preferences
                 </span>
-                <p className="text-xs text-[#7B5E5E]">
+                <p className="text-xs text-[#6E6466]">
                   Age: {activeDrawerProfile.preferences.ageMin} - {activeDrawerProfile.preferences.ageMax} yrs • Height: {activeDrawerProfile.preferences.heightMin} - {activeDrawerProfile.preferences.heightMax}
                 </p>
-                <p className="text-xs text-[#7B5E5E]">
+                <p className="text-xs text-[#6E6466]">
                   Cities: {activeDrawerProfile.preferences.cities.join(', ')} • Castes: {activeDrawerProfile.preferences.castes.join(', ')}
                 </p>
-                <p className="text-xs text-[#7B5E5E]">
+                <p className="text-xs text-[#6E6466]">
                   Min Education: {activeDrawerProfile.preferences.educationMin} • Min Income: {formatPKR(activeDrawerProfile.preferences.minIncome || 0)}
                 </p>
               </div>
 
               {/* Status Switcher in Drawer */}
-              <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3] space-y-2">
-                <span className="font-bold text-[#5A0A14] block text-xs">
+              <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] space-y-2">
+                <span className="font-bold text-[#800F2F] block text-xs">
                   Change Inventory Status:
                 </span>
                 <div className="flex items-center gap-2">
@@ -1010,7 +1010,7 @@ function InventoryContent() {
                         status: e.target.value as StockStatus,
                       });
                     }}
-                    className="flex-1 px-3 py-1.5 rounded-lg bg-[#FBF4E6] border border-[#E9DDC3] text-xs font-semibold text-[#5A0A14]"
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F]"
                   >
                     <option value="available">Available (In Stock)</option>
                     <option value="on_hold">On Hold</option>
@@ -1025,15 +1025,15 @@ function InventoryContent() {
               <div className="grid grid-cols-2 gap-2 pt-2">
                 <Link
                   href={`/profiles/${activeDrawerProfile.id}/matches`}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#5A0A14] text-[#FBF4E6] font-bold text-xs hover:bg-[#420610] transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#800F2F] text-[#F8F5F0] font-bold text-xs hover:bg-[#660A22] transition-colors"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-[#D9A93F]" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
                   <span>View Compatibility Matches</span>
                 </Link>
 
                 <Link
                   href={`/profiles/${activeDrawerProfile.id}/edit`}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#FFFDF8] text-[#5A0A14] border border-[#5A0A14] font-bold text-xs hover:bg-[#FBF4E6] transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] font-bold text-xs hover:bg-[#F8F5F0] transition-colors"
                 >
                   <Edit className="w-3.5 h-3.5" />
                   <span>Edit Full Profile</span>
@@ -1049,7 +1049,7 @@ function InventoryContent() {
 
 export default function InventoryPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Rishta Inventory...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Rishta Inventory...</div>}>
       <InventoryContent />
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost';
@@ -25,19 +25,19 @@ export function Button({
   const variantClasses = {
     // Primary = deep maroon with ivory text
     primary:
-      'bg-[#5A0A14] text-[#FBF4E6] hover:bg-[#420610] active:bg-[#32040B] shadow-sm border border-[#7A1424]',
+      'bg-[#800F2F] text-[#F8F5F0] hover:bg-[#660A22] active:bg-[#52061A] shadow-sm border border-[#96163A]',
     // Secondary = ivory with maroon border
     secondary:
-      'bg-[#FFFDF8] text-[#5A0A14] border border-[#5A0A14] hover:bg-[#FBF4E6] active:bg-[#E9DDC3]',
+      'bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] hover:bg-[#F8F5F0] active:bg-[#E5DFD5]',
     // Accent/Premium = gold with maroon text
     accent:
-      'bg-[#D9A93F] text-[#420610] hover:bg-[#EBCB7C] active:bg-[#B08626] font-semibold shadow-sm border border-[#B08626]',
-    // Danger = lighter maroon #8E1B2B
+      'bg-[#D4AF37] text-[#660A22] hover:bg-[#F0D58A] active:bg-[#B88B22] font-semibold shadow-sm border border-[#B88B22]',
+    // Danger = lighter maroon #A3182E
     danger:
-      'bg-[#8E1B2B] text-[#FBF4E6] hover:bg-[#7A1424] active:bg-[#5A0A14] shadow-sm',
+      'bg-[#A3182E] text-[#F8F5F0] hover:bg-[#96163A] active:bg-[#800F2F] shadow-sm',
     // Ghost
     ghost:
-      'bg-transparent text-[#5A0A14] hover:bg-[#E9DDC3]/40 active:bg-[#E9DDC3]',
+      'bg-transparent text-[#800F2F] hover:bg-[#E5DFD5]/40 active:bg-[#E5DFD5]',
   };
 
   return (

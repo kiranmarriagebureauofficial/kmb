@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -167,17 +167,17 @@ export function DashboardSidebar() {
     <aside 
       className={`${
         collapsed ? 'w-20' : 'w-64'
-      } bg-[#5A0A14] text-[#FBF4E6] flex flex-col shrink-0 min-h-screen border-r border-[#420610] shadow-xl no-print select-none transition-all duration-200`}
+      } bg-[#800F2F] text-[#F8F5F0] flex flex-col shrink-0 min-h-screen border-r border-[#660A22] shadow-xl no-print select-none transition-all duration-200`}
     >
       {/* Brand Header */}
-      <div className="p-4 border-b border-[#420610] flex flex-col items-center text-center relative">
+      <div className="p-4 border-b border-[#660A22] flex flex-col items-center text-center relative">
         <Link href="/dashboard" className="group flex items-center justify-center">
           {collapsed ? (
             <BrandLogo variant="icon" width={44} height={44} priority />
           ) : (
             <div className="flex flex-col items-center">
               <BrandLogo variant="full" width={140} height={140} priority />
-              <span className="text-[9px] tracking-widest text-[#D9A93F] uppercase font-serif mt-1 font-semibold">
+              <span className="text-[9px] tracking-widest text-[#D4AF37] uppercase font-serif mt-1 font-semibold">
                 Rishta ERP & Inventory
               </span>
             </div>
@@ -187,7 +187,7 @@ export function DashboardSidebar() {
         {/* Collapse toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute right-2 top-3 p-1 rounded hover:bg-[#420610] text-[#D9A93F] transition-colors"
+          className="absolute right-2 top-3 p-1 rounded hover:bg-[#660A22] text-[#D4AF37] transition-colors"
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -196,12 +196,12 @@ export function DashboardSidebar() {
 
       {/* Quick Add CTA (when expanded) */}
       {!collapsed && (
-        <div className="p-3 border-b border-[#420610]">
+        <div className="p-3 border-b border-[#660A22]">
           <Link
             href="/profiles/new"
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#D9A93F] hover:bg-[#EBCB7C] text-[#420610] font-bold text-xs uppercase tracking-wider shadow-sm transition-all border border-[#B08626]"
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#D4AF37] hover:bg-[#F0D58A] text-[#660A22] font-bold text-xs uppercase tracking-wider shadow-sm transition-all border border-[#B88B22]"
           >
-            <UserPlus className="w-4 h-4 text-[#420610]" />
+            <UserPlus className="w-4 h-4 text-[#660A22]" />
             <span>+ Add New Rishta</span>
           </Link>
         </div>
@@ -212,7 +212,7 @@ export function DashboardSidebar() {
         {navGroups.map((grp, gIdx) => (
           <div key={gIdx} className="space-y-1">
             {!collapsed && (
-              <span className="text-[9px] font-bold tracking-wider uppercase text-[#D9A93F]/60 px-3 block mb-1">
+              <span className="text-[9px] font-bold tracking-wider uppercase text-[#D4AF37]/60 px-3 block mb-1">
                 {grp.group}
               </span>
             )}
@@ -230,27 +230,27 @@ export function DashboardSidebar() {
                     collapsed ? 'justify-center py-2.5 px-0' : 'justify-between px-3 py-2'
                   } rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-[#420610] text-[#D9A93F] font-semibold border-l-4 border-[#D9A93F] shadow-sm'
-                      : 'text-[#FBF4E6] hover:bg-[#420610]/60 hover:text-[#D9A93F]'
+                      ? 'bg-[#660A22] text-[#D4AF37] font-semibold border-l-4 border-[#D4AF37] shadow-sm'
+                      : 'text-[#F8F5F0] hover:bg-[#660A22]/60 hover:text-[#D4AF37]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <Icon
                       className={`w-4 h-4 shrink-0 ${
-                        isActive ? 'text-[#D9A93F]' : item.isPremium ? 'text-[#D9A93F]' : 'text-[#E9DDC3]'
+                        isActive ? 'text-[#D4AF37]' : item.isPremium ? 'text-[#D4AF37]' : 'text-[#E5DFD5]'
                       }`}
                     />
                     {!collapsed && <span>{item.label}</span>}
                   </div>
 
                   {!collapsed && item.badge !== null && item.badge !== undefined && (
-                    <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-[#D9A93F] text-[#420610]">
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-[#D4AF37] text-[#660A22]">
                       {item.badge}
                     </span>
                   )}
 
                   {!collapsed && item.isPremium && (
-                    <Star className="w-3 h-3 fill-[#D9A93F] text-[#D9A93F]" />
+                    <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
                   )}
                 </Link>
               );
@@ -261,12 +261,12 @@ export function DashboardSidebar() {
 
       {/* Online Form Share Tools (when expanded) */}
       {!collapsed && (
-        <div className="px-3 py-2.5 border-t border-[#420610] bg-[#420610]/40 space-y-1.5">
+        <div className="px-3 py-2.5 border-t border-[#660A22] bg-[#660A22]/40 space-y-1.5">
           <div className="flex items-center justify-between text-[10px]">
-            <span className="tracking-wider uppercase text-[#E9DDC3] font-semibold">
+            <span className="tracking-wider uppercase text-[#E5DFD5] font-semibold">
               Online Form Link
             </span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded ${regEnabled ? 'bg-[#D9A93F]/20 text-[#D9A93F]' : 'bg-[#8E1B2B]/40 text-[#E9DDC3]'}`}>
+            <span className={`text-[9px] px-1.5 py-0.2 rounded ${regEnabled ? 'bg-[#D4AF37]/20 text-[#D4AF37]' : 'bg-[#A3182E]/40 text-[#E5DFD5]'}`}>
               {regEnabled ? 'Active' : 'Paused'}
             </span>
           </div>
@@ -275,17 +275,17 @@ export function DashboardSidebar() {
             <button
               onClick={copyRegistrationLink}
               type="button"
-              className="flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded text-xs bg-[#5A0A14] hover:bg-[#7A1424] text-[#E9DDC3] border border-[#D9A93F]/30 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded text-xs bg-[#800F2F] hover:bg-[#96163A] text-[#E5DFD5] border border-[#D4AF37]/30 transition-colors"
               title="Copy Public Registration Form Link"
             >
               {copied ? (
                 <>
-                  <Check className="w-3 h-3 text-[#D9A93F]" />
-                  <span className="text-[#D9A93F] font-bold text-[11px]">Copied!</span>
+                  <Check className="w-3 h-3 text-[#D4AF37]" />
+                  <span className="text-[#D4AF37] font-bold text-[11px]">Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3 h-3 text-[#D9A93F]" />
+                  <Copy className="w-3 h-3 text-[#D4AF37]" />
                   <span className="text-[11px]">Copy Link</span>
                 </>
               )}
@@ -294,7 +294,7 @@ export function DashboardSidebar() {
             <button
               onClick={shareFormWhatsApp}
               type="button"
-              className="p-1 rounded bg-[#5A0A14] hover:bg-[#7A1424] text-[#D9A93F] border border-[#D9A93F]/30 transition-colors"
+              className="p-1 rounded bg-[#800F2F] hover:bg-[#96163A] text-[#D4AF37] border border-[#D4AF37]/30 transition-colors"
               title="Share Registration Form on WhatsApp"
             >
               <Share2 className="w-3.5 h-3.5" />
@@ -303,7 +303,7 @@ export function DashboardSidebar() {
             <Link
               href="/register"
               target="_blank"
-              className="p-1 rounded bg-[#5A0A14] hover:bg-[#7A1424] text-[#E9DDC3] border border-[#D9A93F]/30 transition-colors"
+              className="p-1 rounded bg-[#800F2F] hover:bg-[#96163A] text-[#E5DFD5] border border-[#D4AF37]/30 transition-colors"
               title="Open Online Form in New Tab"
             >
               <ExternalLink className="w-3.5 h-3.5" />
@@ -313,17 +313,17 @@ export function DashboardSidebar() {
       )}
 
       {/* Current User Card */}
-      <div className={`p-2.5 border-t border-[#420610] bg-[#32040B] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
+      <div className={`p-2.5 border-t border-[#660A22] bg-[#52061A] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-7 h-7 rounded-full bg-[#5A0A14] border border-[#D9A93F] flex items-center justify-center text-[#D9A93F] font-serif font-bold text-xs shrink-0">
+          <div className="w-7 h-7 rounded-full bg-[#800F2F] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-serif font-bold text-xs shrink-0">
             {currentUser?.name ? currentUser.name.charAt(0) : 'K'}
           </div>
           {!collapsed && (
             <div className="overflow-hidden">
-              <p className="text-xs font-semibold text-[#FBF4E6] truncate leading-tight">
+              <p className="text-xs font-semibold text-[#F8F5F0] truncate leading-tight">
                 {currentUser?.name || 'Staff User'}
               </p>
-              <span className="inline-flex items-center gap-1 text-[9px] text-[#D9A93F] capitalize">
+              <span className="inline-flex items-center gap-1 text-[9px] text-[#D4AF37] capitalize">
                 <Shield className="w-2.5 h-2.5" />
                 {currentUser?.role || 'staff'}
               </span>
@@ -334,7 +334,7 @@ export function DashboardSidebar() {
         {!collapsed && (
           <Link
             href="/login"
-            className="p-1.5 text-[#E9DDC3] hover:text-[#D9A93F] transition-colors"
+            className="p-1.5 text-[#E5DFD5] hover:text-[#D4AF37] transition-colors"
             title="Log out"
           >
             <LogOut className="w-3.5 h-3.5" />

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { store } from '@/lib/db/store';
@@ -186,27 +186,27 @@ function ReportsContent() {
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFDF8] p-5 rounded-xl border border-[#E9DDC3] shadow-sm no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-sm no-print">
         <div>
-          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B08626]">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
             Inventory Intelligence & Auditing
           </span>
-          <h1 className="font-serif text-2xl font-bold text-[#5A0A14] mt-0.5">
+          <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
             Reports & Analytics
           </h1>
-          <p className="text-xs text-[#7B5E5E]">
+          <p className="text-xs text-[#6E6466]">
             Comprehensive operational reports for stock turnover, aging rishtas, success fees, and financials.
           </p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           {/* Date range filter */}
-          <div className="flex items-center gap-1.5 text-xs bg-[#FBF4E6] px-3 py-1.5 rounded-lg border border-[#E9DDC3]">
-            <Calendar className="w-3.5 h-3.5 text-[#5A0A14]" />
+          <div className="flex items-center gap-1.5 text-xs bg-[#F8F5F0] px-3 py-1.5 rounded-lg border border-[#E5DFD5]">
+            <Calendar className="w-3.5 h-3.5 text-[#800F2F]" />
             <select
               value={dateRangePreset}
               onChange={(e) => setDateRangePreset(e.target.value as any)}
-              className="bg-transparent font-semibold text-[#5A0A14] focus:outline-none"
+              className="bg-transparent font-semibold text-[#800F2F] focus:outline-none"
             >
               <option value="7days">Last 7 Days</option>
               <option value="30days">Last 30 Days</option>
@@ -220,7 +220,7 @@ function ReportsContent() {
             size="sm"
             variant="secondary"
             onClick={exportActiveCSV}
-            icon={<Download className="w-3.5 h-3.5 text-[#5A0A14]" />}
+            icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
             Export CSV
           </Button>
@@ -229,7 +229,7 @@ function ReportsContent() {
             size="sm"
             variant="primary"
             onClick={handlePrint}
-            icon={<Printer className="w-3.5 h-3.5 text-[#D9A93F]" />}
+            icon={<Printer className="w-3.5 h-3.5 text-[#D4AF37]" />}
           >
             Print Report
           </Button>
@@ -237,7 +237,7 @@ function ReportsContent() {
       </div>
 
       {/* Report Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-b border-[#E9DDC3] no-print">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-b border-[#E5DFD5] no-print">
         {[
           { key: 'stock', label: '1. Stock Inventory', icon: Boxes, count: availableStock.length },
           { key: 'new_entries', label: '2. New Entries', icon: Clock, count: newEntries.length },
@@ -254,14 +254,14 @@ function ReportsContent() {
               onClick={() => setActiveTab(tab.key as any)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-t-lg font-semibold whitespace-nowrap transition-colors border-t border-x ${
                 isActive
-                  ? 'bg-[#5A0A14] text-[#FBF4E6] border-[#5A0A14] shadow-xs'
-                  : 'bg-[#FFFDF8] text-[#5A0A14] border-[#E9DDC3] hover:bg-[#FBF4E6]'
+                  ? 'bg-[#800F2F] text-[#F8F5F0] border-[#800F2F] shadow-xs'
+                  : 'bg-[#FFFFFF] text-[#800F2F] border-[#E5DFD5] hover:bg-[#F8F5F0]'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#D9A93F]' : 'text-[#7B5E5E]'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#D4AF37]' : 'text-[#6E6466]'}`} />
               <span>{tab.label}</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                isActive ? 'bg-[#D9A93F] text-[#420610] font-bold' : 'bg-[#E9DDC3] text-[#7B5E5E]'
+                isActive ? 'bg-[#D4AF37] text-[#660A22] font-bold' : 'bg-[#E5DFD5] text-[#6E6466]'
               }`}>
                 {tab.count}
               </span>
@@ -271,38 +271,38 @@ function ReportsContent() {
       </div>
 
       {/* Printable Report Header (Visible only in print or top of view) */}
-      <div className="hidden print:block text-center border-b border-[#5A0A14] pb-4 mb-4">
-        <h1 className="font-serif text-2xl font-bold text-[#5A0A14]">Kiran Marriage Bureau, Lahore</h1>
-        <p className="text-xs text-[#7B5E5E]">Official Operational Stock & Performance Audit Report</p>
-        <p className="text-[10px] text-[#7B5E5E] mt-1">Generated: {new Date().toLocaleString('en-PK')} • Scope: {dateRangePreset.toUpperCase()}</p>
+      <div className="hidden print:block text-center border-b border-[#800F2F] pb-4 mb-4">
+        <h1 className="font-serif text-2xl font-bold text-[#800F2F]">Kiran Marriage Bureau, Lahore</h1>
+        <p className="text-xs text-[#6E6466]">Official Operational Stock & Performance Audit Report</p>
+        <p className="text-[10px] text-[#6E6466] mt-1">Generated: {new Date().toLocaleString('en-PK')} • Scope: {dateRangePreset.toUpperCase()}</p>
       </div>
 
       {/* Tab 1: Current Stock Report */}
       {activeTab === 'stock' && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Available Stock</span>
-              <span className="font-serif text-2xl font-bold text-[#5A0A14]">{availableStock.length}</span>
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Available Stock</span>
+              <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.length}</span>
             </div>
-            <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Male Stock</span>
-              <span className="font-serif text-2xl font-bold text-[#5A0A14]">{availableStock.filter(p => p.gender === 'Male').length}</span>
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Male Stock</span>
+              <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.filter(p => p.gender === 'Male').length}</span>
             </div>
-            <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Female Stock</span>
-              <span className="font-serif text-2xl font-bold text-[#5A0A14]">{availableStock.filter(p => p.gender === 'Female').length}</span>
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Female Stock</span>
+              <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.filter(p => p.gender === 'Female').length}</span>
             </div>
-            <div className="p-3 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Premium Members</span>
-              <span className="font-serif text-2xl font-bold text-[#D9A93F]">{availableStock.filter(p => p.isPremium || p.premiumMember).length}</span>
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Premium Members</span>
+              <span className="font-serif text-2xl font-bold text-[#D4AF37]">{availableStock.filter(p => p.isPremium || p.premiumMember).length}</span>
             </div>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Form No</th>
                   <th className="p-2.5">Candidate Name</th>
                   <th className="p-2.5">Gender</th>
@@ -314,14 +314,14 @@ function ReportsContent() {
                   <th className="p-2.5">Stock Age</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {availableStock.map((p, idx) => {
                   const days = calculateDaysInStock(p.entryDate || p.createdAt);
                   const b = getAgeBucketLabel(getAgeBucket(days));
                   return (
-                    <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                      <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{p.formNo}</td>
-                      <td className="p-2.5 font-semibold text-[#2A0A0F]">{p.name}</td>
+                    <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                      <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
+                      <td className="p-2.5 font-semibold text-[#2C2526]">{p.name}</td>
                       <td className="p-2.5">{p.gender}</td>
                       <td className="p-2.5">{p.age}</td>
                       <td className="p-2.5">{p.caste}</td>
@@ -345,16 +345,16 @@ function ReportsContent() {
       {/* Tab 2: New Entries Report */}
       {activeTab === 'new_entries' && (
         <div className="space-y-4">
-          <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-            <span className="text-xs font-bold text-[#5A0A14]">
+          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+            <span className="text-xs font-bold text-[#800F2F]">
               {newEntries.length} rishtas entered into inventory in the selected timeframe ({dateRangePreset}).
             </span>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Form No</th>
                   <th className="p-2.5">Entry Date</th>
                   <th className="p-2.5">Candidate Name</th>
@@ -365,16 +365,16 @@ function ReportsContent() {
                   <th className="p-2.5">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {newEntries.map((p, idx) => (
-                  <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{p.formNo}</td>
+                  <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
                     <td className="p-2.5">{formatDate(p.entryDate || p.createdAt)}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{p.name}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{p.name}</td>
                     <td className="p-2.5">{p.gender}, {p.age}y</td>
                     <td className="p-2.5">{p.caste}</td>
                     <td className="p-2.5">{p.city}</td>
-                    <td className="p-2.5 text-[#7B5E5E]">{p.appliedBy || 'Bureau Staff'}</td>
+                    <td className="p-2.5 text-[#6E6466]">{p.appliedBy || 'Bureau Staff'}</td>
                     <td className="p-2.5">{p.status}</td>
                   </tr>
                 ))}
@@ -387,22 +387,22 @@ function ReportsContent() {
       {/* Tab 3: Old Stock Report */}
       {activeTab === 'old_stock' && (
         <div className="space-y-4">
-          <div className="p-4 bg-[#8E1B2B]/10 border border-[#8E1B2B]/30 rounded-xl flex items-center justify-between">
+          <div className="p-4 bg-[#A3182E]/10 border border-[#A3182E]/30 rounded-xl flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-lg font-bold text-[#8E1B2B]">
+              <h2 className="font-serif text-lg font-bold text-[#A3182E]">
                 Old Stock Alert: {oldStock.length} Profiles sitting unmatched for 91+ Days
               </h2>
-              <p className="text-xs text-[#7B5E5E]">
+              <p className="text-xs text-[#6E6466]">
                 These candidates require proactive follow-up, preference widening, or active proposal dispatch.
               </p>
             </div>
-            <span className="font-serif text-3xl font-bold text-[#8E1B2B]">{oldStock.length}</span>
+            <span className="font-serif text-3xl font-bold text-[#A3182E]">{oldStock.length}</span>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Form No</th>
                   <th className="p-2.5">Candidate</th>
                   <th className="p-2.5">Gender / Age</th>
@@ -413,20 +413,20 @@ function ReportsContent() {
                   <th className="p-2.5">Candidate Phone</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {oldStock.map((item, idx) => (
-                  <tr key={item.profile.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{item.profile.formNo}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{item.profile.name}</td>
+                  <tr key={item.profile.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{item.profile.formNo}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{item.profile.name}</td>
                     <td className="p-2.5">{item.profile.gender}, {item.profile.age}y</td>
                     <td className="p-2.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8E1B2B] text-[#FBF4E6]">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#A3182E] text-[#F8F5F0]">
                         {item.daysInStock} days
                       </span>
                     </td>
                     <td className="p-2.5">{item.profile.caste}</td>
                     <td className="p-2.5">{item.profile.city}</td>
-                    <td className="p-2.5 text-center font-bold text-[#5A0A14]">{item.matchCount}</td>
+                    <td className="p-2.5 text-center font-bold text-[#800F2F]">{item.matchCount}</td>
                     <td className="p-2.5 font-medium">{item.profile.phone}</td>
                   </tr>
                 ))}
@@ -439,25 +439,25 @@ function ReportsContent() {
       {/* Tab 4: Closed / Rishta Done */}
       {activeTab === 'closed' && (
         <div className="space-y-4">
-          <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#D9A93F] flex items-center justify-between">
+          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#D4AF37] flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-lg font-bold text-[#5A0A14]">
+              <h2 className="font-serif text-lg font-bold text-[#800F2F]">
                 Total Successful Matrimonies: {finalizedList.length} Finalized Rishtay
               </h2>
-              <p className="text-xs text-[#7B5E5E]">
+              <p className="text-xs text-[#6E6466]">
                 Proposals marked completed ("Rishta Done"), candidate profiles transitioned to engaged/married.
               </p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] text-[#7B5E5E] block uppercase">Success Rate</span>
-              <span className="font-serif text-2xl font-bold text-[#D9A93F]">100%</span>
+              <span className="text-[10px] text-[#6E6466] block uppercase">Success Rate</span>
+              <span className="font-serif text-2xl font-bold text-[#D4AF37]">100%</span>
             </div>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Proposal ID</th>
                   <th className="p-2.5">Groom Candidate</th>
                   <th className="p-2.5">Bride Candidate</th>
@@ -466,15 +466,15 @@ function ReportsContent() {
                   <th className="p-2.5">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {finalizedList.map((pr, idx) => (
-                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{pr.id}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{pr.profileAName}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{pr.profileBName}</td>
-                    <td className="p-2.5 font-bold text-[#D9A93F]">{pr.matchScore}%</td>
+                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{pr.id}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileAName}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileBName}</td>
+                    <td className="p-2.5 font-bold text-[#D4AF37]">{pr.matchScore}%</td>
                     <td className="p-2.5">{formatDate(pr.updatedAt)}</td>
-                    <td className="p-2.5 text-[#7B5E5E] truncate max-w-xs">{pr.notes || 'Rishta finalized.'}</td>
+                    <td className="p-2.5 text-[#6E6466] truncate max-w-xs">{pr.notes || 'Rishta finalized.'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -486,16 +486,16 @@ function ReportsContent() {
       {/* Tab 5: Proposals Sent */}
       {activeTab === 'proposals' && (
         <div className="space-y-4">
-          <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-            <span className="text-xs font-bold text-[#5A0A14]">
+          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+            <span className="text-xs font-bold text-[#800F2F]">
               {rangeProposals.length} formal proposals created or updated in selected timeframe.
             </span>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Proposal ID</th>
                   <th className="p-2.5">Candidate A</th>
                   <th className="p-2.5">Candidate B</th>
@@ -504,15 +504,15 @@ function ReportsContent() {
                   <th className="p-2.5">Date Created</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {rangeProposals.map((pr, idx) => (
-                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{pr.id}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{pr.profileAName}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{pr.profileBName}</td>
-                    <td className="p-2.5 font-bold text-[#5A0A14]">{pr.matchScore}%</td>
+                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{pr.id}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileAName}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileBName}</td>
+                    <td className="p-2.5 font-bold text-[#800F2F]">{pr.matchScore}%</td>
                     <td className="p-2.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FBF4E6] border border-[#E9DDC3] capitalize">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] border border-[#E5DFD5] capitalize">
                         {pr.status}
                       </span>
                     </td>
@@ -529,20 +529,20 @@ function ReportsContent() {
       {activeTab === 'financial' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Revenue Collected</span>
-              <span className="font-serif text-3xl font-bold text-[#5A0A14]">{formatPKR(totalRevenue)}</span>
+            <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Revenue Collected</span>
+              <span className="font-serif text-3xl font-bold text-[#800F2F]">{formatPKR(totalRevenue)}</span>
             </div>
-            <div className="p-4 bg-[#FFFDF8] rounded-xl border border-[#E9DDC3]">
-              <span className="text-[10px] text-[#7B5E5E] uppercase block font-semibold">Outstanding Receivables</span>
-              <span className="font-serif text-3xl font-bold text-[#8E1B2B]">{formatPKR(totalOutstanding)}</span>
+            <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Outstanding Receivables</span>
+              <span className="font-serif text-3xl font-bold text-[#A3182E]">{formatPKR(totalOutstanding)}</span>
             </div>
           </div>
 
-          <div className="bg-[#FFFDF8] border border-[#E9DDC3] rounded-xl overflow-x-auto shadow-xs">
+          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#5A0A14] text-[#FBF4E6] text-[11px] uppercase font-semibold">
+                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">Invoice No</th>
                   <th className="p-2.5">Client Name</th>
                   <th className="p-2.5">Type</th>
@@ -553,16 +553,16 @@ function ReportsContent() {
                   <th className="p-2.5">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E9DDC3]">
+              <tbody className="divide-y divide-[#E5DFD5]">
                 {rangeInvoices.map((inv, idx) => (
-                  <tr key={inv.id} className={idx % 2 === 0 ? 'bg-[#FFFDF8]' : 'bg-[#FAF6EC]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#5A0A14]">{inv.invoiceNumber}</td>
-                    <td className="p-2.5 font-semibold text-[#2A0A0F]">{inv.clientName}</td>
+                  <tr key={inv.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{inv.invoiceNumber}</td>
+                    <td className="p-2.5 font-semibold text-[#2C2526]">{inv.clientName}</td>
                     <td className="p-2.5 capitalize">{inv.invoiceType}</td>
                     <td className="p-2.5">{inv.date}</td>
                     <td className="p-2.5 font-semibold">{formatPKR(inv.total)}</td>
-                    <td className="p-2.5 text-[#5A0A14] font-semibold">{formatPKR(inv.amountPaid)}</td>
-                    <td className="p-2.5 font-bold text-[#8E1B2B]">{formatPKR(inv.balance)}</td>
+                    <td className="p-2.5 text-[#800F2F] font-semibold">{formatPKR(inv.amountPaid)}</td>
+                    <td className="p-2.5 font-bold text-[#A3182E]">{formatPKR(inv.balance)}</td>
                     <td className="p-2.5 capitalize font-semibold">{inv.status}</td>
                   </tr>
                 ))}
@@ -577,7 +577,7 @@ function ReportsContent() {
 
 export default function ReportsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#7B5E5E]">Loading Bureau Reports...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Bureau Reports...</div>}>
       <ReportsContent />
     </Suspense>
   );
