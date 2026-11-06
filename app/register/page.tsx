@@ -68,7 +68,7 @@ export default function RegisterPage() {
       <header className="bg-[#5A0A14] text-[#FBF4E6] border-b border-[#D9A93F]/40 py-6 px-4">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <BrandLogo variant="banner" width={220} height={55} priority />
+            <BrandLogo variant="banner" width={240} height={80} priority />
           </div>
 
           <div className="flex items-center gap-4">

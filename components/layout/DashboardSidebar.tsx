@@ -173,10 +173,10 @@ export function DashboardSidebar() {
       <div className="p-4 border-b border-[#420610] flex flex-col items-center text-center relative">
         <Link href="/dashboard" className="group flex items-center justify-center">
           {collapsed ? (
-            <BrandLogo variant="icon" width={40} height={40} priority />
+            <BrandLogo variant="icon" width={44} height={44} priority />
           ) : (
             <div className="flex flex-col items-center">
-              <BrandLogo variant="banner" width={200} height={52} priority />
+              <BrandLogo variant="full" width={140} height={140} priority />
               <span className="text-[9px] tracking-widest text-[#D9A93F] uppercase font-serif mt-1 font-semibold">
                 Rishta ERP & Inventory
               </span>

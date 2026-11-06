@@ -53,7 +53,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md bg-[#FFFDF8] border-2 border-[#D9A93F] rounded-3xl shadow-2xl overflow-hidden">
         {/* Card Header on Deep Maroon */}
         <div className="bg-[#420610] p-6 text-center border-b border-[#D9A93F]/40 space-y-3">
-          <BrandLogo variant="banner" width={280} height={75} priority />
+          <BrandLogo variant="banner" width={300} height={100} priority />
           <div>
             <h1 className="font-serif text-lg font-bold text-[#FBF4E6] tracking-wide">
               Bureau Staff & Admin Portal

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 interface BrandLogoProps {
-  variant?: 'full' | 'banner' | 'icon' | 'wordmark' | 'print';
+  variant?: 'full' | 'banner' | 'icon' | 'emblem' | 'wordmark' | 'print';
   className?: string;
   width?: number;
   height?: number;
@@ -13,7 +13,7 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({
-  variant = 'banner',
+  variant = 'full',
   className = '',
   width,
   height,
@@ -22,31 +22,33 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const [hasError, setHasError] = useState(false);
 
-  const fileMap = {
+  const fileMap: Record<string, string> = {
     full: '/brand/logo-full-transparent.png',
     banner: '/brand/logo-banner.png',
     icon: '/brand/logo-icon.png',
-    wordmark: '/brand/logo-wordmark.png',
+    emblem: '/brand/logo-emblem.png',
+    wordmark: '/brand/logo-full-transparent.png',
     print: '/brand/logo-print.png',
   };
 
-  const defaultDimensions = {
-    full: { w: 200, h: 200 },
-    banner: { w: 280, h: 80 },
+  const defaultDimensions: Record<string, { w: number; h: number }> = {
+    full: { w: 150, h: 150 },
+    banner: { w: 240, h: 80 }, // 3:1 aspect ratio of original 2172x724
     icon: { w: 48, h: 48 },
-    wordmark: { w: 200, h: 50 },
-    print: { w: 220, h: 90 },
+    emblem: { w: 140, h: 140 },
+    wordmark: { w: 160, h: 160 },
+    print: { w: 160, h: 160 },
   };
 
-  const src = fileMap[variant];
-  const w = width || defaultDimensions[variant].w;
-  const h = height || defaultDimensions[variant].h;
+  const src = fileMap[variant] || fileMap.full;
+  const w = width || defaultDimensions[variant]?.w || 150;
+  const h = height || defaultDimensions[variant]?.h || 150;
 
   if (hasError) {
     return (
-      <div className={`flex items-center gap-2 font-serif font-bold text-[#D9A93F] ${className}`}>
+      <div className={`flex flex-col items-center justify-center font-serif font-bold text-[#D9A93F] text-center ${className}`}>
         <span className="text-xl tracking-wider">KIRAN</span>
-        <span className="text-xs uppercase tracking-widest text-[#E9DDC3] border-l border-[#D9A93F]/40 pl-2">
+        <span className="text-[10px] uppercase tracking-widest text-[#E9DDC3]">
           Marriage Bureau
         </span>
       </div>
@@ -61,10 +63,10 @@ export function BrandLogo({
         width={w}
         height={h}
         priority={priority}
+        unoptimized
         onError={() => setHasError(true)}
-        className="object-contain max-h-full"
+        className="object-contain max-h-full transition-opacity duration-200"
       />
     </div>
   );
 }
-
