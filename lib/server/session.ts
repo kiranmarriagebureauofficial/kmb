@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import type { UserRole } from '../types';
+import { getPersistentDataDir } from './data-dir';
 
 export const SESSION_COOKIE_NAME = 'kmb_session';
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -20,7 +21,7 @@ function getAuthSecret(): string {
   }
   if (cachedSecret) return cachedSecret;
 
-  const dataDir = path.join(process.cwd(), 'data');
+  const dataDir = getPersistentDataDir();
   const secretPath = path.join(dataDir, '.auth-secret');
   try {
     if (fs.existsSync(secretPath)) {

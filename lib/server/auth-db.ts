@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import type { ApprovalStatus, StaffUser, UserPermissions, UserRole } from '../types';
+import { getPersistentDataDir } from './data-dir';
 
 interface StoredUser extends StaffUser {
   passwordHash: string;
@@ -24,7 +25,7 @@ const DEFAULT_TEAM_PERMISSIONS: UserPermissions = {
 };
 
 function getDbFilePath(): string {
-  return path.join(process.cwd(), 'data', 'auth-users.json');
+  return path.join(getPersistentDataDir(), 'auth-users.json');
 }
 
 function hashPassword(password: string): string {
