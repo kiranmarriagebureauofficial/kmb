@@ -36,8 +36,9 @@ function getAuthSecret(): string {
     cachedSecret = generated;
     return generated;
   } catch {
-    // Ephemeral fallback if filesystem is read-only
-    cachedSecret = process.env.NEXTAUTH_SECRET || crypto.createHash('sha256').update(process.cwd()).digest('hex');
+    // Ephemeral cryptographically-random fallback if filesystem is read-only
+    console.warn('Warning: Set AUTH_SECRET in environment variables for persistent sessions.');
+    cachedSecret = process.env.NEXTAUTH_SECRET || crypto.randomBytes(32).toString('hex');
     return cachedSecret;
   }
 }
