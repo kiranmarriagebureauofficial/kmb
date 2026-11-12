@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Proposal, Profile, Invoice } from '@/lib/types';

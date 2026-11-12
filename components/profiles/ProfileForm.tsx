@@ -1026,10 +1026,10 @@ export function ProfileForm({
               {submitting
                 ? tr('Saving...', 'محفوظ ہو رہا ہے...')
                 : isPublic
-                ? tr('Submit Online Registration', 'آن لائن رجسٹریشن جمع کرائیں')
-                : initialData?.id
-                ? tr('Save Profile Changes', 'تبدیلیاں محفوظ کریں')
-                : tr('Save & Enter Matching Engine', 'محفوظ کریں اور میچنگ میں شامل کریں')}
+                  ? tr('Submit Online Registration', 'آن لائن رجسٹریشن جمع کرائیں')
+                  : initialData?.id
+                    ? tr('Save Profile Changes', 'تبدیلیاں محفوظ کریں')
+                    : tr('Save & Enter Matching Engine', 'محفوظ کریں اور میچنگ میں شامل کریں')}
             </Button>
           </div>
         </div>

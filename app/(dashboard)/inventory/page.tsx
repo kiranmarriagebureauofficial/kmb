@@ -158,6 +158,8 @@ function InventoryContent() {
   }, []);
 
   const isAdmin = currentUser?.role === 'admin';
+  const canAddEdit = isAdmin || currentUser?.permissions?.canAddEditData !== false;
+  const canPrint = isAdmin || currentUser?.permissions?.canPrintExport !== false;
 
   // Compute profile matches count map
   const matchCounts = useMemo(() => {
@@ -403,43 +405,51 @@ function InventoryContent() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <Button
-            size="sm"
-            variant="accent"
-            onClick={() => setShowPdfModal(true)}
-            icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
-          >
-            {tr('Download PDF', 'پی ڈی ایف ڈاؤنلوڈ')}
-          </Button>
+          {canPrint && (
+            <>
+              <Button
+                size="sm"
+                variant="accent"
+                onClick={() => setShowPdfModal(true)}
+                icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
+              >
+                {tr('Download PDF', 'پی ڈی ایف ڈاؤنلوڈ')}
+              </Button>
 
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={exportSelectedCSV}
-            icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
-          >
-            {tr('Export CSV', 'سی ایس وی ایکسپورٹ')}
-          </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={exportSelectedCSV}
+                icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
+              >
+                {tr('Export CSV', 'سی ایس وی ایکسپورٹ')}
+              </Button>
+            </>
+          )}
 
-          <Link href="/import-export">
-            <Button
-              size="sm"
-              variant="secondary"
-              icon={<Upload className="w-3.5 h-3.5 text-[#800F2F]" />}
-            >
-              {tr('Import CSV', 'سی ایس وی امپورٹ')}
-            </Button>
-          </Link>
+          {canAddEdit && (
+            <>
+              <Link href="/import-export">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  icon={<Upload className="w-3.5 h-3.5 text-[#800F2F]" />}
+                >
+                  {tr('Import CSV', 'سی ایس وی امپورٹ')}
+                </Button>
+              </Link>
 
-          <Link href="/profiles/new">
-            <Button
-              size="sm"
-              variant="primary"
-              icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
-            >
-              {tr('Add New Rishta', 'نیا رشتہ درج کریں')}
-            </Button>
-          </Link>
+              <Link href="/profiles/new">
+                <Button
+                  size="sm"
+                  variant="primary"
+                  icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
+                >
+                  {tr('Add New Rishta', 'نیا رشتہ درج کریں')}
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 

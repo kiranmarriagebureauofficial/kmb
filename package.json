@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx tests/matching.test.ts"
+    "test": "tsx tests/matching.test.ts && tsx tests/auth.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

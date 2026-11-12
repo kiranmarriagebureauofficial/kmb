@@ -1,27 +1,36 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { store } from '@/lib/db/store';
+import type { StaffUser } from '@/lib/types';
 import { useLanguage } from '@/lib/useLanguage';
 import { LanguageToggle } from '../brand/LanguageToggle';
-import { Search, Plus, Receipt, UserCheck, Shield, ChevronDown } from 'lucide-react';
-import Link from 'next/link';
+import { Search, Plus, Receipt, Shield, ChevronDown, LogOut, Users, KeyRound } from 'lucide-react';
 
-export function DashboardHeader() {
+export function DashboardHeader({ initialUser }: { initialUser?: StaffUser | null }) {
   const router = useRouter();
   const { tr } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentUser, setCurrentUser] = useState(store.getCurrentUser());
+  const [currentUser, setCurrentUser] = useState<StaffUser | null>(initialUser ?? store.getCurrentUser());
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const staffMembers = store.getStaff();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
+    if (initialUser) {
+      setCurrentUser(initialUser);
+    }
     const unsub = store.subscribe(() => {
-      setCurrentUser(store.getCurrentUser());
+      const stored = store.getCurrentUser();
+      if (stored) setCurrentUser(stored);
     });
     return unsub;
-  }, []);
+  }, [initialUser]);
+
+  const isAdmin = currentUser?.role === 'admin';
+  const canAddEdit = isAdmin || currentUser?.permissions?.canAddEditData !== false;
+  const canInvoices = isAdmin || currentUser?.permissions?.canManageInvoices === true;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,12 +39,16 @@ export function DashboardHeader() {
     }
   };
 
-  const switchUser = (userId: string) => {
-    const u = staffMembers.find(s => s.id === userId);
-    if (u) {
-      store.setCurrentUser(u);
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } finally {
+      store.setCurrentUser(null);
+      setUserDropdownOpen(false);
+      router.push('/login');
+      router.refresh();
     }
-    setUserDropdownOpen(false);
   };
 
   return (
@@ -56,79 +69,94 @@ export function DashboardHeader() {
 
       {/* Right Controls */}
       <div className="flex items-center gap-3">
-        {/* Quick Add Buttons */}
-        <Link
-          href="/profiles/new"
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#800F2F] text-[#F8F5F0] hover:bg-[#660A22] transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
-          <span>{tr('Add Rishta', 'نیا رشتہ')}</span>
-        </Link>
+        {canAddEdit && (
+          <Link
+            href="/profiles/new"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#800F2F] text-[#F8F5F0] hover:bg-[#660A22] transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>{tr('Add Rishta', 'نیا رشتہ')}</span>
+          </Link>
+        )}
 
-        <Link
-          href="/invoices?new=1"
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] hover:bg-[#F8F5F0] transition-colors"
-        >
-          <Receipt className="w-3.5 h-3.5 text-[#800F2F]" />
-          <span>{tr('New Invoice', 'نئی رسید')}</span>
-        </Link>
+        {canInvoices && (
+          <Link
+            href="/invoices?new=1"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] hover:bg-[#F8F5F0] transition-colors"
+          >
+            <Receipt className="w-3.5 h-3.5 text-[#800F2F]" />
+            <span>{tr('New Invoice', 'نئی رسید')}</span>
+          </Link>
+        )}
 
         {/* Language switch */}
         <LanguageToggle variant="ivory" />
 
-        {/* User Role Switcher Dropdown */}
+        {/* Authenticated User Menu (No role-switching bypass) */}
         <div className="relative">
           <button
+            type="button"
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
             className="flex items-center gap-2 py-1 px-2.5 rounded-lg border border-[#E5DFD5] hover:border-[#D4AF37] bg-[#FFFFFF] text-xs transition-colors"
           >
             <div className="w-6 h-6 rounded-full bg-[#800F2F] text-[#D4AF37] font-serif font-bold flex items-center justify-center text-xs">
-              {currentUser?.name ? currentUser.name.charAt(0) : 'A'}
+              {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
             </div>
             <div className="text-start hidden md:block">
               <p className="font-semibold text-[#2C2526] leading-tight">
-                {currentUser?.name || tr('Admin', 'منتظم')}
+                {currentUser?.name || tr('User', 'صارف')}
               </p>
               <span className="text-[10px] text-[#B88B22] font-medium uppercase">
-                {currentUser?.role === 'admin' ? tr('admin', 'ایڈمن') : tr('staff', 'عملہ')}
+                {currentUser?.role === 'admin' ? tr('Admin', 'ایڈمن') : tr('Team Member', 'ٹیم ممبر')}
               </span>
             </div>
             <ChevronDown className="w-3 h-3 text-[#6E6466]" />
           </button>
 
           {userDropdownOpen && (
-            <div className="absolute end-0 mt-2 w-56 rounded-lg bg-[#FFFFFF] border border-[#E5DFD5] shadow-lg py-2 z-50">
-              <div className="px-3 py-1.5 border-b border-[#E5DFD5] mb-1">
-                <span className="text-[10px] uppercase font-bold text-[#6E6466] tracking-wider">
-                  {tr('Switch Active Role', 'فعال صارف تبدیل کریں')}
-                </span>
+            <div className="absolute end-0 mt-2 w-64 rounded-xl bg-[#FFFFFF] border border-[#E5DFD5] shadow-xl py-2 z-50 text-xs">
+              <div className="px-3.5 py-2 border-b border-[#E5DFD5] space-y-0.5">
+                <p className="font-bold text-[#800F2F] truncate">{currentUser?.name}</p>
+                <p className="text-[11px] text-[#6E6466] truncate" dir="ltr">{currentUser?.email}</p>
+                <div className="pt-1 flex flex-wrap gap-1">
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#800F2F] text-[#D4AF37] text-[10px] font-bold">
+                    <Shield className="w-2.5 h-2.5" />
+                    {isAdmin ? tr('Administrator', 'ایڈمنسٹریٹر') : tr('Approved Staff', 'منظور شدہ عملہ')}
+                  </span>
+                </div>
               </div>
-              {staffMembers.map(staff => (
+
+              {isAdmin && (
+                <div className="py-1 border-b border-[#E5DFD5]">
+                  <Link
+                    href="/users"
+                    onClick={() => setUserDropdownOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-[#2C2526] hover:bg-[#F8F5F0] hover:text-[#800F2F] transition-colors"
+                  >
+                    <Users className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>{tr('Manage & Approve Users', 'یوزرز اور منظوری کنٹرول')}</span>
+                  </Link>
+                  <Link
+                    href="/settings"
+                    onClick={() => setUserDropdownOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-[#2C2526] hover:bg-[#F8F5F0] hover:text-[#800F2F] transition-colors"
+                  >
+                    <KeyRound className="w-3.5 h-3.5 text-[#800F2F]" />
+                    <span>{tr('Admin ID & Settings', 'ایڈمن آئی ڈی اور سیٹنگز')}</span>
+                  </Link>
+                </div>
+              )}
+
+              <div className="pt-1">
                 <button
-                  key={staff.id}
-                  onClick={() => switchUser(staff.id)}
-                  className={`w-full text-start px-3 py-2 text-xs flex items-center justify-between hover:bg-[#F8F5F0] transition-colors ${
-                    currentUser?.id === staff.id ? 'font-bold text-[#800F2F] bg-[#F8F5F0]' : 'text-[#2C2526]'
-                  }`}
+                  type="button"
+                  disabled={loggingOut}
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3.5 py-2 text-start text-[#A3182E] font-semibold hover:bg-[#F8F5F0] transition-colors"
                 >
-                  <div>
-                    <p>{staff.name}</p>
-                    <span className="text-[10px] text-[#6E6466] uppercase tracking-wide">
-                      {staff.role === 'admin' ? tr('admin', 'ایڈمن') : tr('staff', 'عملہ')}
-                    </span>
-                  </div>
-                  {currentUser?.id === staff.id && (
-                    <UserCheck className="w-4 h-4 text-[#D4AF37]" />
-                  )}
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>{loggingOut ? tr('Signing out...', 'لاگ آؤٹ ہو رہا ہے...') : tr('Sign Out', 'لاگ آؤٹ کریں')}</span>
                 </button>
-              ))}
-              <div className="border-t border-[#E5DFD5] mt-2 pt-1">
-                <Link
-                  href="/login"
-                  className="w-full block px-3 py-1.5 text-xs text-[#A3182E] hover:bg-[#F8F5F0]"
-                >
-                  {tr('Sign Out / Relogin', 'لاگ آؤٹ / دوبارہ لاگ ان')}
-                </Link>
               </div>
             </div>
           )}
@@ -137,4 +165,3 @@ export function DashboardHeader() {
     </header>
   );
 }
-

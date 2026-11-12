@@ -1,22 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { store } from '@/lib/db/store';
-import { BureauSettings, StaffUser } from '@/lib/types';
+import { BureauSettings } from '@/lib/types';
 import { formatPKR } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { TeamManagementPanel } from '@/components/admin/TeamManagementPanel';
 import { 
   Settings, 
   Save, 
   ShieldCheck, 
-  Users, 
+  ShieldAlert,
   Scale, 
   Sliders, 
   Receipt, 
   Lock, 
-  Plus, 
-  UserCheck, 
-  UserX,
   RotateCcw
 } from 'lucide-react';
 import { useLanguage } from '@/lib/useLanguage';
@@ -24,23 +23,14 @@ import { useLanguage } from '@/lib/useLanguage';
 export default function AdminSettingsPage() {
   const { tr } = useLanguage();
   const [settings, setSettings] = useState<BureauSettings>(store.getSettings());
-  const [staffList, setStaffList] = useState<StaffUser[]>(store.getStaff());
   const [currentUser, setCurrentUser] = useState(store.getCurrentUser());
   const [savedSuccess, setSavedSuccess] = useState(false);
-
-  // New staff modal state
-  const [newStaffModal, setNewStaffModal] = useState(false);
-  const [newStaffName, setNewStaffName] = useState('');
-  const [newStaffEmail, setNewStaffEmail] = useState('');
-  const [newStaffRole, setNewStaffRole] = useState<'admin' | 'staff'>('staff');
-  const [newStaffPhone, setNewStaffPhone] = useState('');
 
   const isAdmin = currentUser?.role === 'admin';
 
   useEffect(() => {
     const unsub = store.subscribe(() => {
       setSettings(store.getSettings());
-      setStaffList(store.getStaff());
       setCurrentUser(store.getCurrentUser());
     });
     return unsub;
@@ -79,28 +69,6 @@ export default function AdminSettingsPage() {
     }));
   };
 
-  const handleAddStaff = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newStaffEmail || !newStaffName) return;
-
-    store.addStaffUser({
-      name: newStaffName,
-      email: newStaffEmail,
-      role: newStaffRole,
-      phone: newStaffPhone,
-      active: true,
-    });
-
-    setNewStaffName('');
-    setNewStaffEmail('');
-    setNewStaffPhone('');
-    setNewStaffModal(false);
-  };
-
-  const handleToggleStaffStatus = (id: string) => {
-    store.toggleStaffStatus(id);
-  };
-
   const totalWeights = Object.values(settings.matching.weights).reduce((a, b) => a + b, 0);
 
   const hardFilterLabels: Record<string, [string, string]> = {
@@ -136,6 +104,29 @@ export default function AdminSettingsPage() {
     maslak: ['Maslak', 'مسلک'],
     profession: ['Profession', 'پیشہ'],
   };
+
+  if (currentUser && !isAdmin) {
+    return (
+      <div className="max-w-lg mx-auto my-12 p-8 bg-[#FFFFFF] border-2 border-[#A3182E] rounded-2xl text-center space-y-4 shadow-md">
+        <ShieldAlert className="w-12 h-12 text-[#A3182E] mx-auto" />
+        <h1 className="font-serif text-xl font-bold text-[#800F2F]">
+          {tr('Administrator Access Required', 'صرف ایڈمنسٹریٹر کے لیے')}
+        </h1>
+        <p className="text-xs text-[#6E6466]">
+          {tr(
+            'Only the Bureau Administrator can view or change bureau settings and user approvals.',
+            'صرف بیورو ایڈمنسٹریٹر ہی سسٹم کی سیٹنگز اور یوزرز کی منظوری تبدیل کر سکتا ہے۔'
+          )}
+        </p>
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#800F2F] text-[#F8F5F0] text-xs font-bold"
+        >
+          {tr('Back to Dashboard', 'ڈیش بورڈ پر واپس جائیں')}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -462,72 +453,6 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
-        {/* Section 6: Staff Management */}
-        <div className="bg-[#FFFFFF] rounded-2xl border border-[#E5DFD5] p-6 shadow-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-3 text-[#800F2F]">
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#D4AF37]" />
-              <h2 className="font-serif text-base font-bold">
-                {tr('6. Staff & Admin Access Management', '6. عملہ اور ایڈمن رسائی کا انتظام')}
-              </h2>
-            </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={() => setNewStaffModal(true)}
-              icon={<Plus className="w-3.5 h-3.5 text-[#800F2F]" />}
-            >
-              {tr('Add Staff Member', 'نیا عملہ شامل کریں')}
-            </Button>
-          </div>
-
-          <div className="overflow-x-auto text-xs">
-            <table className="w-full text-start">
-              <thead className="bg-[#F8F5F0] text-[#6E6466] uppercase font-semibold">
-                <tr>
-                  <th className="p-2.5">{tr('Name', 'نام')}</th>
-                  <th className="p-2.5">{tr('Email', 'ای میل')}</th>
-                  <th className="p-2.5">{tr('Role', 'عہدہ')}</th>
-                  <th className="p-2.5">{tr('Phone', 'فون')}</th>
-                  <th className="p-2.5">{tr('Status', 'اسٹیٹس')}</th>
-                  <th className="p-2.5 text-end">{tr('Toggle', 'تبدیلی')}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E5DFD5]">
-                {staffList.map(st => (
-                  <tr key={st.id}>
-                    <td className="p-2.5 font-bold text-[#2C2526]">{st.name}</td>
-                    <td className="p-2.5 text-[#6E6466]" dir="ltr">{st.email}</td>
-                    <td className="p-2.5">
-                      <span className="uppercase text-[10px] font-bold px-2 py-0.5 rounded bg-[#800F2F] text-[#D4AF37]">
-                        {st.role === 'admin' ? tr('Admin', 'ایڈمن') : tr('Staff', 'عملہ')}
-                      </span>
-                    </td>
-                    <td className="p-2.5" dir="ltr">{st.phone || tr('N/A', 'موجود نہیں')}</td>
-                    <td className="p-2.5">
-                      {st.active ? (
-                        <span className="text-[#800F2F] font-bold">{tr('Active', 'فعال')}</span>
-                      ) : (
-                        <span className="text-[#A3182E]">{tr('Disabled', 'غیر فعال')}</span>
-                      )}
-                    </td>
-                    <td className="p-2.5 text-end">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleStaffStatus(st.id)}
-                        className="text-[11px] underline font-semibold text-[#800F2F]"
-                      >
-                        {st.active ? tr('Disable', 'بند کریں') : tr('Enable', 'فعال کریں')}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* Submit Bar */}
         <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] flex items-center justify-between">
           <Button
@@ -554,75 +479,8 @@ export default function AdminSettingsPage() {
         </div>
       </form>
 
-      {/* Add Staff Modal */}
-      {newStaffModal && (
-        <div className="fixed inset-0 z-50 bg-[#2C2526]/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 text-xs">
-            <h3 className="font-serif text-base font-bold text-[#800F2F]">
-              {tr('Add New Bureau Staff Member', 'بیورو کے نئے عملے کا اضافہ')}
-            </h3>
-            <form onSubmit={handleAddStaff} className="space-y-3">
-              <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Full Name', 'مکمل نام')}</label>
-                <input
-                  type="text"
-                  required
-                  value={newStaffName}
-                  onChange={(e) => setNewStaffName(e.target.value)}
-                  placeholder={tr('e.g. Mrs. Saima Nadeem', 'مثال: مسز صائمہ ندیم')}
-                  className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Official Email', 'آفیشل ای میل')}</label>
-                <input
-                  type="email"
-                  required
-                  dir="ltr"
-                  value={newStaffEmail}
-                  onChange={(e) => setNewStaffEmail(e.target.value)}
-                  placeholder="saima@kiranmarriagebureau.com"
-                  className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Role', 'عہدہ')}</label>
-                <select
-                  value={newStaffRole}
-                  onChange={(e) => setNewStaffRole(e.target.value as any)}
-                  className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
-                >
-                  <option value="staff">{tr('Staff (Intake, Matching, Invoices)', 'عملہ (اندراج، میچنگ، انوائسز)')}</option>
-                  <option value="admin">{tr('Admin (All Access, Delete, Settings)', 'ایڈمن (مکمل اختیار، حذف، سیٹنگز)')}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Phone', 'فون نمبر')}</label>
-                <input
-                  type="text"
-                  dir="ltr"
-                  value={newStaffPhone}
-                  onChange={(e) => setNewStaffPhone(e.target.value)}
-                  placeholder="+92 300 0000000"
-                  className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#E5DFD5]">
-                <Button size="sm" variant="secondary" onClick={() => setNewStaffModal(false)}>
-                  {tr('Cancel', 'منسوخ')}
-                </Button>
-                <Button size="sm" variant="primary" type="submit">
-                  {tr('Add User', 'صارف شامل کریں')}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Section 6: Server-Backed Admin User Management & Approvals */}
+      <TeamManagementPanel />
     </div>
   );
 }

@@ -74,6 +74,8 @@ function ProfileDetailContent() {
   }
 
   const isAdmin = currentUser?.role === 'admin';
+  const canAddEdit = isAdmin || currentUser?.permissions?.canAddEditData !== false;
+  const canPrint = isAdmin || currentUser?.permissions?.canPrintExport !== false;
 
   if (isPrintView) {
     return (
@@ -141,29 +143,35 @@ function ProfileDetailContent() {
             </Button>
           </Link>
 
-          <Button
-            size="sm"
-            variant="accent"
-            onClick={() => exportSingleProfilePDF(profile, store.getSettings())}
-            icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
-          >
-            {tr('Download Biodata PDF', 'بائیوڈیٹا پی ڈی ایف')}
-          </Button>
+          {canPrint && (
+            <>
+              <Button
+                size="sm"
+                variant="accent"
+                onClick={() => exportSingleProfilePDF(profile, store.getSettings())}
+                icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
+              >
+                {tr('Download Biodata PDF', 'بائیوڈیٹا پی ڈی ایف')}
+              </Button>
 
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => setIsPrintView(true)}
-            icon={<Printer className="w-3.5 h-3.5 text-[#800F2F]" />}
-          >
-            {tr('Print Form', 'فارم پرنٹ کریں')}
-          </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setIsPrintView(true)}
+                icon={<Printer className="w-3.5 h-3.5 text-[#800F2F]" />}
+              >
+                {tr('Print Form', 'فارم پرنٹ کریں')}
+              </Button>
+            </>
+          )}
 
-          <Link href={`/profiles/${profile.id}/edit`}>
-            <Button size="sm" variant="secondary" icon={<Edit className="w-3.5 h-3.5 text-[#800F2F]" />}>
-              {tr('Edit Profile', 'پروفائل ایڈٹ کریں')}
-            </Button>
-          </Link>
+          {canAddEdit && (
+            <Link href={`/profiles/${profile.id}/edit`}>
+              <Button size="sm" variant="secondary" icon={<Edit className="w-3.5 h-3.5 text-[#800F2F]" />}>
+                {tr('Edit Profile', 'پروفائل ایڈٹ کریں')}
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 

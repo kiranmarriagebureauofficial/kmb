@@ -9,16 +9,16 @@ import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { ProfileAvatar } from '../ui/ProfileAvatar';
 import { buildWhatsAppShareSummary, generateWhatsAppLink } from '@/lib/utils';
-import { 
-  Check, 
-  X, 
-  Share2, 
-  HeartHandshake, 
-  ArrowLeftRight, 
-  Star, 
-  MapPin, 
-  GraduationCap, 
-  Briefcase, 
+import {
+  Check,
+  X,
+  Share2,
+  HeartHandshake,
+  ArrowLeftRight,
+  Star,
+  MapPin,
+  GraduationCap,
+  Briefcase,
   Eye,
   ChevronDown,
   ChevronUp

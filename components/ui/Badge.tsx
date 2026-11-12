@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { Star, Check, AlertTriangle, Clock, ShieldCheck, XCircle } from 'lucide-react';

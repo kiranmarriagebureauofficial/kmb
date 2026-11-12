@@ -242,6 +242,14 @@ export interface Invoice {
   updatedAt: string;
 }
 
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
+
+export interface UserPermissions {
+  canAddEditData: boolean;
+  canPrintExport: boolean;
+  canManageInvoices: boolean;
+}
+
 export interface StaffUser {
   id: string;
   name: string;
@@ -249,6 +257,11 @@ export interface StaffUser {
   role: UserRole;
   phone?: string;
   active: boolean;
+  approvalStatus?: ApprovalStatus;
+  permissions?: UserPermissions;
+  approvedBy?: string;
+  approvedAt?: string;
+  createdAt?: string;
   lastLogin?: string;
 }
 

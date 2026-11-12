@@ -12,8 +12,7 @@ import {
   ProfileStatus 
 } from '../types';
 import { 
-  INITIAL_SETTINGS, 
-  INITIAL_STAFF 
+  INITIAL_SETTINGS 
 } from './seed-data';
 import { calculateMatchesForProfile } from '../matching-engine';
 
@@ -33,9 +32,9 @@ class DataStore {
   private settings: BureauSettings = INITIAL_SETTINGS;
   private invoices: Invoice[] = [];
   private proposals: Proposal[] = [];
-  private staff: StaffUser[] = INITIAL_STAFF;
+  private staff: StaffUser[] = [];
   private auditLogs: AuditLogEntry[] = [];
-  private currentUser: StaffUser | null = INITIAL_STAFF[0]; // default admin
+  private currentUser: StaffUser | null = null;
   private language: 'en' | 'ur' = 'en';
   private listeners: Set<() => void> = new Set();
   private initialized: boolean = false;
@@ -50,9 +49,9 @@ class DataStore {
       this.settings = { ...INITIAL_SETTINGS };
       this.invoices = [];
       this.proposals = [];
-      this.staff = [...INITIAL_STAFF];
+      this.staff = [];
       this.auditLogs = [];
-      this.currentUser = INITIAL_STAFF[0];
+      this.currentUser = null;
       return;
     }
 
@@ -70,13 +69,13 @@ class DataStore {
       this.proposals = prop ? JSON.parse(prop) : [];
 
       const st = localStorage.getItem(STORAGE_KEYS.STAFF);
-      this.staff = st ? JSON.parse(st) : [...INITIAL_STAFF];
+      this.staff = st ? JSON.parse(st) : [];
 
       const al = localStorage.getItem(STORAGE_KEYS.AUDIT);
       this.auditLogs = al ? JSON.parse(al) : [];
 
       const cu = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-      this.currentUser = cu ? JSON.parse(cu) : INITIAL_STAFF[0];
+      this.currentUser = cu ? JSON.parse(cu) : null;
 
       const lang = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
       this.language = (lang === 'ur' ? 'ur' : 'en');
@@ -88,9 +87,9 @@ class DataStore {
       this.settings = { ...INITIAL_SETTINGS };
       this.invoices = [];
       this.proposals = [];
-      this.staff = [...INITIAL_STAFF];
+      this.staff = [];
       this.auditLogs = [];
-      this.currentUser = INITIAL_STAFF[0];
+      this.currentUser = null;
     }
   }
 
@@ -136,7 +135,23 @@ class DataStore {
 
   public setCurrentUser(user: StaffUser | null) {
     this.currentUser = user;
-    this.save(STORAGE_KEYS.CURRENT_USER, user);
+    if (typeof window !== 'undefined') {
+      try {
+        if (user) {
+          localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+        } else {
+          localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+        }
+      } catch (e) {
+        console.error('Save current user failed:', e);
+      }
+    }
+    this.notify();
+  }
+
+  public syncStaffFromServer(users: StaffUser[]) {
+    this.staff = users;
+    this.save(STORAGE_KEYS.STAFF, this.staff);
   }
 
   // Profiles
@@ -914,9 +929,7 @@ class DataStore {
     this.settings = { ...INITIAL_SETTINGS };
     this.invoices = [];
     this.proposals = [];
-    this.staff = [...INITIAL_STAFF];
     this.auditLogs = [];
-    this.currentUser = INITIAL_STAFF[0];
     
     if (typeof window !== 'undefined') {
       localStorage.removeItem(STORAGE_KEYS.PROFILES);

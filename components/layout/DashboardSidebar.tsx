@@ -1,10 +1,11 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BrandLogo } from '../brand/BrandLogo';
 import { store } from '@/lib/db/store';
+import type { StaffUser } from '@/lib/types';
 import { useLanguage } from '@/lib/useLanguage';
 import { 
   LayoutDashboard, 
@@ -19,6 +20,7 @@ import {
   FileSpreadsheet, 
   History, 
   Settings, 
+  Users,
   Copy, 
   Share2, 
   Check, 
@@ -29,25 +31,40 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ initialUser }: { initialUser?: StaffUser | null }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { tr } = useLanguage();
   const [pendingCount, setPendingCount] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [currentUser, setCurrentUser] = useState(store.getCurrentUser());
+  const [currentUser, setCurrentUser] = useState<StaffUser | null>(initialUser ?? store.getCurrentUser());
   const [collapsed, setCollapsed] = useState(false);
   const [regEnabled, setRegEnabled] = useState(true);
 
   useEffect(() => {
+    if (initialUser) {
+      setCurrentUser(initialUser);
+    }
     const update = () => {
       setPendingCount(store.getPendingRequests().length);
-      setCurrentUser(store.getCurrentUser());
+      const stored = store.getCurrentUser();
+      if (stored) setCurrentUser(stored);
       setRegEnabled(store.getSettings().enableOnlineRegistrationLink !== false);
     };
     update();
     const unsub = store.subscribe(update);
     return unsub;
-  }, []);
+  }, [initialUser]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } finally {
+      store.setCurrentUser(null);
+      router.push('/login');
+      router.refresh();
+    }
+  };
 
   interface NavItem {
     href: string;
@@ -140,6 +157,12 @@ export function DashboardSidebar() {
           icon: History,
         },
         {
+          href: '/users',
+          label: tr('Users & Approvals', 'یوزرز اور منظوری'),
+          icon: Users,
+          adminOnly: true,
+        },
+        {
           href: '/settings',
           label: tr('Bureau Settings', 'بیورو سیٹنگز'),
           icon: Settings,
@@ -197,7 +220,7 @@ export function DashboardSidebar() {
       </div>
 
       {/* Quick Add CTA (when expanded) */}
-      {!collapsed && (
+      {!collapsed && (isAdmin || currentUser?.permissions?.canAddEditData !== false) && (
         <div className="p-3 border-b border-[#660A22]">
           <Link
             href="/profiles/new"
@@ -323,24 +346,25 @@ export function DashboardSidebar() {
           {!collapsed && (
             <div className="overflow-hidden">
               <p className="text-xs font-semibold text-[#F8F5F0] truncate leading-tight">
-                {currentUser?.name || 'Staff User'}
+                {currentUser?.name || tr('Staff User', 'عملہ صارف')}
               </p>
               <span className="inline-flex items-center gap-1 text-[9px] text-[#D4AF37] capitalize">
                 <Shield className="w-2.5 h-2.5" />
-                {currentUser?.role || 'staff'}
+                {isAdmin ? tr('Administrator', 'ایڈمنسٹریٹر') : tr('Team Member', 'ٹیم ممبر')}
               </span>
             </div>
           )}
         </div>
 
         {!collapsed && (
-          <Link
-            href="/login"
+          <button
+            type="button"
+            onClick={handleLogout}
             className="p-1.5 text-[#E5DFD5] hover:text-[#D4AF37] transition-colors"
-            title="Log out"
+            title={tr('Log out', 'لاگ آؤٹ')}
           >
             <LogOut className="w-3.5 h-3.5" />
-          </Link>
+          </button>
         )}
       </div>
     </aside>

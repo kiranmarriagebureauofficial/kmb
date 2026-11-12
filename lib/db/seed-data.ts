@@ -1,25 +1,6 @@
 import { Profile, BureauSettings, Proposal, Invoice, StaffUser, ActivityLogEntry } from '../types';
 
-export const INITIAL_STAFF: StaffUser[] = [
-  {
-    id: 'staff-admin-1',
-    name: 'Begum Kiran Shah',
-    email: 'admin@kiranmarriagebureau.com',
-    role: 'admin',
-    phone: '+92 300 8472910',
-    active: true,
-    lastLogin: '2026-11-06T15:30:00Z',
-  },
-  {
-    id: 'staff-coordinator-1',
-    name: 'Mrs. Farzana Akhtar',
-    email: 'staff@kiranmarriagebureau.com',
-    role: 'staff',
-    phone: '+92 321 4455889',
-    active: true,
-    lastLogin: '2026-11-06T14:15:00Z',
-  },
-];
+export const INITIAL_STAFF: StaffUser[] = [];
 
 export const INITIAL_SETTINGS: BureauSettings = {
   bureauName: 'Kiran Marriage Bureau',
