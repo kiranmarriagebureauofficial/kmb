@@ -19,8 +19,10 @@ import {
   UserX,
   RotateCcw
 } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 export default function AdminSettingsPage() {
+  const { tr } = useLanguage();
   const [settings, setSettings] = useState<BureauSettings>(store.getSettings());
   const [staffList, setStaffList] = useState<StaffUser[]>(store.getStaff());
   const [currentUser, setCurrentUser] = useState(store.getCurrentUser());
@@ -101,25 +103,62 @@ export default function AdminSettingsPage() {
 
   const totalWeights = Object.values(settings.matching.weights).reduce((a, b) => a + b, 0);
 
+  const hardFilterLabels: Record<string, [string, string]> = {
+    gender: ['Gender Opposite Match', 'جنس کی مطابقت'],
+    maslak: ['Maslak / Sect Exact Match', 'مسلک کی مطابقت'],
+    maritalStatus: ['Marital Status Filter', 'ازدواجی حیثیت فلٹر'],
+    caste: ['Caste / Biradari Filter', 'ذات / برادری فلٹر'],
+    city: ['City / Location Filter', 'شہر / مقام فلٹر'],
+    education: ['Education Minimum Filter', 'کم از کم تعلیم فلٹر'],
+    income: ['Income Minimum Filter', 'کم از کم آمدنی فلٹر'],
+  };
+
+  const weightLabels: Record<string, [string, string]> = {
+    ageCompatibility: ['Age Compatibility', 'عمر کی مطابقت'],
+    cityMatch: ['City / Area Match', 'شہر / علاقہ میچ'],
+    casteMatch: ['Caste Match', 'ذات میچ'],
+    maslakMatch: ['Maslak Match', 'مسلک میچ'],
+    educationMatch: ['Education Match', 'تعلیم میچ'],
+    incomeMatch: ['Income & Stability', 'آمدنی و معاشی حیثیت'],
+    familySystemMatch: ['Family System', 'خاندانی نظام'],
+    maritalStatusMatch: ['Marital Status', 'ازدواجی حیثیت'],
+    heightMatch: ['Height Match', 'قد کی مطابقت'],
+    professionMatch: ['Profession Match', 'پیشہ کی مطابقت'],
+    locationMatch: ['Location Match', 'علاقہ میچ'],
+    religiousMatch: ['Religious Alignment', 'مذہبی ہم آہنگی'],
+    age: ['Age', 'عمر'],
+    city: ['City', 'شہر'],
+    caste: ['Caste', 'ذات'],
+    education: ['Education', 'تعلیم'],
+    income: ['Income', 'آمدنی'],
+    familySystem: ['Family System', 'خاندانی نظام'],
+    height: ['Height', 'قد'],
+    maslak: ['Maslak', 'مسلک'],
+    profession: ['Profession', 'پیشہ'],
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E5DFD5] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-            System Administration
+            {tr('System Administration', 'سسٹم انتظامیہ')}
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
-            Bureau & Matching Engine Configuration
+            {tr('Bureau & Matching Engine Configuration', 'بیورو اور میچنگ انجن کی سیٹنگز')}
           </h1>
           <p className="text-xs text-[#6E6466]">
-            Configure bureau details, official fee amounts, hard filter toggles, scoring weights, and staff accounts.
+            {tr(
+              'Configure bureau details, official fee amounts, hard filter toggles, scoring weights, and staff accounts.',
+              'بیورو کی تفصیلات، سرکاری فیسیں، سخت فلٹرز، سکورنگ وزن اور عملے کے اکاؤنٹس ترتیب دیں۔'
+            )}
           </p>
         </div>
 
         {savedSuccess && (
           <span className="px-3 py-1.5 rounded-lg bg-[#F8F5F0] text-[#800F2F] border border-[#D4AF37] font-bold text-xs">
-            ✓ Settings Saved Successfully!
+            ✓ {tr('Settings Saved Successfully!', 'سیٹنگز کامیابی سے محفوظ ہو گئیں!')}
           </span>
         )}
       </div>
@@ -130,13 +169,13 @@ export default function AdminSettingsPage() {
           <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-3 text-[#800F2F]">
             <Settings className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold">
-              1. Official Bureau Identity & Contact Numbers
+              {tr('1. Official Bureau Identity & Contact Numbers', '1. بیورو کی سرکاری شناخت اور رابطہ نمبرز')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Bureau Legal Name</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Bureau Legal Name', 'بیورو کا قانونی نام')}</label>
               <input
                 type="text"
                 value={settings.bureauName}
@@ -146,9 +185,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Official WhatsApp</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Official WhatsApp', 'آفیشل واٹس ایپ')}</label>
               <input
                 type="text"
+                dir="ltr"
                 value={settings.whatsapp}
                 onChange={(e) => setSettings({ ...settings, whatsapp: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
@@ -156,9 +196,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Telephone Line 1</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Telephone Line 1', 'فون نمبر 1')}</label>
               <input
                 type="text"
+                dir="ltr"
                 value={settings.phone1}
                 onChange={(e) => setSettings({ ...settings, phone1: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
@@ -166,9 +207,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Telephone Line 2</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Telephone Line 2', 'فون نمبر 2')}</label>
               <input
                 type="text"
+                dir="ltr"
                 value={settings.phone2}
                 onChange={(e) => setSettings({ ...settings, phone2: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
@@ -176,7 +218,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block font-semibold text-[#800F2F] mb-1">Office Address (Printed on Invoices & Forms)</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Office Address (Printed on Invoices & Forms)', 'آفس کا پتہ (انوائس اور فارمز پر پرنٹ ہوتا ہے)')}</label>
               <textarea
                 rows={2}
                 value={settings.address}
@@ -192,15 +234,15 @@ export default function AdminSettingsPage() {
           <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-3 text-[#800F2F]">
             <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold">
-              1B. Online Registration Portal & Stock Velocity Settings
+              {tr('1B. Online Registration Portal & Stock Velocity Settings', '1B. آن لائن رجسٹریشن لنک اور اسٹاک الرٹ سیٹنگز')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] flex items-center justify-between">
               <div>
-                <span className="font-bold text-[#800F2F] block">Enable Public Registration Link (/register)</span>
-                <span className="text-[11px] text-[#6E6466]">When disabled, families visiting the link see an office notice</span>
+                <span className="font-bold text-[#800F2F] block">{tr('Enable Public Registration Link (/register)', 'عوامی رجسٹریشن لنک (/register) فعال کریں')}</span>
+                <span className="text-[11px] text-[#6E6466]">{tr('When disabled, families visiting the link see an office notice', 'بند ہونے پر لنک کھولنے والوں کو آفس کا پیغام نظر آئے گا')}</span>
               </div>
               <input
                 type="checkbox"
@@ -211,7 +253,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Old Stock Alert Threshold (Days Sitting Unmatched)</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Old Stock Alert Threshold (Days Sitting Unmatched)', 'پرانے اسٹاک الرٹ کی حد (بغیر میچ دن)')}</label>
               <input
                 type="number"
                 min={30}
@@ -220,7 +262,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSettings({ ...settings, oldStockAlertDays: parseInt(e.target.value, 10) || 90 })}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] font-bold"
               />
-              <span className="text-[10px] text-[#6E6466] mt-1 block">Profiles older than this trigger Old Stock KPI alerts</span>
+              <span className="text-[10px] text-[#6E6466] mt-1 block">{tr('Profiles older than this trigger Old Stock KPI alerts', 'اس سے پرانے پروفائلز پر پرانے اسٹاک کا الرٹ ظاہر ہوتا ہے')}</span>
             </div>
           </div>
         </div>
@@ -230,13 +272,13 @@ export default function AdminSettingsPage() {
           <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-3 text-[#800F2F]">
             <Receipt className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold">
-              2. Standard Matrimonial Fee Amounts (PKR)
+              {tr('2. Standard Matrimonial Fee Amounts (PKR)', '2. معیاری فیس کی رقمیں (روپے میں)')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Standard Registration Fee</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Standard Registration Fee', 'عام رجسٹریشن فیس')}</label>
               <input
                 type="number"
                 step={1000}
@@ -252,7 +294,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">6-Month Premium Membership Fee</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('6-Month Premium Membership Fee', '6 ماہ کی پریمیم ممبرشپ فیس')}</label>
               <input
                 type="number"
                 step={5000}
@@ -268,7 +310,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#800F2F] mb-1">Success Fee (Rishta Done)</label>
+              <label className="block font-semibold text-[#800F2F] mb-1">{tr('Success Fee (Rishta Done)', 'شادی طے ہونے کی فیس (سکسس فیس)')}</label>
               <input
                 type="number"
                 step={5000}
@@ -291,29 +333,32 @@ export default function AdminSettingsPage() {
             <div className="flex items-center gap-2">
               <Scale className="w-5 h-5 text-[#D4AF37]" />
               <h2 className="font-serif text-base font-bold">
-                3. Matching Engine Hard Filters (Zero Tolerance Gates)
+                {tr('3. Matching Engine Hard Filters (Zero Tolerance Gates)', '3. میچنگ انجن کے سخت فلٹرز (لازمی شرائط)')}
               </h2>
             </div>
-            <span className="text-[11px] text-[#6E6466]">If unchecked, field is relaxed to soft scoring</span>
+            <span className="text-[11px] text-[#6E6466]">{tr('If unchecked, field is relaxed to soft scoring', 'ان چیک ہونے پر اس شرط میں نرمی برتی جائے گی')}</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-            {Object.entries(settings.matching.hardFilters).map(([k, enabled]) => (
-              <label
-                key={k}
-                className="p-3 rounded-xl border border-[#E5DFD5] bg-[#F8F5F0] flex items-center justify-between cursor-pointer hover:border-[#D4AF37] transition-colors"
-              >
-                <span className="font-semibold text-[#2C2526] capitalize">
-                  {k.replace(/([A-Z])/g, ' $1')}
-                </span>
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={() => handleToggleHardFilter(k as any)}
-                  className="w-4 h-4 text-[#800F2F] rounded border-[#E5DFD5]"
-                />
-              </label>
-            ))}
+            {Object.entries(settings.matching.hardFilters).map(([k, enabled]) => {
+              const pair = hardFilterLabels[k];
+              return (
+                <label
+                  key={k}
+                  className="p-3 rounded-xl border border-[#E5DFD5] bg-[#F8F5F0] flex items-center justify-between cursor-pointer hover:border-[#D4AF37] transition-colors"
+                >
+                  <span className="font-semibold text-[#2C2526] capitalize">
+                    {pair ? tr(pair[0], pair[1]) : k.replace(/([A-Z])/g, ' $1')}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={enabled}
+                    onChange={() => handleToggleHardFilter(k as any)}
+                    className="w-4 h-4 text-[#800F2F] rounded border-[#E5DFD5]"
+                  />
+                </label>
+              );
+            })}
           </div>
         </div>
 
@@ -323,30 +368,33 @@ export default function AdminSettingsPage() {
             <div className="flex items-center gap-2">
               <Sliders className="w-5 h-5 text-[#D4AF37]" />
               <h2 className="font-serif text-base font-bold">
-                4. Compatibility Score Weights (Total Must Equal 100)
+                {tr('4. Compatibility Score Weights (Total Must Equal 100)', '4. مطابقت سکورنگ کے وزن (مجموعہ 100 ہونا ضروری ہے)')}
               </h2>
             </div>
             <span className={`text-xs font-mono font-bold ${totalWeights === 100 ? 'text-[#800F2F]' : 'text-[#A3182E]'}`}>
-              Current Total: {totalWeights} / 100
+              {tr('Current Total:', 'موجودہ مجموعہ:')} {totalWeights} / 100
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            {Object.entries(settings.matching.weights).map(([k, weight]) => (
-              <div key={k} className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5]">
-                <label className="block text-[11px] font-semibold text-[#800F2F] mb-1 capitalize truncate">
-                  {k.replace(/([A-Z])/g, ' $1')}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={50}
-                  value={weight}
-                  onChange={(e) => handleWeightChange(k as any, parseInt(e.target.value, 10) || 0)}
-                  className="w-full px-2.5 py-1.5 rounded border border-[#E5DFD5] bg-white font-mono font-bold text-[#800F2F]"
-                />
-              </div>
-            ))}
+            {Object.entries(settings.matching.weights).map(([k, weight]) => {
+              const pair = weightLabels[k];
+              return (
+                <div key={k} className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5]">
+                  <label className="block text-[11px] font-semibold text-[#800F2F] mb-1 capitalize truncate">
+                    {pair ? tr(pair[0], pair[1]) : k.replace(/([A-Z])/g, ' $1')}
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={50}
+                    value={weight}
+                    onChange={(e) => handleWeightChange(k as any, parseInt(e.target.value, 10) || 0)}
+                    className="w-full px-2.5 py-1.5 rounded border border-[#E5DFD5] bg-white font-mono font-bold text-[#800F2F]"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -355,14 +403,14 @@ export default function AdminSettingsPage() {
           <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-3 text-[#800F2F]">
             <Sliders className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold">
-              5. Tier Threshold Boundaries
+              {tr('5. Tier Threshold Boundaries', '5. مطابقت درجات کی حدود')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Minimum Score to Show (Default: 50%)
+                {tr('Minimum Score to Show (Default: 50%)', 'دکھانے کا کم از کم سکور (ڈیفالٹ: 50%)')}
               </label>
               <input
                 type="number"
@@ -383,12 +431,12 @@ export default function AdminSettingsPage() {
                 }
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono font-bold"
               />
-              <span className="text-[10px] text-[#6E6466] mt-1 block">Matches below this % are hidden</span>
+              <span className="text-[10px] text-[#6E6466] mt-1 block">{tr('Matches below this % are hidden', 'اس فیصد سے کم میچز چھپائے جاتے ہیں')}</span>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Premium Rishtay Minimum Score (Default: 75%+)
+                {tr('Premium Rishtay Minimum Score (Default: 75%+)', 'پریمیم رشتوں کا کم از کم سکور (ڈیفالٹ: 75%+)')}
               </label>
               <input
                 type="number"
@@ -409,7 +457,7 @@ export default function AdminSettingsPage() {
                 }
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono font-bold text-[#B88B22]"
               />
-              <span className="text-[10px] text-[#6E6466] mt-1 block">Pairs at or above this score are awarded Gold Ring & Star</span>
+              <span className="text-[10px] text-[#6E6466] mt-1 block">{tr('Pairs at or above this score are awarded Gold Ring & Star', 'اس یا اس سے زیادہ سکور والے جوڑوں کو سنہری ستارہ ملتا ہے')}</span>
             </div>
           </div>
         </div>
@@ -420,7 +468,7 @@ export default function AdminSettingsPage() {
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-[#D4AF37]" />
               <h2 className="font-serif text-base font-bold">
-                6. Staff & Admin Access Management
+                {tr('6. Staff & Admin Access Management', '6. عملہ اور ایڈمن رسائی کا انتظام')}
               </h2>
             </div>
             <Button
@@ -430,47 +478,47 @@ export default function AdminSettingsPage() {
               onClick={() => setNewStaffModal(true)}
               icon={<Plus className="w-3.5 h-3.5 text-[#800F2F]" />}
             >
-              Add Staff Member
+              {tr('Add Staff Member', 'نیا عملہ شامل کریں')}
             </Button>
           </div>
 
           <div className="overflow-x-auto text-xs">
-            <table className="w-full text-left">
+            <table className="w-full text-start">
               <thead className="bg-[#F8F5F0] text-[#6E6466] uppercase font-semibold">
                 <tr>
-                  <th className="p-2.5">Name</th>
-                  <th className="p-2.5">Email</th>
-                  <th className="p-2.5">Role</th>
-                  <th className="p-2.5">Phone</th>
-                  <th className="p-2.5">Status</th>
-                  <th className="p-2.5 text-right">Toggle</th>
+                  <th className="p-2.5">{tr('Name', 'نام')}</th>
+                  <th className="p-2.5">{tr('Email', 'ای میل')}</th>
+                  <th className="p-2.5">{tr('Role', 'عہدہ')}</th>
+                  <th className="p-2.5">{tr('Phone', 'فون')}</th>
+                  <th className="p-2.5">{tr('Status', 'اسٹیٹس')}</th>
+                  <th className="p-2.5 text-end">{tr('Toggle', 'تبدیلی')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
                 {staffList.map(st => (
                   <tr key={st.id}>
                     <td className="p-2.5 font-bold text-[#2C2526]">{st.name}</td>
-                    <td className="p-2.5 text-[#6E6466]">{st.email}</td>
+                    <td className="p-2.5 text-[#6E6466]" dir="ltr">{st.email}</td>
                     <td className="p-2.5">
                       <span className="uppercase text-[10px] font-bold px-2 py-0.5 rounded bg-[#800F2F] text-[#D4AF37]">
-                        {st.role}
+                        {st.role === 'admin' ? tr('Admin', 'ایڈمن') : tr('Staff', 'عملہ')}
                       </span>
                     </td>
-                    <td className="p-2.5">{st.phone || 'N/A'}</td>
+                    <td className="p-2.5" dir="ltr">{st.phone || tr('N/A', 'موجود نہیں')}</td>
                     <td className="p-2.5">
                       {st.active ? (
-                        <span className="text-[#800F2F] font-bold">Active</span>
+                        <span className="text-[#800F2F] font-bold">{tr('Active', 'فعال')}</span>
                       ) : (
-                        <span className="text-[#A3182E]">Disabled</span>
+                        <span className="text-[#A3182E]">{tr('Disabled', 'غیر فعال')}</span>
                       )}
                     </td>
-                    <td className="p-2.5 text-right">
+                    <td className="p-2.5 text-end">
                       <button
                         type="button"
                         onClick={() => handleToggleStaffStatus(st.id)}
                         className="text-[11px] underline font-semibold text-[#800F2F]"
                       >
-                        {st.active ? 'Disable' : 'Enable'}
+                        {st.active ? tr('Disable', 'بند کریں') : tr('Enable', 'فعال کریں')}
                       </button>
                     </td>
                   </tr>
@@ -486,14 +534,14 @@ export default function AdminSettingsPage() {
             type="button"
             variant="ghost"
             onClick={() => {
-              if (confirm('Clear all rishtas, proposals, and invoices for a clean fresh start?')) {
+              if (confirm(tr('Clear all rishtas, proposals, and invoices for a clean fresh start?', 'کیا آپ نئے آغاز کے لیے تمام رشتے، پروپوزلز اور انوائسز صاف کرنا چاہتے ہیں؟'))) {
                 store.resetToDefaults();
-                alert('All bureau data cleared cleanly.');
+                alert(tr('All bureau data cleared cleanly.', 'تمام بیورو ڈیٹا صاف کر دیا گیا ہے۔'));
               }
             }}
             icon={<RotateCcw className="w-3.5 h-3.5 text-[#A3182E]" />}
           >
-            Clear All Bureau Data (Fresh Start)
+            {tr('Clear All Bureau Data (Fresh Start)', 'تمام ڈیٹا صاف کریں (نیا آغاز)')}
           </Button>
 
           <Button
@@ -501,7 +549,7 @@ export default function AdminSettingsPage() {
             variant="primary"
             icon={<Save className="w-4 h-4 text-[#D4AF37]" />}
           >
-            Save All Settings
+            {tr('Save All Settings', 'تمام سیٹنگز محفوظ کریں')}
           </Button>
         </div>
       </form>
@@ -511,26 +559,27 @@ export default function AdminSettingsPage() {
         <div className="fixed inset-0 z-50 bg-[#2C2526]/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 text-xs">
             <h3 className="font-serif text-base font-bold text-[#800F2F]">
-              Add New Bureau Staff Member
+              {tr('Add New Bureau Staff Member', 'بیورو کے نئے عملے کا اضافہ')}
             </h3>
             <form onSubmit={handleAddStaff} className="space-y-3">
               <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">Full Name</label>
+                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Full Name', 'مکمل نام')}</label>
                 <input
                   type="text"
                   required
                   value={newStaffName}
                   onChange={(e) => setNewStaffName(e.target.value)}
-                  placeholder="e.g. Mrs. Saima Nadeem"
+                  placeholder={tr('e.g. Mrs. Saima Nadeem', 'مثال: مسز صائمہ ندیم')}
                   className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">Official Email</label>
+                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Official Email', 'آفیشل ای میل')}</label>
                 <input
                   type="email"
                   required
+                  dir="ltr"
                   value={newStaffEmail}
                   onChange={(e) => setNewStaffEmail(e.target.value)}
                   placeholder="saima@kiranmarriagebureau.com"
@@ -539,21 +588,22 @@ export default function AdminSettingsPage() {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">Role</label>
+                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Role', 'عہدہ')}</label>
                 <select
                   value={newStaffRole}
                   onChange={(e) => setNewStaffRole(e.target.value as any)}
                   className="w-full p-2 rounded border border-[#E5DFD5] bg-[#F8F5F0]"
                 >
-                  <option value="staff">Staff (Intake, Matching, Invoices)</option>
-                  <option value="admin">Admin (All Access, Delete, Settings)</option>
+                  <option value="staff">{tr('Staff (Intake, Matching, Invoices)', 'عملہ (اندراج، میچنگ، انوائسز)')}</option>
+                  <option value="admin">{tr('Admin (All Access, Delete, Settings)', 'ایڈمن (مکمل اختیار، حذف، سیٹنگز)')}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block font-semibold text-[#800F2F] mb-1">Phone</label>
+                <label className="block font-semibold text-[#800F2F] mb-1">{tr('Phone', 'فون نمبر')}</label>
                 <input
                   type="text"
+                  dir="ltr"
                   value={newStaffPhone}
                   onChange={(e) => setNewStaffPhone(e.target.value)}
                   placeholder="+92 300 0000000"
@@ -563,10 +613,10 @@ export default function AdminSettingsPage() {
 
               <div className="flex justify-end gap-2 pt-2 border-t border-[#E5DFD5]">
                 <Button size="sm" variant="secondary" onClick={() => setNewStaffModal(false)}>
-                  Cancel
+                  {tr('Cancel', 'منسوخ')}
                 </Button>
                 <Button size="sm" variant="primary" type="submit">
-                  Add User
+                  {tr('Add User', 'صارف شامل کریں')}
                 </Button>
               </div>
             </form>

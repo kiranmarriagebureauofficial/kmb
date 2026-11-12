@@ -24,6 +24,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { ProfileComparisonModal } from './ProfileComparisonModal';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface MatchCardProps {
   match: MatchResult;
@@ -32,6 +33,7 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardProps) {
+  const { tr, isUr } = useLanguage();
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
   const partner = match.partnerProfile;
@@ -48,7 +50,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
 
   return (
     <>
-      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden border-l-4 hover:border-l-[#D4AF37] flex flex-col justify-between">
+      <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden border-s-4 hover:border-s-[#D4AF37] flex flex-col justify-between">
         <div className="p-5 space-y-4">
           {/* Header Row */}
           <div className="flex items-start justify-between gap-4">
@@ -68,15 +70,15 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
                     {partner.name}
                   </h3>
                   <span className="text-xs font-mono font-semibold text-[#800F2F] bg-[#F8F5F0] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
-                    Reg: {partner.formNo}
+                    {tr('Reg:', 'رجسٹر:')} {partner.formNo}
                   </span>
                   {partner.premiumMember && (
-                    <Badge variant="premium">Premium Member</Badge>
+                    <Badge variant="premium">{tr('Premium Member', 'پریمیم ممبر')}</Badge>
                   )}
                 </div>
 
                 <p className="text-xs text-[#6E6466] mt-0.5 flex items-center gap-1.5 flex-wrap">
-                  <span>{partner.age} Yrs</span>
+                  <span>{partner.age} {tr('Yrs', 'سال')}</span>
                   <span>•</span>
                   <span>{partner.height}</span>
                   <span>•</span>
@@ -94,7 +96,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
                 tier={match.tier}
                 className="mt-1 text-[10px] py-0 px-1.5"
               >
-                {match.tier === 'premium' ? '75%+ Premium' : 'Compatible'}
+                {match.tier === 'premium' ? tr('75%+ Premium', '75%+ پریمیم') : tr('Compatible', 'موزوں')}
               </Badge>
             </div>
           </div>
@@ -103,7 +105,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
             <div className="flex items-center gap-2 p-2 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5]">
               <MapPin className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-              <span className="truncate">{partner.city} ({partner.societyName || 'Lahore'})</span>
+              <span className="truncate">{partner.city} ({partner.societyName || tr('Lahore', 'لاہور')})</span>
             </div>
 
             <div className="flex items-center gap-2 p-2 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5]">
@@ -121,22 +123,22 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
           <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] flex items-center justify-between text-xs">
             <div>
               <span className="text-[10px] uppercase font-bold text-[#6E6466] block">
-                Two-Way Compatibility
+                {tr('Two-Way Compatibility', 'دو طرفہ مطابقت')}
               </span>
               <div className="flex items-center gap-3 mt-1">
                 <span>
-                  Candidate Suitability: <strong className="text-[#800F2F]">{match.scoreAB}%</strong>
+                  {tr('Candidate Suitability:', 'امیدوار کی مطابقت:')} <strong className="text-[#800F2F]">{match.scoreAB}%</strong>
                 </span>
                 <span className="text-[#D8D0C3]">|</span>
                 <span>
-                  Partner Suitability: <strong className="text-[#800F2F]">{match.scoreBA}%</strong>
+                  {tr('Partner Suitability:', 'فریقِ ثانی کی مطابقت:')} <strong className="text-[#800F2F]">{match.scoreBA}%</strong>
                 </span>
               </div>
             </div>
 
             {match.mutual && (
               <span className="px-2 py-1 rounded bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37] text-[11px] font-bold">
-                ✓ High Mutual Fit
+                ✓ {tr('High Mutual Fit', 'بہترین باہمی جوڑ')}
               </span>
             )}
           </div>
@@ -148,7 +150,11 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
               onClick={() => setShowBreakdown(!showBreakdown)}
               className="text-xs font-semibold text-[#800F2F] hover:text-[#96163A] flex items-center gap-1.5 transition-colors"
             >
-              <span>{showBreakdown ? 'Hide Compatibility Factors' : 'View Compatibility Factors & Match Analysis'}</span>
+              <span>
+                {showBreakdown
+                  ? tr('Hide Compatibility Factors', 'مطابقت کی تفصیل چھپائیں')
+                  : tr('View Compatibility Factors & Match Analysis', 'مطابقت کے عوامل اور تجزیہ دیکھیں')}
+              </span>
               {showBreakdown ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
 
@@ -167,13 +173,15 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
                         </div>
                       )}
                       <div>
-                        <span className="font-semibold text-[#2C2526]">{item.labelEn}:</span>{' '}
+                        <span className="font-semibold text-[#2C2526]">
+                          {isUr ? (item.labelUr || item.labelEn) : item.labelEn}:
+                        </span>{' '}
                         <span className="text-[#6E6466]">{item.details}</span>
                       </div>
                     </div>
 
                     <span className="text-[11px] font-mono font-bold text-[#800F2F] shrink-0">
-                      {item.scoreContribution} / {item.maxScore} pts
+                      {item.scoreContribution} / {item.maxScore} {tr('pts', 'نمبر')}
                     </span>
                   </div>
                 ))}
@@ -187,7 +195,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
           <div className="flex items-center gap-2">
             <Link href={`/profiles/${partner.id}`}>
               <Button size="sm" variant="ghost" icon={<Eye className="w-3.5 h-3.5" />}>
-                View Profile
+                {tr('View Profile', 'پروفائل دیکھیں')}
               </Button>
             </Link>
 
@@ -197,7 +205,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
               onClick={() => setShowComparison(true)}
               icon={<ArrowLeftRight className="w-3.5 h-3.5 text-[#800F2F]" />}
             >
-              Compare Side-by-Side
+              {tr('Compare Side-by-Side', 'آمنے سامنے موازنہ')}
             </Button>
           </div>
 
@@ -207,9 +215,9 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
               variant="secondary"
               onClick={handleShareWhatsApp}
               icon={<Share2 className="w-3.5 h-3.5 text-[#800F2F]" />}
-              title="Share sanitized summary with family on WhatsApp"
+              title={tr('Share sanitized summary with family on WhatsApp', 'واٹس ایپ پر خاندان کے ساتھ خلاصہ شیئر کریں')}
             >
-              Share Summary
+              {tr('Share Summary', 'خلاصہ شیئر کریں')}
             </Button>
 
             <Button
@@ -220,7 +228,7 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
               }}
               icon={<HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />}
             >
-              Send Proposal
+              {tr('Send Proposal', 'پروپوزل بھیجیں')}
             </Button>
           </div>
         </div>

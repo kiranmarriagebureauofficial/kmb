@@ -6,6 +6,7 @@ import { store } from '@/lib/db/store';
 import { Button } from '../ui/Button';
 import { formatPKR } from '@/lib/utils';
 import { CreditCard, X, Check } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface RecordPaymentModalProps {
   invoice: Invoice;
@@ -18,6 +19,7 @@ export function RecordPaymentModal({
   onClose,
   onSuccess,
 }: RecordPaymentModalProps) {
+  const { tr } = useLanguage();
   const currentUser = store.getCurrentUser();
   const [amount, setAmount] = useState(invoice.balance || 0);
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -70,7 +72,7 @@ export function RecordPaymentModal({
           <div className="flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
-              Record Client Fee Payment
+              {tr('Record Client Fee Payment', 'کلائنٹ فیس کی ادائیگی درج کریں')}
             </h2>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-[#660A22] text-[#E5DFD5]">
@@ -82,15 +84,15 @@ export function RecordPaymentModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-1">
             <div className="flex justify-between">
-              <span className="text-[#6E6466]">Invoice Number:</span>
+              <span className="text-[#6E6466]">{tr('Invoice Number:', 'انوائس نمبر:')}</span>
               <span className="font-mono font-bold text-[#800F2F]">{invoice.invoiceNumber}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[#6E6466]">Client Name:</span>
+              <span className="text-[#6E6466]">{tr('Client Name:', 'کلائنٹ کا نام:')}</span>
               <span className="font-semibold">{invoice.clientName}</span>
             </div>
             <div className="flex justify-between border-t border-[#E5DFD5] pt-1">
-              <span className="text-[#6E6466]">Outstanding Balance:</span>
+              <span className="text-[#6E6466]">{tr('Outstanding Balance:', 'واجب الادا بقیہ رقم:')}</span>
               <span className="font-bold text-[#A3182E]">{formatPKR(invoice.balance)}</span>
             </div>
           </div>
@@ -98,7 +100,7 @@ export function RecordPaymentModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Payment Amount (PKR) *
+                {tr('Payment Amount (PKR) *', 'ادائیگی کی رقم (روپے) *')}
               </label>
               <input
                 type="number"
@@ -108,13 +110,13 @@ export function RecordPaymentModal({
                 step={500}
                 value={amount}
                 onChange={(e) => setAmount(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right font-bold text-[#800F2F]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-end font-bold text-[#800F2F]"
               />
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Payment Date *
+                {tr('Payment Date *', 'ادائیگی کی تاریخ *')}
               </label>
               <input
                 type="date"
@@ -129,27 +131,28 @@ export function RecordPaymentModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Payment Method *
+                {tr('Payment Method *', 'ادائیگی کا طریقہ *')}
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
               >
-                <option value="Cash">Cash</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="JazzCash">JazzCash</option>
-                <option value="Easypaisa">Easypaisa</option>
+                <option value="Cash">{tr('Cash', 'نقد')}</option>
+                <option value="Bank Transfer">{tr('Bank Transfer', 'بینک ٹرانسفر')}</option>
+                <option value="JazzCash">{tr('JazzCash', 'جاز کیش')}</option>
+                <option value="Easypaisa">{tr('Easypaisa', 'ایزی پیسہ')}</option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Receipt Number *
+                {tr('Receipt Number *', 'رسید نمبر *')}
               </label>
               <input
                 type="text"
                 required
+                dir="ltr"
                 value={receiptNumber}
                 onChange={(e) => setReceiptNumber(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono"
@@ -159,7 +162,7 @@ export function RecordPaymentModal({
 
           <div>
             <label className="block font-semibold text-[#800F2F] mb-1">
-              Received By (Staff Member) *
+              {tr('Received By (Staff Member) *', 'وصول کنندہ (عملے کا رکن) *')}
             </label>
             <input
               type="text"
@@ -172,20 +175,20 @@ export function RecordPaymentModal({
 
           <div>
             <label className="block font-semibold text-[#800F2F] mb-1">
-              Payment Remarks / Reference Note
+              {tr('Payment Remarks / Reference Note', 'ادائیگی کی تفصیل / حوالہ')}
             </label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Bank online transaction ID or cash desk slip"
+              placeholder={tr('e.g. Bank online transaction ID or cash desk slip', 'مثال: بینک ٹرانزیکشن نمبر یا نقد کیش پرچی')}
               className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             />
           </div>
 
           <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
             <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
+              {tr('Cancel', 'منسوخ')}
             </Button>
             <Button
               type="submit"
@@ -193,7 +196,9 @@ export function RecordPaymentModal({
               disabled={saving}
               icon={<Check className="w-4 h-4 text-[#D4AF37]" />}
             >
-              {saving ? 'Recording...' : 'Record Payment & Issue Receipt'}
+              {saving
+                ? tr('Recording...', 'محفوظ ہو رہا ہے...')
+                : tr('Record Payment & Issue Receipt', 'ادائیگی درج کریں اور رسید بنائیں')}
             </Button>
           </div>
         </form>

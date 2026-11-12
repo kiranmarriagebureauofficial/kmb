@@ -23,8 +23,10 @@ import {
   TrendingUp,
   FileText
 } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 function ReportsContent() {
+  const { tr, isUr } = useLanguage();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -236,13 +238,16 @@ function ReportsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-sm no-print">
         <div>
           <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-            Inventory Intelligence & Auditing
+            {tr('Inventory Intelligence & Auditing', 'انوینٹری تجزیہ اور آڈٹ')}
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
-            Reports & Analytics
+            {tr('Reports & Analytics', 'رپورٹس اور تجزیات')}
           </h1>
           <p className="text-xs text-[#6E6466]">
-            Comprehensive operational reports for stock turnover, aging rishtas, success fees, and financials.
+            {tr(
+              'Comprehensive operational reports for stock turnover, aging rishtas, success fees, and financials.',
+              'اسٹاک کی صورتحال، پرانے رشتوں، کامیاب شادیوں اور مالیاتی حساب کتاب کی مکمل رپورٹس۔'
+            )}
           </p>
         </div>
 
@@ -255,25 +260,25 @@ function ReportsContent() {
               onChange={(e) => setDateRangePreset(e.target.value as any)}
               className="bg-transparent font-semibold text-[#800F2F] focus:outline-none"
             >
-              <option value="all">All Time</option>
-              <option value="7days">Last 7 Days</option>
-              <option value="30days">Last 30 Days</option>
-              <option value="90days">Last 90 Days</option>
-              <option value="this_month">This Month</option>
-              <option value="custom">Custom Date Range</option>
+              <option value="all">{tr('All Time', 'تمام وقت')}</option>
+              <option value="7days">{tr('Last 7 Days', 'گزشتہ 7 دن')}</option>
+              <option value="30days">{tr('Last 30 Days', 'گزشتہ 30 دن')}</option>
+              <option value="90days">{tr('Last 90 Days', 'گزشتہ 90 دن')}</option>
+              <option value="this_month">{tr('This Month', 'اس مہینے')}</option>
+              <option value="custom">{tr('Custom Date Range', 'اپنی مرضی کی تاریخ')}</option>
             </select>
           </div>
 
           {dateRangePreset === 'custom' && (
             <div className="flex items-center gap-1.5 text-xs bg-[#F8F5F0] px-2.5 py-1 rounded-lg border border-[#D4AF37]">
-              <span className="text-[10px] font-bold text-[#800F2F]">From:</span>
+              <span className="text-[10px] font-bold text-[#800F2F]">{tr('From:', 'از تاریخ:')}</span>
               <input
                 type="date"
                 value={customFromDate}
                 onChange={(e) => setCustomFromDate(e.target.value)}
                 className="bg-[#FFFFFF] border border-[#E5DFD5] rounded px-1.5 py-0.5 text-[11px] text-[#2C2526]"
               />
-              <span className="text-[10px] font-bold text-[#800F2F]">To:</span>
+              <span className="text-[10px] font-bold text-[#800F2F]">{tr('To:', 'تا تاریخ:')}</span>
               <input
                 type="date"
                 value={customToDate}
@@ -290,7 +295,9 @@ function ReportsContent() {
             onClick={handleDownloadPDF}
             icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            {isExportingPdf ? 'Generating PDF...' : 'Download PDF (Male/Female)'}
+            {isExportingPdf
+              ? tr('Generating PDF...', 'پی ڈی ایف بن رہی ہے...')
+              : tr('Download PDF (Male/Female)', 'پی ڈی ایف ڈاؤنلوڈ (مرد/خواتین)')}
           </Button>
 
           <Button
@@ -299,7 +306,7 @@ function ReportsContent() {
             onClick={exportActiveCSV}
             icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Export CSV
+            {tr('Export CSV', 'سی ایس وی ایکسپورٹ')}
           </Button>
 
           <Button
@@ -308,7 +315,7 @@ function ReportsContent() {
             onClick={handlePrint}
             icon={<Printer className="w-3.5 h-3.5 text-[#D4AF37]" />}
           >
-            Print Report
+            {tr('Print Report', 'پرنٹ رپورٹ')}
           </Button>
         </div>
       </div>
@@ -316,12 +323,12 @@ function ReportsContent() {
       {/* Report Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-b border-[#E5DFD5] no-print">
         {[
-          { key: 'stock', label: '1. Stock Inventory', icon: Boxes, count: availableStock.length },
-          { key: 'new_entries', label: '2. New Entries', icon: Clock, count: newEntries.length },
-          { key: 'old_stock', label: '3. Old Stock Alert (91+d)', icon: AlertCircle, count: oldStock.length },
-          { key: 'closed', label: '4. Closed / Rishta Done', icon: CheckCircle, count: finalizedList.length },
-          { key: 'proposals', label: '5. Proposals Sent', icon: HeartHandshake, count: rangeProposals.length },
-          { key: 'financial', label: '6. Revenue & Receivables', icon: Receipt, count: rangeInvoices.length },
+          { key: 'stock', label: tr('1. Stock Inventory', '1. دستیاب اسٹاک'), icon: Boxes, count: availableStock.length },
+          { key: 'new_entries', label: tr('2. New Entries', '2. نئے اندراجات'), icon: Clock, count: newEntries.length },
+          { key: 'old_stock', label: tr('3. Old Stock Alert (91+d)', '3. پرانا اسٹاک (91+ دن)'), icon: AlertCircle, count: oldStock.length },
+          { key: 'closed', label: tr('4. Closed / Rishta Done', '4. مکمل / رشتہ طے'), icon: CheckCircle, count: finalizedList.length },
+          { key: 'proposals', label: tr('5. Proposals Sent', '5. بھیجے گئے پروپوزلز'), icon: HeartHandshake, count: rangeProposals.length },
+          { key: 'financial', label: tr('6. Revenue & Receivables', '6. آمدنی اور بقایاجات'), icon: Receipt, count: rangeInvoices.length },
         ].map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -349,9 +356,9 @@ function ReportsContent() {
 
       {/* Printable Report Header (Visible only in print or top of view) */}
       <div className="hidden print:block text-center border-b border-[#800F2F] pb-4 mb-4">
-        <h1 className="font-serif text-2xl font-bold text-[#800F2F]">Kiran Marriage Bureau, Lahore</h1>
-        <p className="text-xs text-[#6E6466]">Official Operational Stock & Performance Audit Report</p>
-        <p className="text-[10px] text-[#6E6466] mt-1">Generated: {new Date().toLocaleString('en-PK')} • Scope: {dateRangePreset.toUpperCase()}</p>
+        <h1 className="font-serif text-2xl font-bold text-[#800F2F]">{tr('Kiran Marriage Bureau, Lahore', 'کرن میرج بیورو، لاہور')}</h1>
+        <p className="text-xs text-[#6E6466]">{tr('Official Operational Stock & Performance Audit Report', 'سرکاری اسٹاک اور کارکردگی آڈٹ رپورٹ')}</p>
+        <p className="text-[10px] text-[#6E6466] mt-1">{tr('Generated:', 'تیاری:')} {new Date().toLocaleString('en-PK')} • {tr('Scope:', 'حد:')} {dateRangePreset.toUpperCase()}</p>
       </div>
 
       {/* Tab 1: Current Stock Report */}
@@ -359,45 +366,53 @@ function ReportsContent() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Available Stock</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Available Stock', 'دستیاب اسٹاک')}</span>
               <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.length}</span>
             </div>
             <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Male Stock</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Male Stock', 'مردوں کا اسٹاک')}</span>
               <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.filter(p => p.gender === 'Male').length}</span>
             </div>
             <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Female Stock</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Female Stock', 'خواتین کا اسٹاک')}</span>
               <span className="font-serif text-2xl font-bold text-[#800F2F]">{availableStock.filter(p => p.gender === 'Female').length}</span>
             </div>
             <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Premium Members</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Premium Members', 'پریمیم ممبرز')}</span>
               <span className="font-serif text-2xl font-bold text-[#D4AF37]">{availableStock.filter(p => p.isPremium || p.premiumMember).length}</span>
             </div>
           </div>
 
           {[
-            { title: 'Section A: Male Rishtay (Grooms)', list: maleAvailableStock, emptyMsg: 'No male rishtay currently available in stock.' },
-            { title: 'Section B: Female Rishtay (Brides)', list: femaleAvailableStock, emptyMsg: 'No female rishtay currently available in stock.' },
+            {
+              title: tr('Section A: Male Rishtay (Grooms)', 'حصہ الف: مرد حضرات کے رشتے (دولہے)'),
+              list: maleAvailableStock,
+              emptyMsg: tr('No male rishtay currently available in stock.', 'فی الحال کوئی مرد پروفائل اسٹاک میں دستیاب نہیں ہے۔'),
+            },
+            {
+              title: tr('Section B: Female Rishtay (Brides)', 'حصہ ب: خواتین کے رشتے (دلہنیں)'),
+              list: femaleAvailableStock,
+              emptyMsg: tr('No female rishtay currently available in stock.', 'فی الحال کوئی خاتون پروفائل اسٹاک میں دستیاب نہیں ہے۔'),
+            },
           ].map((sec) => (
             <div key={sec.title} className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
               <div className="bg-[#660A22] text-[#D4AF37] px-4 py-2.5 flex items-center justify-between border-b border-[#D4AF37]">
                 <h3 className="font-serif font-bold text-sm">{sec.title}</h3>
                 <span className="text-[11px] bg-[#D4AF37] text-[#660A22] px-2 py-0.5 rounded-full font-bold">
-                  {sec.list.length} Profiles
+                  {sec.list.length} {tr('Profiles', 'پروفائلز')}
                 </span>
               </div>
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-start text-xs border-collapse">
                 <thead>
                   <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                    <th className="p-2.5">Register / Form No</th>
-                    <th className="p-2.5">Candidate Name</th>
-                    <th className="p-2.5">Age</th>
-                    <th className="p-2.5">Caste</th>
-                    <th className="p-2.5">Maslak</th>
-                    <th className="p-2.5">City</th>
-                    <th className="p-2.5">Profession</th>
-                    <th className="p-2.5">Stock Age</th>
+                    <th className="p-2.5">{tr('Register / Form No', 'رجسٹر / فارم نمبر')}</th>
+                    <th className="p-2.5">{tr('Candidate Name', 'امیدوار کا نام')}</th>
+                    <th className="p-2.5">{tr('Age', 'عمر')}</th>
+                    <th className="p-2.5">{tr('Caste', 'ذات')}</th>
+                    <th className="p-2.5">{tr('Maslak', 'مسلک')}</th>
+                    <th className="p-2.5">{tr('City', 'شہر')}</th>
+                    <th className="p-2.5">{tr('Profession', 'پیشہ')}</th>
+                    <th className="p-2.5">{tr('Stock Age', 'اسٹاک مدت')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5DFD5]">
@@ -425,7 +440,7 @@ function ReportsContent() {
                           <td className="p-2.5">{p.profession}</td>
                           <td className="p-2.5">
                             <span className={`px-1.5 py-0.5 rounded text-[10px] ${b.badgeClass}`}>
-                              {days}d ({b.label})
+                              {days}{tr('d', ' دن')} ({isUr ? b.textUr : b.label})
                             </span>
                           </td>
                         </tr>
@@ -444,33 +459,43 @@ function ReportsContent() {
         <div className="space-y-4">
           <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-bold text-[#800F2F]">
-              {newEntries.length} rishtas entered ({maleNewEntries.length} Male, {femaleNewEntries.length} Female)
-              {effectiveFromDate || effectiveToDate ? ` from ${effectiveFromDate || 'start'} to ${effectiveToDate || 'today'}` : ' across all dates'}.
+              {tr(
+                `${newEntries.length} rishtas entered (${maleNewEntries.length} Male, ${femaleNewEntries.length} Female)${effectiveFromDate || effectiveToDate ? ` from ${effectiveFromDate || 'start'} to ${effectiveToDate || 'today'}` : ' across all dates'}.`,
+                `${newEntries.length} رشتے درج کیے گئے (${maleNewEntries.length} مرد، ${femaleNewEntries.length} خواتین)${effectiveFromDate || effectiveToDate ? ` از ${effectiveFromDate || 'ابتدا'} تا ${effectiveToDate || 'آج'}` : ' تمام تاریخوں میں'}۔`
+              )}
             </span>
           </div>
 
           {[
-            { title: 'Section A: Male Rishtay (New Entries)', list: maleNewEntries, emptyMsg: 'No male rishtay entered in this date range.' },
-            { title: 'Section B: Female Rishtay (New Entries)', list: femaleNewEntries, emptyMsg: 'No female rishtay entered in this date range.' },
+            {
+              title: tr('Section A: Male Rishtay (New Entries)', 'حصہ الف: مرد حضرات کے نئے رشتے'),
+              list: maleNewEntries,
+              emptyMsg: tr('No male rishtay entered in this date range.', 'اس تاریخ کے درمیان کوئی مرد پروفائل درج نہیں ہوا۔'),
+            },
+            {
+              title: tr('Section B: Female Rishtay (New Entries)', 'حصہ ب: خواتین کے نئے رشتے'),
+              list: femaleNewEntries,
+              emptyMsg: tr('No female rishtay entered in this date range.', 'اس تاریخ کے درمیان کوئی خاتون پروفائل درج نہیں ہوئی۔'),
+            },
           ].map((sec) => (
             <div key={sec.title} className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
               <div className="bg-[#660A22] text-[#D4AF37] px-4 py-2.5 flex items-center justify-between border-b border-[#D4AF37]">
                 <h3 className="font-serif font-bold text-sm">{sec.title}</h3>
                 <span className="text-[11px] bg-[#D4AF37] text-[#660A22] px-2 py-0.5 rounded-full font-bold">
-                  {sec.list.length} Profiles
+                  {sec.list.length} {tr('Profiles', 'پروفائلز')}
                 </span>
               </div>
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-start text-xs border-collapse">
                 <thead>
                   <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                    <th className="p-2.5">Register / Form No</th>
-                    <th className="p-2.5">Entry Date</th>
-                    <th className="p-2.5">Candidate Name</th>
-                    <th className="p-2.5">Age / Height</th>
-                    <th className="p-2.5">Caste</th>
-                    <th className="p-2.5">City</th>
-                    <th className="p-2.5">Phone</th>
-                    <th className="p-2.5">Status</th>
+                    <th className="p-2.5">{tr('Register / Form No', 'رجسٹر / فارم نمبر')}</th>
+                    <th className="p-2.5">{tr('Entry Date', 'تاریخ اندراج')}</th>
+                    <th className="p-2.5">{tr('Candidate Name', 'امیدوار کا نام')}</th>
+                    <th className="p-2.5">{tr('Age / Height', 'عمر / قد')}</th>
+                    <th className="p-2.5">{tr('Caste', 'ذات')}</th>
+                    <th className="p-2.5">{tr('City', 'شہر')}</th>
+                    <th className="p-2.5">{tr('Phone', 'فون')}</th>
+                    <th className="p-2.5">{tr('Status', 'اسٹیٹس')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5DFD5]">
@@ -489,11 +514,18 @@ function ReportsContent() {
                             <span>{p.name}</span>
                           </div>
                         </td>
-                        <td className="p-2.5">{p.age}y • {p.height}</td>
+                        <td className="p-2.5">{p.age}{tr('y', 'س')} • {p.height}</td>
                         <td className="p-2.5">{p.caste}</td>
                         <td className="p-2.5">{p.city}</td>
-                        <td className="p-2.5 text-[#6E6466]">{p.phone}</td>
-                        <td className="p-2.5 capitalize">{p.status.replace(/_/g, ' ')}</td>
+                        <td className="p-2.5 text-[#6E6466]" dir="ltr">{p.phone}</td>
+                        <td className="p-2.5 capitalize">
+                          {p.status === 'available' ? tr('Available', 'دستیاب')
+                            : p.status === 'on_hold' ? tr('On Hold', 'روکا گیا')
+                            : p.status === 'engaged' ? tr('Engaged', 'منگنی شدہ')
+                            : p.status === 'married' ? tr('Married', 'شادی شدہ')
+                            : p.status === 'rejected' ? tr('Rejected', 'مسترد')
+                            : p.status.replace(/_/g, ' ')}
+                        </td>
                       </tr>
                     ))
                   )}
@@ -510,27 +542,33 @@ function ReportsContent() {
           <div className="p-4 bg-[#A3182E]/10 border border-[#A3182E]/30 rounded-xl flex items-center justify-between">
             <div>
               <h2 className="font-serif text-lg font-bold text-[#A3182E]">
-                Old Stock Alert: {oldStock.length} Profiles sitting unmatched for 91+ Days
+                {tr(
+                  `Old Stock Alert: ${oldStock.length} Profiles sitting unmatched for 91+ Days`,
+                  `پرانے اسٹاک کا الرٹ: ${oldStock.length} پروفائلز 91+ دنوں سے بغیر میچ موجود ہیں`
+                )}
               </h2>
               <p className="text-xs text-[#6E6466]">
-                These candidates require proactive follow-up, preference widening, or active proposal dispatch.
+                {tr(
+                  'These candidates require proactive follow-up, preference widening, or active proposal dispatch.',
+                  'ان امیدواروں کے لیے فوری فالو اپ، ترجیحات میں نرمی، یا فعال پروپوزل بھیجنے کی ضرورت ہے۔'
+                )}
               </p>
             </div>
             <span className="font-serif text-3xl font-bold text-[#A3182E]">{oldStock.length}</span>
           </div>
 
           <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Form No</th>
-                  <th className="p-2.5">Candidate</th>
-                  <th className="p-2.5">Gender / Age</th>
-                  <th className="p-2.5">Days in Stock</th>
-                  <th className="p-2.5">Caste</th>
-                  <th className="p-2.5">City</th>
-                  <th className="p-2.5 text-center">Available Matches</th>
-                  <th className="p-2.5">Candidate Phone</th>
+                  <th className="p-2.5">{tr('Form No', 'فارم نمبر')}</th>
+                  <th className="p-2.5">{tr('Candidate', 'امیدوار')}</th>
+                  <th className="p-2.5">{tr('Gender / Age', 'جنس / عمر')}</th>
+                  <th className="p-2.5">{tr('Days in Stock', 'اسٹاک میں دن')}</th>
+                  <th className="p-2.5">{tr('Caste', 'ذات')}</th>
+                  <th className="p-2.5">{tr('City', 'شہر')}</th>
+                  <th className="p-2.5 text-center">{tr('Available Matches', 'دستیاب میچز')}</th>
+                  <th className="p-2.5">{tr('Candidate Phone', 'امیدوار کا فون')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
@@ -538,16 +576,16 @@ function ReportsContent() {
                   <tr key={item.profile.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
                     <td className="p-2.5 font-bold font-serif text-[#800F2F]">{item.profile.formNo}</td>
                     <td className="p-2.5 font-semibold text-[#2C2526]">{item.profile.name}</td>
-                    <td className="p-2.5">{item.profile.gender}, {item.profile.age}y</td>
+                    <td className="p-2.5">{item.profile.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')}, {item.profile.age}{tr('y', 'س')}</td>
                     <td className="p-2.5">
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#A3182E] text-[#F8F5F0]">
-                        {item.daysInStock} days
+                        {item.daysInStock} {tr('days', 'دن')}
                       </span>
                     </td>
                     <td className="p-2.5">{item.profile.caste}</td>
                     <td className="p-2.5">{item.profile.city}</td>
                     <td className="p-2.5 text-center font-bold text-[#800F2F]">{item.matchCount}</td>
-                    <td className="p-2.5 font-medium">{item.profile.phone}</td>
+                    <td className="p-2.5 font-medium" dir="ltr">{item.profile.phone}</td>
                   </tr>
                 ))}
               </tbody>
@@ -562,28 +600,34 @@ function ReportsContent() {
           <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#D4AF37] flex items-center justify-between">
             <div>
               <h2 className="font-serif text-lg font-bold text-[#800F2F]">
-                Total Successful Matrimonies: {finalizedList.length} Finalized Rishtay
+                {tr(
+                  `Total Successful Matrimonies: ${finalizedList.length} Finalized Rishtay`,
+                  `مجموعی کامیاب شادیاں: ${finalizedList.length} مکمل رشتے`
+                )}
               </h2>
               <p className="text-xs text-[#6E6466]">
-                Proposals marked completed ("Rishta Done"), candidate profiles transitioned to engaged/married.
+                {tr(
+                  'Proposals marked completed ("Rishta Done"), candidate profiles transitioned to engaged/married.',
+                  'وہ پروپوزلز جو مکمل ("رشتہ طے") ہوئے اور پروفائلز منگنی یا شادی میں تبدیل ہوئے۔'
+                )}
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-[10px] text-[#6E6466] block uppercase">Success Rate</span>
+            <div className="text-end">
+              <span className="text-[10px] text-[#6E6466] block uppercase">{tr('Success Rate', 'کامیابی کی شرح')}</span>
               <span className="font-serif text-2xl font-bold text-[#D4AF37]">100%</span>
             </div>
           </div>
 
           <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">#</th>
-                  <th className="p-2.5">Candidate 1 (Name &amp; Form No)</th>
-                  <th className="p-2.5">Candidate 2 (Name &amp; Form No)</th>
-                  <th className="p-2.5">Compatibility Score</th>
-                  <th className="p-2.5">Finalized Date</th>
-                  <th className="p-2.5">Notes</th>
+                  <th className="p-2.5">{tr('Candidate 1 (Name & Form No)', 'امیدوار 1 (نام اور فارم نمبر)')}</th>
+                  <th className="p-2.5">{tr('Candidate 2 (Name & Form No)', 'امیدوار 2 (نام اور فارم نمبر)')}</th>
+                  <th className="p-2.5">{tr('Compatibility Score', 'مطابقت سکور')}</th>
+                  <th className="p-2.5">{tr('Finalized Date', 'تکمیل کی تاریخ')}</th>
+                  <th className="p-2.5">{tr('Notes', 'نوٹس')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
@@ -601,7 +645,7 @@ function ReportsContent() {
                       </td>
                       <td className="p-2.5 font-bold text-[#D4AF37]">{pr.matchScore}%</td>
                       <td className="p-2.5">{formatDate(pr.updatedAt)}</td>
-                      <td className="p-2.5 text-[#6E6466] truncate max-w-xs">{pr.notes || 'Rishta finalized.'}</td>
+                      <td className="p-2.5 text-[#6E6466] truncate max-w-xs">{pr.notes || tr('Rishta finalized.', 'رشتہ طے پا گیا۔')}</td>
                     </tr>
                   );
                 })}
@@ -616,20 +660,23 @@ function ReportsContent() {
         <div className="space-y-4">
           <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
             <span className="text-xs font-bold text-[#800F2F]">
-              {rangeProposals.length} formal proposals created or updated in selected timeframe.
+              {tr(
+                `${rangeProposals.length} formal proposals created or updated in selected timeframe.`,
+                `منتخب مدت میں ${rangeProposals.length} پروپوزلز بنائے یا اپ ڈیٹ کیے گئے۔`
+              )}
             </span>
           </div>
 
           <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
                   <th className="p-2.5">#</th>
-                  <th className="p-2.5">Candidate A (Name &amp; Form No)</th>
-                  <th className="p-2.5">Candidate B (Name &amp; Form No)</th>
-                  <th className="p-2.5">Match Score</th>
-                  <th className="p-2.5">Status</th>
-                  <th className="p-2.5">Date Created</th>
+                  <th className="p-2.5">{tr('Candidate A (Name & Form No)', 'امیدوار الف (نام اور فارم نمبر)')}</th>
+                  <th className="p-2.5">{tr('Candidate B (Name & Form No)', 'امیدوار ب (نام اور فارم نمبر)')}</th>
+                  <th className="p-2.5">{tr('Match Score', 'میچ سکور')}</th>
+                  <th className="p-2.5">{tr('Status', 'اسٹیٹس')}</th>
+                  <th className="p-2.5">{tr('Date Created', 'تخلیق کی تاریخ')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
@@ -666,27 +713,27 @@ function ReportsContent() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Revenue Collected</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Revenue Collected', 'وصول شدہ آمدنی')}</span>
               <span className="font-serif text-3xl font-bold text-[#800F2F]">{formatPKR(totalRevenue)}</span>
             </div>
             <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
-              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">Outstanding Receivables</span>
+              <span className="text-[10px] text-[#6E6466] uppercase block font-semibold">{tr('Outstanding Receivables', 'واجب الوصول رقم')}</span>
               <span className="font-serif text-3xl font-bold text-[#A3182E]">{formatPKR(totalOutstanding)}</span>
             </div>
           </div>
 
           <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Invoice No</th>
-                  <th className="p-2.5">Client Name</th>
-                  <th className="p-2.5">Type</th>
-                  <th className="p-2.5">Date</th>
-                  <th className="p-2.5">Total Amount</th>
-                  <th className="p-2.5">Amount Paid</th>
-                  <th className="p-2.5">Balance</th>
-                  <th className="p-2.5">Status</th>
+                  <th className="p-2.5">{tr('Invoice No', 'انوائس نمبر')}</th>
+                  <th className="p-2.5">{tr('Client Name', 'کلائنٹ کا نام')}</th>
+                  <th className="p-2.5">{tr('Type', 'قسم')}</th>
+                  <th className="p-2.5">{tr('Date', 'تاریخ')}</th>
+                  <th className="p-2.5">{tr('Total Amount', 'کل رقم')}</th>
+                  <th className="p-2.5">{tr('Amount Paid', 'ادا شدہ رقم')}</th>
+                  <th className="p-2.5">{tr('Balance', 'بقیہ رقم')}</th>
+                  <th className="p-2.5">{tr('Status', 'اسٹیٹس')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
@@ -699,7 +746,13 @@ function ReportsContent() {
                     <td className="p-2.5 font-semibold">{formatPKR(inv.total)}</td>
                     <td className="p-2.5 text-[#800F2F] font-semibold">{formatPKR(inv.amountPaid)}</td>
                     <td className="p-2.5 font-bold text-[#A3182E]">{formatPKR(inv.balance)}</td>
-                    <td className="p-2.5 capitalize font-semibold">{inv.status}</td>
+                    <td className="p-2.5 capitalize font-semibold">
+                      {inv.status === 'paid' ? tr('Paid', 'ادا شدہ')
+                        : inv.status === 'partial' ? tr('Partial', 'جزوی')
+                        : inv.status === 'unpaid' ? tr('Unpaid', 'واجب الادا')
+                        : inv.status === 'cancelled' ? tr('Cancelled', 'منسوخ')
+                        : inv.status}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -712,8 +765,9 @@ function ReportsContent() {
 }
 
 export default function ReportsPage() {
+  const { tr } = useLanguage();
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Bureau Reports...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">{tr('Loading Bureau Reports...', 'بیورو رپورٹس لوڈ ہو رہی ہیں...')}</div>}>
       <ReportsContent />
     </Suspense>
   );

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { store } from '@/lib/db/store';
@@ -20,8 +20,10 @@ import {
   CheckCircle, 
   AlertCircle 
 } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 function ActivityContent() {
+  const { tr } = useLanguage();
   const [logs, setLogs] = useState<ActivityLogEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterEntity, setFilterEntity] = useState<string>('all');
@@ -115,13 +117,16 @@ function ActivityContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-sm">
         <div>
           <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-            Immutable Bureau Audit Log
+            {tr('Immutable Bureau Audit Log', 'بیورو کا محفوظ آڈٹ لاگ')}
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
-            Activity Ledger
+            {tr('Activity Ledger', 'سرگرمیوں کا ریکارڈ')}
           </h1>
           <p className="text-xs text-[#6E6466]">
-            Chronological audit trail of all profile registrations, status changes, proposals, and fee payments.
+            {tr(
+              'Chronological audit trail of all profile registrations, status changes, proposals, and fee payments.',
+              'تمام پروفائل اندراجات، اسٹیٹس تبدیلیوں، پروپوزلز اور فیس کی ادائیگیوں کا تاریخی ریکارڈ۔'
+            )}
           </p>
         </div>
 
@@ -131,7 +136,7 @@ function ActivityContent() {
           onClick={exportCSV}
           icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
         >
-          Export Audit Trail
+          {tr('Export Audit Trail', 'آڈٹ ریکارڈ ایکسپورٹ کریں')}
         </Button>
       </div>
 
@@ -139,59 +144,59 @@ function ActivityContent() {
       <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E5DFD5] flex items-center gap-3 flex-wrap text-xs">
         {/* Search */}
         <div className="flex-1 min-w-[200px] relative">
-          <Search className="w-3.5 h-3.5 text-[#6E6466] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#6E6466] absolute start-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search activity by keyword, form number, actor..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
+            placeholder={tr('Search activity by keyword, form number, actor...', 'کی ورڈ، فارم نمبر یا عملے کے نام سے تلاش کریں...')}
+            className="w-full ps-8 pe-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
           />
         </div>
 
         {/* Entity filter */}
         <div className="flex items-center gap-1">
-          <span className="text-[#6E6466] font-medium">Entity:</span>
+          <span className="text-[#6E6466] font-medium">{tr('Entity:', 'شعبہ:')}</span>
           <select
             value={filterEntity}
             onChange={(e) => setFilterEntity(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F] focus:outline-none"
           >
-            <option value="all">All Entities</option>
-            <option value="rishta">Rishta Profiles</option>
-            <option value="invoice">Invoices & Payments</option>
-            <option value="proposal">Proposals</option>
-            <option value="settings">Settings</option>
-            <option value="staff">Staff Accounts</option>
+            <option value="all">{tr('All Entities', 'تمام شعبے')}</option>
+            <option value="rishta">{tr('Rishta Profiles', 'رشتے پروفائلز')}</option>
+            <option value="invoice">{tr('Invoices & Payments', 'انوائسز اور ادائیگیاں')}</option>
+            <option value="proposal">{tr('Proposals', 'پروپوزلز')}</option>
+            <option value="settings">{tr('Settings', 'سیٹنگز')}</option>
+            <option value="staff">{tr('Staff Accounts', 'عملہ اکاؤنٹس')}</option>
           </select>
         </div>
 
         {/* Action filter */}
         <div className="flex items-center gap-1">
-          <span className="text-[#6E6466] font-medium">Action:</span>
+          <span className="text-[#6E6466] font-medium">{tr('Action:', 'عمل:')}</span>
           <select
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F] focus:outline-none"
           >
-            <option value="all">All Actions</option>
-            <option value="create">Created</option>
-            <option value="edit">Edited</option>
-            <option value="status_change">Status Change</option>
-            <option value="payment">Payment</option>
-            <option value="delete">Deleted</option>
+            <option value="all">{tr('All Actions', 'تمام اعمال')}</option>
+            <option value="create">{tr('Created', 'تخلیق شدہ')}</option>
+            <option value="edit">{tr('Edited', 'تبدیل شدہ')}</option>
+            <option value="status_change">{tr('Status Change', 'اسٹیٹس تبدیلی')}</option>
+            <option value="payment">{tr('Payment', 'ادائیگی')}</option>
+            <option value="delete">{tr('Deleted', 'حذف شدہ')}</option>
           </select>
         </div>
 
         {/* Actor filter */}
         <div className="flex items-center gap-1">
-          <span className="text-[#6E6466] font-medium">Actor:</span>
+          <span className="text-[#6E6466] font-medium">{tr('Actor:', 'صارف:')}</span>
           <select
             value={filterActor}
             onChange={(e) => setFilterActor(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F] focus:outline-none"
           >
-            <option value="all">All Staff</option>
+            <option value="all">{tr('All Staff', 'تمام عملہ')}</option>
             {actors.map(act => (
               <option key={act} value={act}>{act}</option>
             ))}
@@ -201,21 +206,21 @@ function ActivityContent() {
 
       {/* Ledger Table */}
       <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl shadow-xs overflow-x-auto">
-        <table className="w-full text-left text-xs border-collapse">
+        <table className="w-full text-start text-xs border-collapse">
           <thead>
             <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-              <th className="p-3 w-40">Timestamp</th>
-              <th className="p-3 w-36">Staff Member</th>
-              <th className="p-3 w-28">Entity</th>
-              <th className="p-3 w-28">Action</th>
-              <th className="p-3">Details & Audit Remarks</th>
+              <th className="p-3 w-40">{tr('Timestamp', 'تاریخ و وقت')}</th>
+              <th className="p-3 w-36">{tr('Staff Member', 'عملے کا رکن')}</th>
+              <th className="p-3 w-28">{tr('Entity', 'شعبہ')}</th>
+              <th className="p-3 w-28">{tr('Action', 'عمل')}</th>
+              <th className="p-3">{tr('Details & Audit Remarks', 'تفصیلات اور نوٹس')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E5DFD5]">
             {filteredLogs.length === 0 ? (
               <tr>
                 <td colSpan={5} className="p-8 text-center text-[#6E6466]">
-                  No activity log entries found matching criteria.
+                  {tr('No activity log entries found matching criteria.', 'موجودہ فلٹر کے مطابق سرگرمیوں کا کوئی ریکارڈ نہیں ملا۔')}
                 </td>
               </tr>
             ) : (
@@ -238,12 +243,24 @@ function ActivityContent() {
                   <td className="p-3 whitespace-nowrap">
                     <div className="flex items-center gap-1.5 capitalize font-medium text-[#2C2526]">
                       {getEntityIcon(log.entity)}
-                      <span>{log.entity}</span>
+                      <span>
+                        {log.entity === 'rishta' ? tr('Rishta', 'رشتہ')
+                          : log.entity === 'invoice' ? tr('Invoice', 'انوائس')
+                          : log.entity === 'proposal' ? tr('Proposal', 'پروپوزل')
+                          : log.entity === 'settings' ? tr('Settings', 'سیٹنگز')
+                          : log.entity === 'staff' ? tr('Staff', 'عملہ')
+                          : log.entity}
+                      </span>
                     </div>
                   </td>
                   <td className="p-3 whitespace-nowrap">
                     <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-[#F8F5F0] text-[#800F2F] border border-[#E5DFD5] uppercase">
-                      {log.action.replace('_', ' ')}
+                      {log.action === 'create' ? tr('Created', 'تخلیق')
+                        : log.action === 'edit' ? tr('Edited', 'ترمیم')
+                        : log.action === 'status_change' ? tr('Status Change', 'اسٹیٹس تبدیلی')
+                        : log.action === 'payment' ? tr('Payment', 'ادائیگی')
+                        : log.action === 'delete' ? tr('Deleted', 'حذف')
+                        : log.action.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="p-3 text-[#2C2526] leading-relaxed">
@@ -260,8 +277,9 @@ function ActivityContent() {
 }
 
 export default function ActivityPage() {
+  const { tr } = useLanguage();
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading Activity Ledger...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">{tr('Loading Activity Ledger...', 'سرگرمیوں کا ریکارڈ لوڈ ہو رہا ہے...')}</div>}>
       <ActivityContent />
     </Suspense>
   );

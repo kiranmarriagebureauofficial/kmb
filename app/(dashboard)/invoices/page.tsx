@@ -1,8 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { Invoice, InvoiceStatus, InvoiceType } from '@/lib/types';
 import { formatPKR, formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 
 function InvoicesManagementContent() {
+  const { tr } = useLanguage();
   const searchParams = useSearchParams();
   const shouldOpenNew = searchParams.get('new') === '1';
 
@@ -74,10 +76,10 @@ function InvoicesManagementContent() {
 
   const handleCancelInvoice = (id: string, num: string) => {
     if (!isAdmin) {
-      alert('Only administrators are authorized to cancel official invoices.');
+      alert(tr('Only administrators are authorized to cancel official invoices.', 'صرف منتظم (ایڈمن) سرکاری انوائس منسوخ کرنے کے مجاز ہیں۔'));
       return;
     }
-    if (confirm(`Are you sure you want to cancel invoice ${num}?`)) {
+    if (confirm(tr(`Are you sure you want to cancel invoice ${num}?`, `کیا آپ واقعی انوائس ${num} منسوخ کرنا چاہتے ہیں؟`))) {
       store.cancelInvoice(id);
     }
   };
@@ -88,26 +90,26 @@ function InvoicesManagementContent() {
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FFFFFF] text-[#800F2F] border border-[#D4AF37]">
             <Check className="w-3 h-3 text-[#D4AF37] stroke-[3]" />
-            <span>Fully Settled</span>
+            <span>{tr('Fully Settled', 'مکمل ادا شدہ')}</span>
           </span>
         );
       case 'partial':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#F8F5F0] text-[#B88B22] border border-[#D4AF37]">
-            <span>Partially Paid</span>
+            <span>{tr('Partially Paid', 'جزوی ادا شدہ')}</span>
           </span>
         );
       case 'unpaid':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FFFFFF] text-[#A3182E] border border-[#A3182E]/40">
             <AlertCircle className="w-3 h-3 text-[#A3182E]" />
-            <span>Unpaid</span>
+            <span>{tr('Unpaid', 'غیر ادا شدہ')}</span>
           </span>
         );
       case 'cancelled':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#F8F5F0] text-[#6E6466] line-through border border-[#E5DFD5]">
-            <span>Cancelled</span>
+            <span>{tr('Cancelled', 'منسوخ')}</span>
           </span>
         );
     }
@@ -119,13 +121,13 @@ function InvoicesManagementContent() {
       <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E5DFD5] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-            Fee Accounting & Cash Desk
+            {tr('Fee Accounting & Cash Desk', 'فیس اکاؤنٹنگ اور کیش ڈیسک')}
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
-            Client Invoices & Fee Ledger ({filteredInvoices.length})
+            {tr('Client Invoices & Fee Ledger', 'کلائنٹ انوائسز اور فیس لیجر')} ({filteredInvoices.length})
           </h1>
           <p className="text-xs text-[#6E6466]">
-            Automated sequential numbering (INV-2026-XXXX). Generates A4, A5, and 80mm POS thermal receipts.
+            {tr('Automated sequential numbering (INV-2026-XXXX). Generates A4, A5, and 80mm POS thermal receipts.', 'خودکار ترتیب وار نمبرنگ۔ A4، A5 اور 80mm تھرمل رسیدیں تیار کریں۔')}
           </p>
         </div>
 
@@ -135,24 +137,24 @@ function InvoicesManagementContent() {
           onClick={() => setShowNewModal(true)}
           icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
         >
-          Create New Invoice
+          {tr('Create New Invoice', 'نئی انوائس بنائیں')}
         </Button>
       </div>
 
       {/* Aggregate Financial Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E5DFD5] shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#6E6466]">Total Billed (Net)</span>
+          <span className="text-[10px] uppercase font-bold text-[#6E6466]">{tr('Total Billed (Net)', 'کل بل رقم')}</span>
           <p className="font-serif text-2xl font-bold text-[#800F2F]">{formatPKR(totalBilled)}</p>
         </div>
 
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#D4AF37] shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#B88B22]">Collected Revenue</span>
+          <span className="text-[10px] uppercase font-bold text-[#B88B22]">{tr('Collected Revenue', 'وصول شدہ رقم')}</span>
           <p className="font-serif text-2xl font-bold text-[#B88B22]">{formatPKR(totalCollected)}</p>
         </div>
 
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#A3182E]/40 shadow-sm text-xs space-y-1">
-          <span className="text-[10px] uppercase font-bold text-[#A3182E]">Outstanding Balance Due</span>
+          <span className="text-[10px] uppercase font-bold text-[#A3182E]">{tr('Outstanding Balance Due', 'واجب الادا بقایا')}</span>
           <p className="font-serif text-2xl font-bold text-[#A3182E]">{formatPKR(totalOutstanding)}</p>
         </div>
       </div>
@@ -164,7 +166,7 @@ function InvoicesManagementContent() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by invoice number or client name..."
+            placeholder={tr('Search by invoice number or client name...', 'انوائس نمبر یا کلائنٹ کے نام سے تلاش کریں...')}
             className="w-full px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
           />
         </div>
@@ -176,11 +178,11 @@ function InvoicesManagementContent() {
               onChange={(e) => setFilterType(e.target.value)}
               className="px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             >
-              <option value="All">All Fee Types</option>
-              <option value="registration">Registration Fee</option>
-              <option value="premium">Premium Membership</option>
-              <option value="success">Success Fee</option>
-              <option value="other">Other</option>
+              <option value="All">{tr('All Fee Types', 'تمام اقسام کی فیس')}</option>
+              <option value="registration">{tr('Registration Fee', 'رجسٹریشن فیس')}</option>
+              <option value="premium">{tr('Premium Membership', 'پریمیم ممبرشپ')}</option>
+              <option value="success">{tr('Success Fee', 'کامیابی فیس')}</option>
+              <option value="other">{tr('Other', 'دیگر')}</option>
             </select>
           </div>
 
@@ -190,11 +192,11 @@ function InvoicesManagementContent() {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             >
-              <option value="All">All Payment Statuses</option>
-              <option value="paid">Fully Settled</option>
-              <option value="partial">Partially Paid</option>
-              <option value="unpaid">Unpaid</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="All">{tr('All Payment Statuses', 'ادائیگی کی تمام حیثیتیں')}</option>
+              <option value="paid">{tr('Fully Settled', 'مکمل ادا شدہ')}</option>
+              <option value="partial">{tr('Partially Paid', 'جزوی ادا شدہ')}</option>
+              <option value="unpaid">{tr('Unpaid', 'غیر ادا شدہ')}</option>
+              <option value="cancelled">{tr('Cancelled', 'منسوخ')}</option>
             </select>
           </div>
         </div>
@@ -203,24 +205,24 @@ function InvoicesManagementContent() {
       {/* Invoices Table */}
       <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left">
+          <table className="w-full text-xs text-start">
             <thead className="bg-[#800F2F] text-[#F8F5F0] uppercase font-serif tracking-wider">
               <tr>
-                <th className="p-3.5">Invoice #</th>
-                <th className="p-3.5">Client & Phone</th>
-                <th className="p-3.5">Category</th>
-                <th className="p-3.5 text-right">Total Net</th>
-                <th className="p-3.5 text-right">Paid</th>
-                <th className="p-3.5 text-right">Balance</th>
-                <th className="p-3.5">Status</th>
-                <th className="p-3.5 text-right">Actions</th>
+                <th className="p-3.5">{tr('Invoice #', 'انوائس نمبر')}</th>
+                <th className="p-3.5">{tr('Client & Phone', 'کلائنٹ اور فون')}</th>
+                <th className="p-3.5">{tr('Category', 'فیس کی قسم')}</th>
+                <th className="p-3.5 text-end">{tr('Total Net', 'کل رقم')}</th>
+                <th className="p-3.5 text-end">{tr('Paid', 'ادائیگی')}</th>
+                <th className="p-3.5 text-end">{tr('Balance', 'بقایا')}</th>
+                <th className="p-3.5">{tr('Status', 'حیثیت')}</th>
+                <th className="p-3.5 text-end">{tr('Actions', 'اعمال')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E5DFD5]">
               {filteredInvoices.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="p-8 text-center text-[#6E6466]">
-                    No invoices match your filter criteria.
+                    {tr('No invoices match your filter criteria.', 'موجودہ فلٹر کے مطابق کوئی انوائس موجود نہیں۔')}
                   </td>
                 </tr>
               ) : (
@@ -273,20 +275,20 @@ function InvoicesManagementContent() {
                         <button
                           onClick={() => setSelectedReceipt(inv)}
                           className="p-1.5 rounded-lg bg-[#800F2F] hover:bg-[#660A22] text-[#D4AF37] text-[11px] font-semibold flex items-center gap-1 px-2.5 shadow-sm"
-                          title="Print Receipt (A4, A5, Thermal 80mm)"
+                          title={tr('Print Receipt (A4, A5, Thermal 80mm)', 'رسید پرنٹ کریں')}
                         >
                           <Printer className="w-3 h-3" />
-                          <span>Receipt</span>
+                          <span>{tr('Receipt', 'رسید')}</span>
                         </button>
 
                         {inv.balance > 0 && inv.status !== 'cancelled' && (
                           <button
                             onClick={() => setPaymentInvoice(inv)}
                             className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#D4AF37] hover:bg-[#F8F5F0] text-[#800F2F] text-[11px] font-semibold flex items-center gap-1 px-2"
-                            title="Record partial or full payment"
+                            title={tr('Record partial or full payment', 'جزوی یا مکمل ادائیگی درج کریں')}
                           >
                             <CreditCard className="w-3 h-3 text-[#D4AF37]" />
-                            <span>Pay</span>
+                            <span>{tr('Pay', 'ادائیگی')}</span>
                           </button>
                         )}
 

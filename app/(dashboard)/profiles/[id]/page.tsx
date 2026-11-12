@@ -28,8 +28,10 @@ import {
   HeartHandshake,
   ArrowLeft
 } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 function ProfileDetailContent() {
+  const { tr } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
@@ -62,10 +64,10 @@ function ProfileDetailContent() {
     return (
       <div className="p-12 text-center space-y-4">
         <h2 className="font-serif text-xl font-bold text-[#800F2F]">
-          Profile Not Found
+          {tr('Profile Not Found', 'پروفائل نہیں ملی')}
         </h2>
         <Link href="/profiles" className="text-xs font-semibold text-[#800F2F] underline">
-          Return to All Rishtas
+          {tr('Return to All Rishtas', 'تمام رشتوں پر واپس جائیں')}
         </Link>
       </div>
     );
@@ -82,9 +84,9 @@ function ProfileDetailContent() {
             className="flex items-center gap-1.5 text-xs font-bold text-[#800F2F]"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Profile Details</span>
+            <span>{tr('Back to Profile Details', 'پروفائل تفصیلات پر واپس جائیں')}</span>
           </button>
-          <span className="text-xs text-[#6E6466]">Print-Ready Official Layout</span>
+          <span className="text-xs text-[#6E6466]">{tr('Print-Ready Official Layout', 'پرنٹ کے لیے تیار سرکاری فارم')}</span>
         </div>
         <ProfilePrintView profile={profile} onClose={() => setIsPrintView(false)} />
       </div>
@@ -110,18 +112,18 @@ function ProfileDetailContent() {
                 {profile.name}
               </h1>
               <span className="px-2.5 py-0.5 rounded font-mono font-bold text-xs bg-[#F8F5F0] text-[#800F2F] border border-[#D8D0C3]">
-                Reg: {profile.formNo}
+                {tr('Reg:', 'رجسٹر:')} {profile.formNo}
               </span>
               <Badge status={profile.status} />
               {profile.premiumMember && (
-                <Badge variant="premium">Premium Member</Badge>
+                <Badge variant="premium">{tr('Premium Member', 'پریمیم ممبر')}</Badge>
               )}
             </div>
 
             <p className="text-xs text-[#6E6466] flex items-center gap-2 flex-wrap">
-              <span>{profile.gender}</span>
+              <span>{profile.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')}</span>
               <span>•</span>
-              <span>{profile.age} Yrs ({profile.height})</span>
+              <span>{profile.age} {tr('Yrs', 'سال')} ({profile.height})</span>
               <span>•</span>
               <span className="font-semibold text-[#800F2F]">{profile.caste}</span>
               <span>•</span>
@@ -135,7 +137,7 @@ function ProfileDetailContent() {
         <div className="flex items-center gap-2 flex-wrap">
           <Link href={`/profiles/${profile.id}/matches`}>
             <Button size="sm" variant="primary" icon={<Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />}>
-              View Matches
+              {tr('View Matches', 'موزوں رشتے دیکھیں')}
             </Button>
           </Link>
 
@@ -145,7 +147,7 @@ function ProfileDetailContent() {
             onClick={() => exportSingleProfilePDF(profile, store.getSettings())}
             icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Download Biodata PDF
+            {tr('Download Biodata PDF', 'بائیوڈیٹا پی ڈی ایف')}
           </Button>
 
           <Button
@@ -154,12 +156,12 @@ function ProfileDetailContent() {
             onClick={() => setIsPrintView(true)}
             icon={<Printer className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Print Form
+            {tr('Print Form', 'فارم پرنٹ کریں')}
           </Button>
 
           <Link href={`/profiles/${profile.id}/edit`}>
             <Button size="sm" variant="secondary" icon={<Edit className="w-3.5 h-3.5 text-[#800F2F]" />}>
-              Edit Profile
+              {tr('Edit Profile', 'پروفائل ایڈٹ کریں')}
             </Button>
           </Link>
         </div>
@@ -173,60 +175,59 @@ function ProfileDetailContent() {
           <div className="bg-[#FFFFFF] rounded-2xl border border-[#E5DFD5] p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-3">
               <h3 className="font-serif text-base font-bold text-[#800F2F]">
-                1. Personal & Family Lineage
+                {tr('1. Personal & Family Lineage', '1. ذاتی و خاندانی پس منظر')}
               </h3>
-              <span className="text-xs font-urdu text-[#6E6466]">ذاتی و خاندانی پس منظر</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <span className="text-[#6E6466] block">Father Name:</span>
+                <span className="text-[#6E6466] block">{tr('Father Name:', 'والد کا نام:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.fatherName}</span>
                 <span className="text-[11px] text-[#6E6466] block">({profile.fatherOccupation})</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Mother Name:</span>
+                <span className="text-[#6E6466] block">{tr('Mother Name:', 'والدہ کا نام:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.motherName}</span>
-                <span className="text-[11px] text-[#6E6466] block">({profile.motherOccupation || 'Homemaker'})</span>
+                <span className="text-[11px] text-[#6E6466] block">({profile.motherOccupation || tr('Homemaker', 'خانہ دار')})</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Siblings:</span>
-                <span className="font-semibold text-[#2C2526]">Total {profile.totalSiblings}</span>
+                <span className="text-[#6E6466] block">{tr('Siblings:', 'بہن بھائی:')}</span>
+                <span className="font-semibold text-[#2C2526]">{tr('Total', 'کل')} {profile.totalSiblings}</span>
                 <span className="text-[11px] text-[#6E6466] block">
-                  {profile.brothersCount} Bros, {profile.sistersCount} Sis ({profile.marriedSiblingsCount} Married)
+                  {profile.brothersCount} {tr('Bros', 'بھائی')}, {profile.sistersCount} {tr('Sis', 'بہنیں')} ({profile.marriedSiblingsCount} {tr('Married', 'شادی شدہ')})
                 </span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Caste / Qaum:</span>
+                <span className="text-[#6E6466] block">{tr('Caste / Qaum:', 'ذات / قوم:')}</span>
                 <span className="font-bold text-[#800F2F]">{profile.caste}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Maslak / Sect:</span>
+                <span className="text-[#6E6466] block">{tr('Maslak / Sect:', 'مسلک / فرقہ:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.maslak}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Religion:</span>
+                <span className="text-[#6E6466] block">{tr('Religion:', 'مذہب:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.religion}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">City & Area:</span>
+                <span className="text-[#6E6466] block">{tr('City & Area:', 'شہر اور علاقہ:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.city}</span>
-                <span className="text-[11px] text-[#6E6466] block">{profile.societyName || 'Lahore'}</span>
+                <span className="text-[11px] text-[#6E6466] block">{profile.societyName || tr('Lahore', 'لاہور')}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Date Applied:</span>
+                <span className="text-[#6E6466] block">{tr('Date Applied:', 'تاریخ اندراج:')}</span>
                 <span className="font-semibold text-[#2C2526]">{formatDate(profile.dateApplied)}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Applied / Brought By:</span>
+                <span className="text-[#6E6466] block">{tr('Applied / Brought By:', 'درج کنندہ / حوالہ:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.appliedBy}</span>
               </div>
             </div>
@@ -236,37 +237,36 @@ function ProfileDetailContent() {
           <div className="bg-[#FFFFFF] rounded-2xl border border-[#E5DFD5] p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-3">
               <h3 className="font-serif text-base font-bold text-[#800F2F]">
-                2. Educational & Professional Standing
+                {tr('2. Educational & Professional Standing', '2. تعلیمی و پیشہ ورانہ کوائف')}
               </h3>
-              <span className="text-xs font-urdu text-[#6E6466]">تعلیمی و پیشہ ورانہ کوائف</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
               <div className="sm:col-span-2">
-                <span className="text-[#6E6466] block">Degree & Institute:</span>
+                <span className="text-[#6E6466] block">{tr('Degree & Institute:', 'ڈگری اور تعلیمی ادارہ:')}</span>
                 <span className="font-bold text-[#2C2526] text-sm">{profile.degree}</span>
                 <span className="text-[11px] text-[#800F2F] font-medium block">{profile.educationLevel}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Monthly Income:</span>
+                <span className="text-[#6E6466] block">{tr('Monthly Income:', 'ماہانہ آمدنی:')}</span>
                 <span className="font-bold text-[#800F2F] text-sm">{formatPKR(profile.monthlyIncome)}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Profession:</span>
+                <span className="text-[#6E6466] block">{tr('Profession:', 'پیشہ / کاروبار:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.profession}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Designation:</span>
-                <span className="font-semibold text-[#2C2526]">{profile.designation || 'N/A'}</span>
+                <span className="text-[#6E6466] block">{tr('Designation:', 'عہدہ:')}</span>
+                <span className="font-semibold text-[#2C2526]">{profile.designation || tr('N/A', 'موجود نہیں')}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Experience:</span>
+                <span className="text-[#6E6466] block">{tr('Experience:', 'تجربہ:')}</span>
                 <span className="font-semibold text-[#2C2526]">
-                  {profile.experienceYears ? `${profile.experienceYears} Years` : 'N/A'}
+                  {profile.experienceYears ? `${profile.experienceYears} ${tr('Years', 'سال')}` : tr('N/A', 'موجود نہیں')}
                 </span>
               </div>
             </div>
@@ -276,46 +276,45 @@ function ProfileDetailContent() {
           <div className="bg-[#FFFFFF] rounded-2xl border border-[#E5DFD5] p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-3">
               <h3 className="font-serif text-base font-bold text-[#800F2F]">
-                3. Partner Preferences (Configured for Matching Engine)
+                {tr('3. Partner Preferences (Configured for Matching Engine)', '3. شریک حیات کی ترجیحات')}
               </h3>
-              <span className="text-xs font-urdu text-[#6E6466]">شریک حیات کی ترجیحات</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <span className="text-[#6E6466] block">Preferred Age Range:</span>
-                <span className="font-bold text-[#2C2526]">{profile.preferences.ageMin} – {profile.preferences.ageMax} Years</span>
+                <span className="text-[#6E6466] block">{tr('Preferred Age Range:', 'مطلوبہ عمر:')}</span>
+                <span className="font-bold text-[#2C2526]">{profile.preferences.ageMin} – {profile.preferences.ageMax} {tr('Years', 'سال')}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Minimum Education:</span>
+                <span className="text-[#6E6466] block">{tr('Minimum Education:', 'کم از کم تعلیم:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.preferences.educationMin}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Acceptable Castes:</span>
+                <span className="text-[#6E6466] block">{tr('Acceptable Castes:', 'مطلوبہ ذات:')}</span>
                 <span className="font-semibold text-[#800F2F]">{profile.preferences.castes.join(', ')}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Preferred Cities:</span>
+                <span className="text-[#6E6466] block">{tr('Preferred Cities:', 'مطلوبہ شہر:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.preferences.cities.join(', ')}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Preferred Maslak:</span>
+                <span className="text-[#6E6466] block">{tr('Preferred Maslak:', 'مطلوبہ مسلک:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.preferences.maslak}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block">Marital Statuses:</span>
+                <span className="text-[#6E6466] block">{tr('Marital Statuses:', 'ازدواجی حیثیت:')}</span>
                 <span className="font-semibold text-[#2C2526]">{profile.preferences.maritalStatuses.join(', ')}</span>
               </div>
 
               <div className="col-span-full pt-1">
-                <span className="text-[#6E6466] block">Other Expectations / Notes:</span>
+                <span className="text-[#6E6466] block">{tr('Other Expectations / Notes:', 'دیگر خواہشات / نوٹس:')}</span>
                 <p className="text-xs text-[#2C2526] italic bg-[#F8F5F0] p-2.5 rounded-lg border border-[#E5DFD5] mt-1">
-                  {profile.preferences.otherNotes || 'Respectable family background and cultural alignment.'}
+                  {profile.preferences.otherNotes || tr('Respectable family background and cultural alignment.', 'معزز خاندان اور بہتر ہم آہنگی۔')}
                 </p>
               </div>
             </div>
@@ -329,37 +328,37 @@ function ProfileDetailContent() {
             <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-2 text-[#800F2F]">
               <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="font-serif font-bold text-xs uppercase tracking-wider">
-                Confidential Contact (Staff Only)
+                {tr('Confidential Contact (Staff Only)', 'خفیہ رابطہ نمبر (صرف عملے کے لیے)')}
               </h3>
             </div>
 
             <div className="space-y-2.5 text-xs">
               <div>
-                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">Primary Phone</span>
-                <span className="font-bold text-[#800F2F] text-sm">{profile.phone}</span>
+                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">{tr('Primary Phone', 'بنیادی فون نمبر')}</span>
+                <span className="font-bold text-[#800F2F] text-sm" dir="ltr">{profile.phone}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">WhatsApp</span>
-                <span className="font-semibold text-[#2C2526]">{profile.whatsapp}</span>
+                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">{tr('WhatsApp', 'واٹس ایپ')}</span>
+                <span className="font-semibold text-[#2C2526]" dir="ltr">{profile.whatsapp}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">Guardian</span>
+                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">{tr('Guardian', 'سرپرست')}</span>
                 <span className="font-semibold text-[#2C2526]">
-                  {profile.guardianName || 'N/A'} ({profile.guardianPhone || 'N/A'})
+                  {profile.guardianName || tr('N/A', 'موجود نہیں')} (<span dir="ltr">{profile.guardianPhone || tr('N/A', 'موجود نہیں')}</span>)
                 </span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">Home Address</span>
+                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">{tr('Home Address', 'گھر کا پتہ')}</span>
                 <span className="text-[#2C2526]">{profile.address}</span>
               </div>
 
               <div>
-                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">CNIC</span>
-                <span className="font-mono text-[#2C2526]">
-                  {isAdmin ? profile.cnic || 'N/A' : maskCNIC(profile.cnic)}
+                <span className="text-[#6E6466] block text-[10px] uppercase font-bold">{tr('CNIC', 'شناختی کارڈ نمبر')}</span>
+                <span className="font-mono text-[#2C2526]" dir="ltr">
+                  {isAdmin ? profile.cnic || tr('N/A', 'موجود نہیں') : maskCNIC(profile.cnic)}
                 </span>
               </div>
             </div>
@@ -368,10 +367,10 @@ function ProfileDetailContent() {
           {/* Internal Remarks */}
           <div className="bg-[#660A22] text-[#F8F5F0] rounded-2xl p-5 shadow-sm space-y-2 border border-[#D4AF37]/40">
             <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider block">
-              Internal Office Remarks (Never Shared)
+              {tr('Internal Office Remarks (Never Shared)', 'آفس کے اندرونی نوٹس (کبھی شیئر نہیں کیے جاتے)')}
             </span>
             <p className="text-xs text-[#E5DFD5] leading-relaxed italic">
-              {profile.remarks || 'No internal remarks logged.'}
+              {profile.remarks || tr('No internal remarks logged.', 'کوئی اندرونی نوٹ درج نہیں ہے۔')}
             </p>
           </div>
 
@@ -380,12 +379,12 @@ function ProfileDetailContent() {
             <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-2 text-[#800F2F]">
               <HeartHandshake className="w-4 h-4 text-[#D4AF37]" />
               <h3 className="font-serif font-bold text-xs uppercase tracking-wider">
-                Proposal Pipeline History
+                {tr('Proposal Pipeline History', 'پروپوزل ہسٹری')}
               </h3>
             </div>
 
             {proposals.length === 0 ? (
-              <p className="text-[11px] text-[#6E6466]">No active proposals logged yet for this candidate.</p>
+              <p className="text-[11px] text-[#6E6466]">{tr('No active proposals logged yet for this candidate.', 'اس امیدوار کے لیے ابھی کوئی پروپوزل درج نہیں ہوا۔')}</p>
             ) : (
               <div className="space-y-2">
                 {proposals.map(pr => (
@@ -399,7 +398,7 @@ function ProfileDetailContent() {
                       </span>
                     </div>
                     <p className="text-[10px] text-[#6E6466]">
-                      Sent on {formatDate(pr.sentDate || pr.createdAt)} by {pr.sentBy || 'Staff'}
+                      {tr('Sent on', 'بھیجا گیا')} {formatDate(pr.sentDate || pr.createdAt)} {tr('by', 'از')} {pr.sentBy || tr('Staff', 'عملہ')}
                     </p>
                   </div>
                 ))}
@@ -413,8 +412,9 @@ function ProfileDetailContent() {
 }
 
 export default function ProfileDetailPage() {
+  const { tr } = useLanguage();
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">Loading candidate profile...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#6E6466]">{tr('Loading candidate profile...', 'امیدوار کا پروفائل لوڈ ہو رہا ہے...')}</div>}>
       <ProfileDetailContent />
     </Suspense>
   );

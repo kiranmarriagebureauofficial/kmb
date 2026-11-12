@@ -7,6 +7,7 @@ import { store } from '@/lib/db/store';
 import { formatPKR, formatDate } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { Printer, X, Download, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface InvoiceReceiptProps {
   invoice: Invoice;
@@ -14,6 +15,7 @@ interface InvoiceReceiptProps {
 }
 
 export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
+  const { tr } = useLanguage();
   const [layoutMode, setLayoutMode] = useState<'a4' | 'a5' | 'thermal'>('a4');
   const settings = store.getSettings();
   const linkedProfile = invoice.profileId ? store.getProfileById(invoice.profileId) : undefined;
@@ -31,26 +33,26 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
         <div className="no-print p-4 bg-[#800F2F] text-[#F8F5F0] flex items-center justify-between border-b border-[#D4AF37] shrink-0 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <span className="font-serif font-bold text-sm tracking-wide">
-              Official Receipt & Invoice
+              {tr('Official Receipt & Invoice', 'سرکاری رسید اور انوائس')}
             </span>
             <div className="flex items-center bg-[#660A22] rounded-lg p-0.5 border border-[#D4AF37]/40 text-xs">
               <button
                 onClick={() => setLayoutMode('a4')}
                 className={`px-2.5 py-1 rounded ${layoutMode === 'a4' ? 'bg-[#D4AF37] text-[#660A22] font-bold' : 'text-[#E5DFD5]'}`}
               >
-                A4 Standard
+                {tr('A4 Standard', 'A4 معیاری')}
               </button>
               <button
                 onClick={() => setLayoutMode('a5')}
                 className={`px-2.5 py-1 rounded ${layoutMode === 'a5' ? 'bg-[#D4AF37] text-[#660A22] font-bold' : 'text-[#E5DFD5]'}`}
               >
-                A5 Slip
+                {tr('A5 Slip', 'A5 سلپ')}
               </button>
               <button
                 onClick={() => setLayoutMode('thermal')}
                 className={`px-2.5 py-1 rounded ${layoutMode === 'thermal' ? 'bg-[#D4AF37] text-[#660A22] font-bold' : 'text-[#E5DFD5]'}`}
               >
-                80mm Thermal
+                {tr('80mm Thermal', '80mm تھرمل')}
               </button>
             </div>
           </div>
@@ -62,7 +64,7 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
               onClick={handlePrint}
               icon={<Printer className="w-4 h-4 text-[#660A22]" />}
             >
-              Print Receipt
+              {tr('Print Receipt', 'رسید پرنٹ کریں')}
             </Button>
             {onClose && (
               <button onClick={onClose} className="p-1 rounded hover:bg-[#660A22] text-[#E5DFD5]">
@@ -198,34 +200,34 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
                   </div>
                 </div>
 
-                <div className="text-right">
+                <div className="text-end">
                   <span className="inline-block px-3 py-1 bg-[#800F2F] text-[#F8F5F0] font-bold text-xs rounded uppercase tracking-wider">
-                    Official Fee Invoice
+                    {tr('Official Fee Invoice', 'سرکاری فیس انوائس')}
                   </span>
                   <p className="font-serif text-base font-bold text-[#800F2F] mt-1">
                     {invoice.invoiceNumber}
                   </p>
-                  <p className="text-xs text-[#6E6466]">Date: {formatDate(invoice.date)}</p>
+                  <p className="text-xs text-[#6E6466]">{tr('Date:', 'تاریخ:')} {formatDate(invoice.date)}</p>
                 </div>
               </div>
 
               {/* Billed To Details */}
               <div className="grid grid-cols-2 gap-4 p-3 bg-[#F8F5F0] rounded-lg border border-[#E5DFD5] mb-6 text-xs">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Billed To / Client:</span>
+                  <span className="text-[10px] uppercase font-bold text-[#6E6466] block">{tr('Billed To / Client:', 'کلائنٹ کا نام:')}</span>
                   <p className="font-bold text-[#2C2526] text-sm">{resolvedClientName}</p>
                   {resolvedFormNo && (
                     <p className="text-[#800F2F] font-mono font-bold text-[11px]">
-                      Register / Form No: {resolvedFormNo}
+                      {tr('Register / Form No:', 'رجسٹر / فارم نمبر:')} {resolvedFormNo}
                     </p>
                   )}
-                  <p className="text-[#6E6466]">Phone: {invoice.clientPhone}</p>
+                  <p className="text-[#6E6466]" dir="ltr">{tr('Phone:', 'فون:')} {invoice.clientPhone}</p>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Fee Category:</span>
-                  <p className="font-bold text-[#800F2F] uppercase text-xs">{invoice.invoiceType} Fee</p>
+                <div className="text-end">
+                  <span className="text-[10px] uppercase font-bold text-[#6E6466] block">{tr('Fee Category:', 'فیس کی قسم:')}</span>
+                  <p className="font-bold text-[#800F2F] uppercase text-xs">{invoice.invoiceType} {tr('Fee', 'فیس')}</p>
                   <p className="text-[#6E6466]">
-                    Payment Status: <strong className="uppercase text-[#800F2F]">{invoice.status}</strong>
+                    {tr('Payment Status:', 'ادائیگی اسٹیٹس:')} <strong className="uppercase text-[#800F2F]">{invoice.status}</strong>
                   </p>
                 </div>
               </div>
@@ -234,15 +236,15 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
               <table className="w-full text-xs border border-[#E5DFD5] border-collapse mb-6">
                 <thead>
                   <tr className="bg-[#800F2F] text-[#F8F5F0]">
-                    <th className="p-2.5 text-left">Description / Particulars</th>
-                    <th className="p-2.5 text-right w-32">Amount (PKR)</th>
+                    <th className="p-2.5 text-start">{tr('Description / Particulars', 'تفصیل / مدات')}</th>
+                    <th className="p-2.5 text-end w-32">{tr('Amount (PKR)', 'رقم (روپے)')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5DFD5]">
                   {invoice.items.map((it, idx) => (
                     <tr key={idx}>
                       <td className="p-3 text-[#2C2526] font-medium">{it.description}</td>
-                      <td className="p-3 text-right font-mono font-bold text-[#2C2526]">
+                      <td className="p-3 text-end font-mono font-bold text-[#2C2526]">
                         {formatPKR(it.amount)}
                       </td>
                     </tr>
@@ -250,26 +252,26 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
                 </tbody>
                 <tfoot>
                   <tr className="border-t border-[#E5DFD5]">
-                    <td className="p-2 text-right font-semibold text-[#6E6466]">Subtotal:</td>
-                    <td className="p-2 text-right font-mono font-semibold">{formatPKR(invoice.subtotal)}</td>
+                    <td className="p-2 text-end font-semibold text-[#6E6466]">{tr('Subtotal:', 'ذیلی مجموعہ:')}</td>
+                    <td className="p-2 text-end font-mono font-semibold">{formatPKR(invoice.subtotal)}</td>
                   </tr>
                   {invoice.discount > 0 && (
                     <tr>
-                      <td className="p-2 text-right font-semibold text-[#A3182E]">Discount:</td>
-                      <td className="p-2 text-right font-mono font-semibold text-[#A3182E]">-{formatPKR(invoice.discount)}</td>
+                      <td className="p-2 text-end font-semibold text-[#A3182E]">{tr('Discount:', 'رعایت:')}</td>
+                      <td className="p-2 text-end font-mono font-semibold text-[#A3182E]">-{formatPKR(invoice.discount)}</td>
                     </tr>
                   )}
                   <tr className="bg-[#F8F5F0] border-t-2 border-[#800F2F]">
-                    <td className="p-2.5 text-right font-bold text-[#800F2F] text-sm">Total Payable:</td>
-                    <td className="p-2.5 text-right font-mono font-bold text-[#800F2F] text-sm">{formatPKR(invoice.total)}</td>
+                    <td className="p-2.5 text-end font-bold text-[#800F2F] text-sm">{tr('Total Payable:', 'کل قابلِ ادائیگی:')}</td>
+                    <td className="p-2.5 text-end font-mono font-bold text-[#800F2F] text-sm">{formatPKR(invoice.total)}</td>
                   </tr>
                   <tr>
-                    <td className="p-2 text-right font-semibold text-[#2C2526]">Amount Received:</td>
-                    <td className="p-2 text-right font-mono font-bold text-[#2C2526]">{formatPKR(invoice.amountPaid)}</td>
+                    <td className="p-2 text-end font-semibold text-[#2C2526]">{tr('Amount Received:', 'وصول شدہ رقم:')}</td>
+                    <td className="p-2 text-end font-mono font-bold text-[#2C2526]">{formatPKR(invoice.amountPaid)}</td>
                   </tr>
                   <tr className="border-t border-[#E5DFD5]">
-                    <td className="p-2 text-right font-bold text-[#A3182E]">Outstanding Balance:</td>
-                    <td className="p-2 text-right font-mono font-bold text-[#A3182E]">{formatPKR(invoice.balance)}</td>
+                    <td className="p-2 text-end font-bold text-[#A3182E]">{tr('Outstanding Balance:', 'بقیہ رقم:')}</td>
+                    <td className="p-2 text-end font-mono font-bold text-[#A3182E]">{formatPKR(invoice.balance)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -278,16 +280,16 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
               {invoice.payments.length > 0 && (
                 <div className="mb-6">
                   <h4 className="text-xs font-serif font-bold uppercase text-[#800F2F] tracking-wider mb-2">
-                    Payment Receipts Breakdown
+                    {tr('Payment Receipts Breakdown', 'وصولیوں کی تفصیل')}
                   </h4>
                   <table className="w-full text-xs border border-[#E5DFD5]">
                     <thead className="bg-[#F8F5F0] text-[#6E6466]">
                       <tr>
-                        <th className="p-2 text-left">Receipt #</th>
-                        <th className="p-2 text-left">Date</th>
-                        <th className="p-2 text-left">Method</th>
-                        <th className="p-2 text-left">Received By</th>
-                        <th className="p-2 text-right">Amount</th>
+                        <th className="p-2 text-start">{tr('Receipt #', 'رسید #')}</th>
+                        <th className="p-2 text-start">{tr('Date', 'تاریخ')}</th>
+                        <th className="p-2 text-start">{tr('Method', 'طریقہ')}</th>
+                        <th className="p-2 text-start">{tr('Received By', 'وصول کنندہ')}</th>
+                        <th className="p-2 text-end">{tr('Amount', 'رقم')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#E5DFD5]">
@@ -297,7 +299,7 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
                           <td className="p-2">{formatDate(p.paymentDate)}</td>
                           <td className="p-2 font-medium">{p.paymentMethod}</td>
                           <td className="p-2 text-[#6E6466]">{p.receivedBy}</td>
-                          <td className="p-2 text-right font-mono font-bold">{formatPKR(p.amount)}</td>
+                          <td className="p-2 text-end font-mono font-bold">{formatPKR(p.amount)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -308,11 +310,11 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
               {/* Signatures */}
               <div className="mt-8 pt-4 border-t border-[#D4AF37] flex items-center justify-between text-xs text-[#6E6466]">
                 <div>
-                  <p className="font-semibold text-[#800F2F]">Kiran Marriage Bureau</p>
-                  <p className="text-[11px]">System-Generated Receipt</p>
+                  <p className="font-semibold text-[#800F2F]">{tr('Kiran Marriage Bureau', 'کرن میرج بیورو')}</p>
+                  <p className="text-[11px]">{tr('System-Generated Receipt', 'کمپیوٹرائزڈ رسید')}</p>
                 </div>
-                <div className="text-right">
-                  <p>Authorized Cashier / Stamp: ______________________</p>
+                <div className="text-end">
+                  <p>{tr('Authorized Cashier / Stamp: ______________________', 'دستخط کیشیئر / مہر: ______________________')}</p>
                 </div>
               </div>
             </div>

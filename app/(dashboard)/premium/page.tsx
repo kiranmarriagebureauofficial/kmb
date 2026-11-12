@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -23,8 +23,10 @@ import {
   CalendarCheck
 } from 'lucide-react';
 import { COMMON_CITIES } from '@/lib/i18n';
+import { useLanguage } from '@/lib/useLanguage';
 
 export default function PremiumRishtayDirectoryPage() {
+  const { tr } = useLanguage();
   const [pairs, setPairs] = useState<{ profileA: Profile; profileB: Profile; match: MatchResult }[]>([]);
   const [filterCity, setFilterCity] = useState<string>('All');
   const [filterPremiumMemberOnly, setFilterPremiumMemberOnly] = useState<boolean>(false);
@@ -75,26 +77,29 @@ export default function PremiumRishtayDirectoryPage() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#D4AF37] text-[#660A22]">
             <Crown className="w-3.5 h-3.5 fill-[#660A22]" />
-            <span>Bureau-Wide 75%+ Compatibility Directory</span>
+            <span>{tr('Bureau-Wide 75%+ Compatibility Directory', 'بیورو بھر کی 75% سے زائد مطابقت والی فہرست')}</span>
           </div>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F]">
-            Premium Rishtay Pairs ({filteredPairs.length})
+            {tr(`Premium Rishtay Pairs (${filteredPairs.length})`, `پریمیم رشتوں کے جوڑے (${filteredPairs.length})`)}
           </h1>
           <p className="text-xs text-[#6E6466]">
-            All verified male & female profiles across Lahore & Pakistan achieving 75%+ two-way compatibility.
+            {tr(
+              'All verified male & female profiles across Lahore & Pakistan achieving 75%+ two-way compatibility.',
+              'لاہور اور پاکستان بھر کے تمام تصدیق شدہ مرد و خواتین پروفائلز جن کی باہمی مطابقت 75% یا اس سے زیادہ ہے۔'
+            )}
           </p>
         </div>
 
         {/* Filter Controls */}
         <div className="flex items-center gap-3 text-xs flex-wrap">
           <div>
-            <label className="block text-[10px] uppercase font-bold text-[#6E6466] mb-1">Location</label>
+            <label className="block text-[10px] uppercase font-bold text-[#6E6466] mb-1">{tr('Location', 'مقام')}</label>
             <select
               value={filterCity}
               onChange={(e) => setFilterCity(e.target.value)}
               className="px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             >
-              <option value="All">All Cities</option>
+              <option value="All">{tr('All Cities', 'تمام شہر')}</option>
               {COMMON_CITIES.map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -111,7 +116,7 @@ export default function PremiumRishtayDirectoryPage() {
               />
               <span className="flex items-center gap-1">
                 <Star className="w-3 h-3 text-[#D4AF37] fill-[#D4AF37]" />
-                <span>VIP Clients Only</span>
+                <span>{tr('VIP Clients Only', 'صرف وی آئی پی کلائنٹس')}</span>
               </span>
             </label>
           </div>
@@ -123,10 +128,10 @@ export default function PremiumRishtayDirectoryPage() {
         <div className="p-12 text-center bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl space-y-3">
           <Star className="w-10 h-10 text-[#D4AF37] mx-auto fill-[#D4AF37]" />
           <h3 className="font-serif text-base font-bold text-[#800F2F]">
-            No 75%+ Premium Match Pairs Found with Selected Filters
+            {tr('No 75%+ Premium Match Pairs Found with Selected Filters', 'منتخب فلٹرز کے مطابق کوئی 75%+ پریمیم جوڑا نہیں ملا')}
           </h3>
           <p className="text-xs text-[#6E6466]">
-            Try changing the city filter to "All Cities" or register new compatible profiles.
+            {tr('Try changing the city filter to "All Cities" or register new compatible profiles.', 'شہر کا فلٹر "تمام شہر" پر تبدیل کریں یا نئے موزوں پروفائلز شامل کریں۔')}
           </p>
         </div>
       ) : (
@@ -134,7 +139,7 @@ export default function PremiumRishtayDirectoryPage() {
           {filteredPairs.map(({ profileA, profileB, match }) => (
             <div
               key={match.id}
-              className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all border-l-4 border-l-[#D4AF37] grid grid-cols-1 lg:grid-cols-12 gap-4 items-center"
+              className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all border-s-4 border-s-[#D4AF37] grid grid-cols-1 lg:grid-cols-12 gap-4 items-center"
             >
               {/* Groom Party A */}
               <div className="lg:col-span-4 space-y-1">
@@ -150,12 +155,12 @@ export default function PremiumRishtayDirectoryPage() {
                   )}
                 </div>
                 <p className="text-xs text-[#6E6466]">
-                  {profileA.age} Yrs • {profileA.height} • <strong className="text-[#800F2F]">{profileA.caste}</strong> • {profileA.maslak}
+                  {profileA.age} {tr('Yrs', 'سال')} • {profileA.height} • <strong className="text-[#800F2F]">{profileA.caste}</strong> • {profileA.maslak}
                 </p>
                 <p className="text-xs text-[#2C2526] truncate">{profileA.profession} ({profileA.degree})</p>
                 <p className="text-[11px] text-[#6E6466] flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[#D4AF37]" />
-                  <span>{profileA.city} ({profileA.societyName || 'Lahore'})</span>
+                  <span>{profileA.city} ({profileA.societyName || tr('Lahore', 'لاہور')})</span>
                 </p>
               </div>
 
@@ -163,7 +168,7 @@ export default function PremiumRishtayDirectoryPage() {
               <div className="lg:col-span-3 flex flex-col items-center justify-center text-center p-3 bg-[#F8F5F0] rounded-xl border border-[#D4AF37]/40 space-y-1">
                 <MatchRing score={match.finalScore} size={54} strokeWidth={5} />
                 <Badge tier="premium" className="text-[10px]" />
-                <span className="text-[10px] text-[#6E6466]">
+                <span className="text-[10px] text-[#6E6466]" dir="ltr">
                   A: {match.scoreAB}% ↔ B: {match.scoreBA}%
                 </span>
               </div>
@@ -182,12 +187,12 @@ export default function PremiumRishtayDirectoryPage() {
                   )}
                 </div>
                 <p className="text-xs text-[#6E6466]">
-                  {profileB.age} Yrs • {profileB.height} • <strong className="text-[#800F2F]">{profileB.caste}</strong> • {profileB.maslak}
+                  {profileB.age} {tr('Yrs', 'سال')} • {profileB.height} • <strong className="text-[#800F2F]">{profileB.caste}</strong> • {profileB.maslak}
                 </p>
                 <p className="text-xs text-[#2C2526] truncate">{profileB.profession} ({profileB.degree})</p>
                 <p className="text-[11px] text-[#6E6466] flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[#D4AF37]" />
-                  <span>{profileB.city} ({profileB.societyName || 'Lahore'})</span>
+                  <span>{profileB.city} ({profileB.societyName || tr('Lahore', 'لاہور')})</span>
                 </p>
               </div>
 
@@ -199,7 +204,7 @@ export default function PremiumRishtayDirectoryPage() {
                   onClick={() => setActiveProposal({ a: profileA, b: profileB })}
                   icon={<HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />}
                 >
-                  Initiate Proposal
+                  {tr('Initiate Proposal', 'پروپوزل بھیجیں')}
                 </Button>
 
                 <Button
@@ -208,7 +213,7 @@ export default function PremiumRishtayDirectoryPage() {
                   onClick={() => setActiveComparison({ a: profileA, b: profileB, m: match })}
                   icon={<ArrowLeftRight className="w-3.5 h-3.5 text-[#800F2F]" />}
                 >
-                  Compare
+                  {tr('Compare', 'موازنہ کریں')}
                 </Button>
               </div>
             </div>
@@ -232,7 +237,7 @@ export default function PremiumRishtayDirectoryPage() {
           profileA={activeProposal.a}
           profileB={activeProposal.b}
           onClose={() => setActiveProposal(null)}
-          onSuccess={() => alert('Proposal created and tracked!')}
+          onSuccess={() => alert(tr('Proposal created and tracked!', 'پروپوزل بنا کر ریکارڈ کر لیا گیا!'))}
         />
       )}
     </div>

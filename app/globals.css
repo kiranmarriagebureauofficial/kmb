@@ -51,14 +51,32 @@ body {
 /* Urdu styling */
 [dir="rtl"] {
   font-family: "Noto Nastaliq Urdu", Inter, system-ui, sans-serif;
-  line-height: 1.8;
+  line-height: 1.9;
+}
+
+[dir="rtl"] body {
+  font-family: "Noto Nastaliq Urdu", Inter, system-ui, sans-serif;
+}
+
+[dir="rtl"] .font-serif {
+  font-family: "Noto Nastaliq Urdu", "Playfair Display", Georgia, serif;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] th.text-center,
+[dir="rtl"] td.text-center {
+  text-align: center;
 }
 
 [dir="rtl"] h1,
 [dir="rtl"] h2,
 [dir="rtl"] h3,
 [dir="rtl"] h4 {
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .font-serif {

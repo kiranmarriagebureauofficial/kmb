@@ -5,6 +5,7 @@ import { Profile, ProposalStatus } from '@/lib/types';
 import { store } from '@/lib/db/store';
 import { Button } from '../ui/Button';
 import { HeartHandshake, X, Calendar, User, FileText } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface ProposalModalProps {
   profileA: Profile;
@@ -19,6 +20,7 @@ export function ProposalModal({
   onClose,
   onSuccess,
 }: ProposalModalProps) {
+  const { tr } = useLanguage();
   const currentUser = store.getCurrentUser();
   const [sentBy, setSentBy] = useState(currentUser?.name || 'Begum Kiran Shah');
   const [sentDate, setSentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -60,7 +62,7 @@ export function ProposalModal({
           <div className="flex items-center gap-2">
             <HeartHandshake className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
-              Initiate & Log Rishta Proposal
+              {tr('Initiate & Log Rishta Proposal', 'رشتہ پروپوزل شروع اور ریکارڈ کریں')}
             </h2>
           </div>
           <button
@@ -75,16 +77,16 @@ export function ProposalModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {/* Pair Preview */}
           <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] flex items-center justify-between">
-            <div className="text-left">
-              <span className="text-[10px] uppercase font-bold text-[#6E6466]">Party A</span>
+            <div className="text-start">
+              <span className="text-[10px] uppercase font-bold text-[#6E6466]">{tr('Party A', 'فریق اول')}</span>
               <p className="font-bold text-[#800F2F]">{profileA.name}</p>
               <span className="text-[10px] text-[#6E6466]">{profileA.formNo}</span>
             </div>
 
             <HeartHandshake className="w-6 h-6 text-[#D4AF37]" />
 
-            <div className="text-right">
-              <span className="text-[10px] uppercase font-bold text-[#6E6466]">Party B</span>
+            <div className="text-end">
+              <span className="text-[10px] uppercase font-bold text-[#6E6466]">{tr('Party B', 'فریق دوم')}</span>
               <p className="font-bold text-[#800F2F]">{profileB.name}</p>
               <span className="text-[10px] text-[#6E6466]">{profileB.formNo}</span>
             </div>
@@ -93,7 +95,7 @@ export function ProposalModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Proposal Sent Date *
+                {tr('Proposal Sent Date *', 'پروپوزل بھیجنے کی تاریخ *')}
               </label>
               <input
                 type="date"
@@ -106,7 +108,7 @@ export function ProposalModal({
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Handled By *
+                {tr('Handled By *', 'نگران عملہ *')}
               </label>
               <input
                 type="text"
@@ -121,24 +123,24 @@ export function ProposalModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Initial Response Status
+                {tr('Initial Response Status', 'ابتدائی ردِعمل اسٹیٹس')}
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as ProposalStatus)}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
               >
-                <option value="waiting">Waiting for Response</option>
-                <option value="interested">Family Interested</option>
-                <option value="meeting_scheduled">Meeting Scheduled</option>
-                <option value="not_interested">Not Interested</option>
-                <option value="finalized">Finalized</option>
+                <option value="waiting">{tr('Waiting for Response', 'جواب کا انتظار')}</option>
+                <option value="interested">{tr('Family Interested', 'خاندان راضی/دلچسپی')}</option>
+                <option value="meeting_scheduled">{tr('Meeting Scheduled', 'ملاقات طے')}</option>
+                <option value="not_interested">{tr('Not Interested', 'غیر متفق')}</option>
+                <option value="finalized">{tr('Finalized', 'طے شدہ')}</option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Follow-Up Reminder Date
+                {tr('Follow-Up Reminder Date', 'فالو اپ یاددہانی کی تاریخ')}
               </label>
               <input
                 type="date"
@@ -151,20 +153,23 @@ export function ProposalModal({
 
           <div>
             <label className="block font-semibold text-[#800F2F] mb-1">
-              Internal Proposal Notes
+              {tr('Internal Proposal Notes', 'پروپوزل کے اندرونی نوٹس')}
             </label>
             <textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Sent sanitized WhatsApp bio to mother; awaiting response on meeting..."
+              placeholder={tr(
+                'e.g. Sent sanitized WhatsApp bio to mother; awaiting response on meeting...',
+                'مثال: والدہ کو واٹس ایپ پر بائیوڈیٹا بھیجا گیا؛ ملاقات کے جواب کا انتظار ہے...'
+              )}
               className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
             />
           </div>
 
           <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
             <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
+              {tr('Cancel', 'منسوخ')}
             </Button>
             <Button
               type="submit"
@@ -172,7 +177,9 @@ export function ProposalModal({
               disabled={saving}
               icon={<HeartHandshake className="w-4 h-4 text-[#D4AF37]" />}
             >
-              {saving ? 'Logging...' : 'Save & Track Proposal'}
+              {saving
+                ? tr('Logging...', 'محفوظ ہو رہا ہے...')
+                : tr('Save & Track Proposal', 'پروپوزل محفوظ کریں')}
             </Button>
           </div>
         </form>

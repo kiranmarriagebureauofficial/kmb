@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Profile } from '@/lib/types';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { formatPKR, formatDate, maskCNIC, maskPhone } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { exportSingleProfilePDF } from '@/lib/pdf-export';
@@ -15,6 +16,7 @@ interface ProfilePrintViewProps {
 }
 
 export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
+  const { tr } = useLanguage();
   const [hideContact, setHideContact] = useState(true);
   const [docLang, setDocLang] = useState<'en' | 'ur' | 'both'>('both');
   const settings = store.getSettings();
@@ -34,7 +36,7 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
             onClick={handlePrint}
             icon={<Printer className="w-4 h-4 text-[#D4AF37]" />}
           >
-            Print Profile Form
+            {tr('Print Profile Form', 'پروفائل فارم پرنٹ کریں')}
           </Button>
 
           <Button
@@ -43,7 +45,7 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
             onClick={() => exportSingleProfilePDF(profile, settings)}
             icon={<FileText className="w-4 h-4 text-[#800F2F]" />}
           >
-            Download Biodata PDF
+            {tr('Download Biodata PDF', 'بائیوڈیٹا پی ڈی ایف ڈاؤنلوڈ')}
           </Button>
 
           <Button
@@ -52,7 +54,7 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
             onClick={handlePrint}
             icon={<Download className="w-4 h-4 text-[#800F2F]" />}
           >
-            Print / Browser PDF
+            {tr('Print / Browser PDF', 'پرنٹ / براؤزر پی ڈی ایف')}
           </Button>
         </div>
 
@@ -68,7 +70,7 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
             }`}
           >
             {hideContact ? <EyeOff className="w-3.5 h-3.5 text-[#D4AF37]" /> : <Eye className="w-3.5 h-3.5 text-[#800F2F]" />}
-            <span>{hideContact ? 'Family Share Copy (Contact Hidden)' : 'Internal Office Copy (Full Contact)'}</span>
+            <span>{hideContact ? tr('Family Share Copy (Contact Hidden)', 'خاندانی کاپی (رابطہ نمبر مخفی)') : tr('Internal Office Copy (Full Contact)', 'دفتری کاپی (مکمل رابطہ)')}</span>
           </button>
 
           {/* Language Selector */}

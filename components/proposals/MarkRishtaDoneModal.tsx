@@ -6,6 +6,7 @@ import { store } from '@/lib/db/store';
 import { Button } from '../ui/Button';
 import { formatPKR } from '@/lib/utils';
 import { Star, CheckCircle, Receipt, X, Heart } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface MarkRishtaDoneModalProps {
   proposal: Proposal;
@@ -18,6 +19,7 @@ export function MarkRishtaDoneModal({
   onClose,
   onSuccess,
 }: MarkRishtaDoneModalProps) {
+  const { tr } = useLanguage();
   const settings = store.getSettings();
   const profileA = store.getProfileById(proposal.profileAId);
   const profileB = store.getProfileById(proposal.profileBId);
@@ -44,7 +46,7 @@ export function MarkRishtaDoneModal({
           <div className="flex items-center gap-2">
             <Heart className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
-              Mubarak! Mark as Rishta Done
+              {tr('Mubarak! Mark as Rishta Done', 'مبارک ہو! رشتہ طے شدہ قرار دیں')}
             </h2>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-[#660A22] text-[#E5DFD5]">
@@ -60,31 +62,34 @@ export function MarkRishtaDoneModal({
 
             <div>
               <h3 className="font-serif text-xl font-bold text-[#800F2F]">
-                Rishta Finalized Successfully!
+                {tr('Rishta Finalized Successfully!', 'رشتہ کامیابی سے طے پا گیا!')}
               </h3>
               <p className="text-xs text-[#6E6466] mt-1">
-                Both profiles have been set to <strong>Engaged</strong> and removed from the active matching pool.
+                {tr(
+                  'Both profiles have been set to Engaged and removed from the active matching pool.',
+                  'دونوں پروفائلز منگنی شدہ (Engaged) کر دیے گئے ہیں اور فعال میچنگ سے ہٹا دیے گئے ہیں۔'
+                )}
               </p>
             </div>
 
-            <div className="p-4 bg-[#F8F5F0] rounded-xl border border-[#D4AF37]/40 text-left text-xs space-y-2">
+            <div className="p-4 bg-[#F8F5F0] rounded-xl border border-[#D4AF37]/40 text-start text-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[#6E6466]">Success Fee Invoice:</span>
+                <span className="text-[#6E6466]">{tr('Success Fee Invoice:', 'سکسس فیس انوائس:')}</span>
                 <span className="font-mono font-bold text-[#800F2F]">{createdInvoice.invoiceNumber}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[#6E6466]">Billed To:</span>
+                <span className="text-[#6E6466]">{tr('Billed To:', 'بل بنام:')}</span>
                 <span className="font-bold">{createdInvoice.clientName}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[#6E6466]">Amount Payable:</span>
+                <span className="text-[#6E6466]">{tr('Amount Payable:', 'واجب الادا رقم:')}</span>
                 <span className="font-bold text-[#800F2F]">{formatPKR(createdInvoice.total)}</span>
               </div>
             </div>
 
             <div className="pt-2 flex justify-center gap-3">
               <Button variant="primary" onClick={onClose}>
-                Close & Return to Dashboard
+                {tr('Close & Return to Dashboard', 'بند کریں اور واپس جائیں')}
               </Button>
             </div>
           </div>
@@ -95,13 +100,16 @@ export function MarkRishtaDoneModal({
                 {proposal.profileAName} & {proposal.profileBName}
               </p>
               <p className="text-[11px] text-[#6E6466]">
-                Confirming completion of this rishta will mark both parties as Engaged, exclude them from future match queries, and generate the bureau Success Fee invoice.
+                {tr(
+                  'Confirming completion of this rishta will mark both parties as Engaged, exclude them from future match queries, and generate the bureau Success Fee invoice.',
+                  'تصدیق کرنے پر دونوں فریق منگنی شدہ ہو جائیں گے، آئندہ میچز میں شامل نہیں ہوں گے اور بیورو سکسس فیس کی انوائس بن جائے گی۔'
+                )}
               </p>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Select Billed Client / Family for Success Fee:
+                {tr('Select Billed Client / Family for Success Fee:', 'سکسس فیس کی انوائس کے لیے کلائنٹ / خاندان چنیں:')}
               </label>
               <select
                 value={billedPartyId}
@@ -109,17 +117,17 @@ export function MarkRishtaDoneModal({
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
               >
                 <option value={proposal.profileAId}>
-                  Party A: {profileA?.name} ({profileA?.formNo})
+                  {tr('Party A:', 'فریق اول:')} {profileA?.name} ({profileA?.formNo})
                 </option>
                 <option value={proposal.profileBId}>
-                  Party B: {profileB?.name} ({profileB?.formNo})
+                  {tr('Party B:', 'فریق دوم:')} {profileB?.name} ({profileB?.formNo})
                 </option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Success Fee Amount (PKR):
+                {tr('Success Fee Amount (PKR):', 'سکسس فیس رقم (روپے):')}
               </label>
               <input
                 type="number"
@@ -129,20 +137,20 @@ export function MarkRishtaDoneModal({
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-bold text-[#800F2F]"
               />
               <span className="text-[10px] text-[#6E6466] mt-1 block">
-                Standard configured success fee is {formatPKR(settings.feeDefaults.successFee)}
+                {tr('Standard configured success fee is', 'مقررہ معیاری سکسس فیس ہے:')} {formatPKR(settings.feeDefaults.successFee)}
               </span>
             </div>
 
             <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
               <Button variant="secondary" onClick={onClose}>
-                Cancel
+                {tr('Cancel', 'منسوخ')}
               </Button>
               <Button
                 variant="primary"
                 onClick={handleConfirm}
                 icon={<Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />}
               >
-                Confirm Rishta Done & Generate Invoice
+                {tr('Confirm Rishta Done & Generate Invoice', 'رشتہ طے کی تصدیق کریں اور انوائس بنائیں')}
               </Button>
             </div>
           </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Profile, MatchResult } from '@/lib/types';
 import { calculateMatchesForProfile } from '@/lib/matching-engine';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { MatchRing } from '../ui/MatchRing';
 import { Badge } from '../ui/Badge';
 import { ProfileAvatar } from '../ui/ProfileAvatar';
@@ -23,6 +24,7 @@ export function EntrySidePanel({
   hasEnteredData = true,
   className = '',
 }: EntrySidePanelProps) {
+  const { tr } = useLanguage();
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
 
@@ -138,14 +140,14 @@ export function EntrySidePanel({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#D4AF37]" />
             <h3 className="font-serif font-bold text-sm text-[#800F2F] tracking-wide">
-              Live Compatibility Engine
+              {tr('Live Compatibility Engine', 'لائیو مطابقت انجن')}
             </h3>
           </div>
           {isCalculating ? (
-            <span className="text-[10px] text-[#6E6466] animate-pulse">Analyzing...</span>
+            <span className="text-[10px] text-[#6E6466] animate-pulse">{tr('Analyzing...', 'جائزہ جاری ہے...')}</span>
           ) : (
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#800F2F] text-[#F8F5F0]">
-              {matches.length} Matches Found
+              {matches.length} {tr('Matches Found', 'رشتے ملے')}
             </span>
           )}
         </div>
@@ -153,13 +155,13 @@ export function EntrySidePanel({
         {/* Sub-counts */}
         <div className="grid grid-cols-2 gap-2 mt-2.5">
           <div className="bg-[#F8F5F0] p-2 rounded-lg border border-[#E5DFD5] text-center">
-            <span className="text-xs text-[#6E6466] block leading-tight">Matches (50-74%)</span>
+            <span className="text-xs text-[#6E6466] block leading-tight">{tr('Matches (50-74%)', 'مطابق رشتے (50-74%)')}</span>
             <span className="text-base font-serif font-bold text-[#800F2F]">{regularCount}</span>
           </div>
           <div className="bg-[#F8F5F0] p-2 rounded-lg border border-[#D4AF37]/50 text-center">
             <div className="flex items-center justify-center gap-1 text-[#B88B22] text-xs">
               <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
-              <span className="font-semibold">Premium (75%+)</span>
+              <span className="font-semibold">{tr('Premium (75%+)', 'پریمیم (75%+)')}</span>
             </div>
             <span className="text-base font-serif font-bold text-[#B88B22]">{premiumCount}</span>
           </div>
@@ -172,18 +174,18 @@ export function EntrySidePanel({
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6E6466]">
             <Sparkles className="w-8 h-8 text-[#D4AF37]/70 mb-2" />
             <p className="text-xs font-semibold text-[#800F2F]">
-              Live Matching Ready
+              {tr('Live Matching Ready', 'لائیو میچنگ تیار ہے')}
             </p>
             <p className="text-[11px] text-[#6E6466] mt-1 leading-relaxed">
-              Matches will appear live here as you enter candidate details (gender, age, caste, city &amp; preferences).
+              {tr('Matches will appear live here as you enter candidate details (gender, age, caste, city & preferences).', 'جیسے ہی آپ امیدوار کی تفصیلات (جنس، عمر، ذات، شہر اور ترجیحات) درج کریں گے، مطابق رشتے یہاں لائیو نظر آئیں گے۔')}
             </p>
           </div>
         ) : matches.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6E6466]">
             <Users className="w-8 h-8 text-[#D8D0C3] mb-2" />
-            <p className="text-xs font-medium">No 50%+ compatible rishtas found yet.</p>
+            <p className="text-xs font-medium">{tr('No 50%+ compatible rishtas found yet.', 'ابھی تک 50%+ مطابق کوئی رشتہ نہیں ملا۔')}</p>
             <p className="text-[11px] text-[#6E6466]/80 mt-1">
-              Verify opposite gender, religion, caste &amp; sect preferences.
+              {tr('Verify opposite gender, religion, caste & sect preferences.', 'مخالف جنس، مذہب، ذات اور مسلک کی ترجیحات چیک کریں۔')}
             </p>
           </div>
         ) : (
@@ -237,7 +239,7 @@ export function EntrySidePanel({
             href={`/profiles/${savedProfileId}/matches`}
             className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold bg-[#800F2F] hover:bg-[#660A22] text-[#F8F5F0] transition-colors"
           >
-            <span>View All {matches.length} Matches</span>
+            <span>{tr(`View All ${matches.length} Matches`, `تمام ${matches.length} رشتے دیکھیں`)}</span>
             <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
           </Link>
         </div>

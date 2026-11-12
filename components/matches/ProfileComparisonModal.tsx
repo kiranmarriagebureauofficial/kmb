@@ -7,6 +7,7 @@ import { MatchRing } from '../ui/MatchRing';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { X, Printer, Check, ArrowLeftRight, Star } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface ProfileComparisonModalProps {
   profileA: Profile;
@@ -21,6 +22,7 @@ export function ProfileComparisonModal({
   match,
   onClose,
 }: ProfileComparisonModalProps) {
+  const { tr, isUr } = useLanguage();
   const handlePrint = () => {
     window.print();
   };
@@ -33,7 +35,7 @@ export function ProfileComparisonModal({
           <div className="flex items-center gap-2">
             <ArrowLeftRight className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
-              Side-by-Side Rishta Comparison & Compatibility Audit
+              {tr('Side-by-Side Rishta Comparison & Compatibility Audit', 'آمنے سامنے رشتہ موازنہ اور مطابقت کا جائزہ')}
             </h2>
           </div>
 
@@ -44,7 +46,7 @@ export function ProfileComparisonModal({
               onClick={handlePrint}
               icon={<Printer className="w-4 h-4 text-[#660A22]" />}
             >
-              Print Comparison Sheet
+              {tr('Print Comparison Sheet', 'موازنہ شیٹ پرنٹ کریں')}
             </Button>
 
             <button
@@ -61,9 +63,9 @@ export function ProfileComparisonModal({
           {/* Header Banner for print & screen */}
           <div className="text-center space-y-2 border-b border-[#E5DFD5] pb-4">
             <div className="inline-flex items-center gap-2 text-xs font-serif uppercase tracking-widest text-[#B88B22] font-bold">
-              <span>Kiran Marriage Bureau Lahore</span>
+              <span>{tr('Kiran Marriage Bureau Lahore', 'کرن میرج بیورو لاہور')}</span>
               <span>•</span>
-              <span>Official Matrimonial Evaluation</span>
+              <span>{tr('Official Matrimonial Evaluation', 'سرکاری ازدواجی موازنہ')}</span>
             </div>
             <div className="flex items-center justify-center gap-6">
               <h3 className="font-serif text-lg font-bold text-[#800F2F]">
@@ -83,61 +85,61 @@ export function ProfileComparisonModal({
           <table className="w-full text-xs border border-[#E5DFD5] border-collapse">
             <thead>
               <tr className="bg-[#800F2F] text-[#F8F5F0]">
-                <th className="p-2.5 text-left w-1/3">Candidate: {profileA.name}</th>
-                <th className="p-2.5 text-center w-1/3 text-[#D4AF37] font-serif">Comparison Factor</th>
-                <th className="p-2.5 text-right w-1/3">Partner: {profileB.name}</th>
+                <th className="p-2.5 text-start w-1/3">{tr('Candidate:', 'امیدوار:')} {profileA.name}</th>
+                <th className="p-2.5 text-center w-1/3 text-[#D4AF37] font-serif">{tr('Comparison Factor', 'موازنے کا پہلو')}</th>
+                <th className="p-2.5 text-end w-1/3">{tr('Partner:', 'فریقِ ثانی:')} {profileB.name}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E5DFD5]">
               <tr>
-                <td className="p-3 font-semibold text-[#2C2526]">{profileA.gender} ({profileA.age} Yrs)</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Gender & Age</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.gender} ({profileB.age} Yrs)</td>
+                <td className="p-3 font-semibold text-[#2C2526]">{profileA.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')} ({profileA.age} {tr('Yrs', 'سال')})</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Gender & Age', 'جنس اور عمر')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')} ({profileB.age} {tr('Yrs', 'سال')})</td>
               </tr>
               <tr>
                 <td className="p-3 font-semibold text-[#2C2526]">{profileA.height}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Height</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.height}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Height', 'قد')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.height}</td>
               </tr>
               <tr>
                 <td className="p-3 font-semibold text-[#2C2526]">{profileA.maritalStatus}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Marital Status</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.maritalStatus}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Marital Status', 'ازدواجی حیثیت')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.maritalStatus}</td>
               </tr>
               <tr>
                 <td className="p-3 font-bold text-[#800F2F]">{profileA.caste}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Caste / Qaum</td>
-                <td className="p-3 text-right font-bold text-[#800F2F]">{profileB.caste}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Caste / Qaum', 'ذات / قوم')}</td>
+                <td className="p-3 text-end font-bold text-[#800F2F]">{profileB.caste}</td>
               </tr>
               <tr>
                 <td className="p-3 font-semibold text-[#2C2526]">{profileA.maslak}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Maslak / Sect</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.maslak}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Maslak / Sect', 'مسلک / فرقہ')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.maslak}</td>
               </tr>
               <tr>
-                <td className="p-3 font-semibold text-[#2C2526]">{profileA.city} ({profileA.societyName || 'Lahore'})</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">City & Area</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.city} ({profileB.societyName || 'Lahore'})</td>
+                <td className="p-3 font-semibold text-[#2C2526]">{profileA.city} ({profileA.societyName || tr('Lahore', 'لاہور')})</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('City & Area', 'شہر اور علاقہ')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.city} ({profileB.societyName || tr('Lahore', 'لاہور')})</td>
               </tr>
               <tr>
                 <td className="p-3 font-semibold text-[#2C2526]">{profileA.degree}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Education Qualification</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.degree}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Education Qualification', 'تعلیمی قابلیت')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.degree}</td>
               </tr>
               <tr>
                 <td className="p-3 font-semibold text-[#2C2526]">{profileA.profession} {profileA.designation ? `(${profileA.designation})` : ''}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Profession & Designation</td>
-                <td className="p-3 text-right font-semibold text-[#2C2526]">{profileB.profession} {profileB.designation ? `(${profileB.designation})` : ''}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Profession & Designation', 'پیشہ اور عہدہ')}</td>
+                <td className="p-3 text-end font-semibold text-[#2C2526]">{profileB.profession} {profileB.designation ? `(${profileB.designation})` : ''}</td>
               </tr>
               <tr>
                 <td className="p-3 text-[#6E6466]">{profileA.fatherOccupation}</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Father Occupation</td>
-                <td className="p-3 text-right text-[#6E6466]">{profileB.fatherOccupation}</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Father Occupation', 'والد کا پیشہ')}</td>
+                <td className="p-3 text-end text-[#6E6466]">{profileB.fatherOccupation}</td>
               </tr>
               <tr>
-                <td className="p-3 text-[#6E6466]">{profileA.totalSiblings} ({profileA.marriedSiblingsCount} married)</td>
-                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">Siblings Background</td>
-                <td className="p-3 text-right text-[#6E6466]">{profileB.totalSiblings} ({profileB.marriedSiblingsCount} married)</td>
+                <td className="p-3 text-[#6E6466]">{profileA.totalSiblings} ({profileA.marriedSiblingsCount} {tr('married', 'شادی شدہ')})</td>
+                <td className="p-3 text-center bg-[#F8F5F0] text-[#6E6466] font-medium">{tr('Siblings Background', 'بہن بھائیوں کی تفصیل')}</td>
+                <td className="p-3 text-end text-[#6E6466]">{profileB.totalSiblings} ({profileB.marriedSiblingsCount} {tr('married', 'شادی شدہ')})</td>
               </tr>
             </tbody>
           </table>
@@ -145,7 +147,7 @@ export function ProfileComparisonModal({
           {/* Compatibility Breakdown Box */}
           <div className="bg-[#F8F5F0] p-4 rounded-xl border border-[#E5DFD5]">
             <h4 className="font-serif font-bold text-xs uppercase text-[#800F2F] tracking-wider mb-3">
-              Detailed Compatibility Audit Breakdown
+              {tr('Detailed Compatibility Audit Breakdown', 'تفصیلی مطابقت سکور کارڈ')}
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               {match.breakdown.map(item => (
@@ -160,7 +162,7 @@ export function ProfileComparisonModal({
                         <X className="w-3 h-3" />
                       </div>
                     )}
-                    <span className="font-medium text-[#2C2526]">{item.labelEn}</span>
+                    <span className="font-medium text-[#2C2526]">{isUr ? (item.labelUr || item.labelEn) : item.labelEn}</span>
                   </div>
                   <span className="font-mono font-bold text-[#800F2F]">
                     {item.scoreContribution} / {item.maxScore}
@@ -174,10 +176,10 @@ export function ProfileComparisonModal({
         {/* Footer (No-print) */}
         <div className="no-print p-4 bg-[#F8F5F0] border-t border-[#E5DFD5] flex justify-end gap-2 shrink-0">
           <Button variant="secondary" onClick={onClose}>
-            Close
+            {tr('Close', 'بند کریں')}
           </Button>
           <Button variant="primary" onClick={handlePrint} icon={<Printer className="w-4 h-4 text-[#D4AF37]" />}>
-            Print Document
+            {tr('Print Document', 'پرنٹ کریں')}
           </Button>
         </div>
       </div>

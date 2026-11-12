@@ -6,6 +6,7 @@ import { store } from '@/lib/db/store';
 import { Button } from '../ui/Button';
 import { formatPKR } from '@/lib/utils';
 import { Receipt, X, Plus, Trash2 } from 'lucide-react';
+import { useLanguage } from '@/lib/useLanguage';
 
 interface NewInvoiceModalProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ export function NewInvoiceModal({
   onSuccess,
   defaultProfileId,
 }: NewInvoiceModalProps) {
+  const { tr } = useLanguage();
   const profiles = store.getProfiles();
   const settings = store.getSettings();
 
@@ -132,7 +134,7 @@ export function NewInvoiceModal({
           <div className="flex items-center gap-2">
             <Receipt className="w-5 h-5 text-[#D4AF37]" />
             <h2 className="font-serif text-base font-bold tracking-wide">
-              Generate New Client Fee Invoice
+              {tr('Generate New Client Fee Invoice', 'کلائنٹ فیس کی نئی انوائس بنائیں')}
             </h2>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-[#660A22] text-[#E5DFD5]">
@@ -144,7 +146,7 @@ export function NewInvoiceModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           <div>
             <label className="block font-semibold text-[#800F2F] mb-1">
-              Select Client / Profile *
+              {tr('Select Client / Profile *', 'کلائنٹ / پروفائل منتخب کریں *')}
             </label>
             <select
               required
@@ -154,7 +156,7 @@ export function NewInvoiceModal({
             >
               {profiles.map(p => (
                 <option key={p.id} value={p.id}>
-                  {p.formNo} - {p.name} ({p.gender}, {p.caste}, {p.city})
+                  {p.formNo} - {p.name} ({p.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')}, {p.caste}, {p.city})
                 </option>
               ))}
             </select>
@@ -163,23 +165,23 @@ export function NewInvoiceModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Fee Category *
+                {tr('Fee Category *', 'فیس کی قسم *')}
               </label>
               <select
                 value={invoiceType}
                 onChange={(e) => handleTypeChange(e.target.value as InvoiceType)}
                 className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-medium"
               >
-                <option value="registration">Registration Fee</option>
-                <option value="premium">Premium Membership Fee</option>
-                <option value="success">Success Fee</option>
-                <option value="other">Other Service</option>
+                <option value="registration">{tr('Registration Fee', 'رجسٹریشن فیس')}</option>
+                <option value="premium">{tr('Premium Membership Fee', 'پریمیم ممبرشپ فیس')}</option>
+                <option value="success">{tr('Success Fee', 'سکسس فیس')}</option>
+                <option value="other">{tr('Other Service', 'دیگر سروس')}</option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Invoice Date *
+                {tr('Invoice Date *', 'انوائس کی تاریخ *')}
               </label>
               <input
                 type="date"
@@ -195,7 +197,7 @@ export function NewInvoiceModal({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="font-semibold text-[#800F2F]">
-                Invoice Line Items
+                {tr('Invoice Line Items', 'فیس کی تفصیلات')}
               </label>
               <button
                 type="button"
@@ -203,7 +205,7 @@ export function NewInvoiceModal({
                 className="text-[11px] text-[#800F2F] hover:text-[#D4AF37] font-bold flex items-center gap-1"
               >
                 <Plus className="w-3 h-3" />
-                <span>+ Add Item</span>
+                <span>{tr('+ Add Item', '+ آئٹم شامل کریں')}</span>
               </button>
             </div>
 
@@ -215,7 +217,7 @@ export function NewInvoiceModal({
                     required
                     value={it.description}
                     onChange={(e) => updateItem(it.id, 'description', e.target.value)}
-                    placeholder="Description"
+                    placeholder={tr('Description', 'تفصیل')}
                     className="flex-1 px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
                   />
                   <input
@@ -225,7 +227,7 @@ export function NewInvoiceModal({
                     step={1000}
                     value={it.amount}
                     onChange={(e) => updateItem(it.id, 'amount', parseInt(e.target.value, 10))}
-                    className="w-28 px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right"
+                    className="w-28 px-3 py-1.5 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-end"
                   />
                   {items.length > 1 && (
                     <button
@@ -244,19 +246,19 @@ export function NewInvoiceModal({
           <div className="grid grid-cols-2 gap-3 pt-2">
             <div>
               <label className="block font-semibold text-[#800F2F] mb-1">
-                Discount (PKR)
+                {tr('Discount (PKR)', 'رعایت (روپے)')}
               </label>
               <input
                 type="number"
                 min={0}
                 value={discount}
                 onChange={(e) => setDiscount(parseInt(e.target.value, 10) || 0)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-right"
+                className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] font-mono text-end"
               />
             </div>
 
-            <div className="p-2.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-right">
-              <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Net Payable</span>
+            <div className="p-2.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-end">
+              <span className="text-[10px] uppercase font-bold text-[#6E6466] block">{tr('Net Payable', 'کل قابلِ ادائیگی')}</span>
               <span className="font-serif font-bold text-base text-[#800F2F]">{formatPKR(total)}</span>
             </div>
           </div>
@@ -264,12 +266,12 @@ export function NewInvoiceModal({
           {/* Initial Payment Section */}
           <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#D4AF37]/40 space-y-3">
             <span className="font-bold text-[#800F2F] block">
-              Record Initial Payment (Optional)
+              {tr('Record Initial Payment (Optional)', 'ابتدائی ادائیگی درج کریں (اختیاری)')}
             </span>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-semibold text-[#6E6466] mb-1">
-                  Amount Received Now:
+                  {tr('Amount Received Now:', 'ابھی وصول شدہ رقم:')}
                 </label>
                 <input
                   type="number"
@@ -278,23 +280,23 @@ export function NewInvoiceModal({
                   value={initialPayment}
                   onChange={(e) => setInitialPayment(parseInt(e.target.value, 10) || 0)}
                   placeholder="0"
-                  className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-white font-mono text-right font-bold text-[#800F2F]"
+                  className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-white font-mono text-end font-bold text-[#800F2F]"
                 />
               </div>
 
               <div>
                 <label className="block font-semibold text-[#6E6466] mb-1">
-                  Payment Method:
+                  {tr('Payment Method:', 'ادائیگی کا طریقہ:')}
                 </label>
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
                   className="w-full px-3 py-2 rounded-lg border border-[#E5DFD5] bg-white font-medium"
                 >
-                  <option value="Cash">Cash</option>
-                  <option value="Bank Transfer">Bank Transfer</option>
-                  <option value="JazzCash">JazzCash</option>
-                  <option value="Easypaisa">Easypaisa</option>
+                  <option value="Cash">{tr('Cash', 'نقد')}</option>
+                  <option value="Bank Transfer">{tr('Bank Transfer', 'بینک ٹرانسفر')}</option>
+                  <option value="JazzCash">{tr('JazzCash', 'جاز کیش')}</option>
+                  <option value="Easypaisa">{tr('Easypaisa', 'ایزی پیسہ')}</option>
                 </select>
               </div>
             </div>
@@ -302,7 +304,7 @@ export function NewInvoiceModal({
 
           <div className="pt-3 border-t border-[#E5DFD5] flex items-center justify-end gap-2">
             <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
+              {tr('Cancel', 'منسوخ')}
             </Button>
             <Button
               type="submit"
@@ -310,7 +312,9 @@ export function NewInvoiceModal({
               disabled={saving}
               icon={<Receipt className="w-4 h-4 text-[#D4AF37]" />}
             >
-              {saving ? 'Creating...' : 'Create & Issue Invoice'}
+              {saving
+                ? tr('Creating...', 'تیار ہو رہی ہے...')
+                : tr('Create & Issue Invoice', 'انوائس بنائیں اور جاری کریں')}
             </Button>
           </div>
         </form>

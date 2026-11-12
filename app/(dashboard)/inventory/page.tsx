@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { 
   Profile, 
   Gender, 
@@ -60,6 +61,7 @@ import {
 } from '@/lib/i18n';
 
 function InventoryContent() {
+  const { tr, isUr } = useLanguage();
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
   const initialBucket = (searchParams.get('bucket') as AgeBucket) || 'all';
@@ -344,37 +346,37 @@ function InventoryContent() {
       case 'active' as any:
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/20 text-[#800F2F] border border-[#D4AF37]/50">
-            Available
+            {tr('Available', 'دستیاب')}
           </span>
         );
       case 'on_hold':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] text-[#6E6466] border border-[#E5DFD5]">
-            On Hold
+            {tr('On Hold', 'ہولڈ پر')}
           </span>
         );
       case 'engaged':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#800F2F] text-[#F8F5F0]">
-            Engaged
+            {tr('Engaged', 'منگنی شدہ')}
           </span>
         );
       case 'married':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#660A22] text-[#D4AF37] border border-[#D4AF37]">
-            Married
+            {tr('Married', 'شادی شدہ')}
           </span>
         );
       case 'pending_approval':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#FFFFFF] text-[#B88B22] border border-[#D4AF37]">
-            Pending Approval
+            {tr('Pending Approval', 'زیرِ التواء منظوری')}
           </span>
         );
       case 'rejected':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#A3182E]/10 text-[#A3182E] border border-[#A3182E]/30">
-            Rejected
+            {tr('Rejected', 'مسترد')}
           </span>
         );
       default:
@@ -389,14 +391,14 @@ function InventoryContent() {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-              Stock Ledger & Profiles
+              {tr('Stock Ledger & Profiles', 'اسٹاک لیجر اور کوائف')}
             </span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-[#800F2F] text-[#F8F5F0] font-bold">
-              {filteredProfiles.length} in view
+              {filteredProfiles.length} {tr('in view', 'موجود')}
             </span>
           </div>
           <h1 className="font-serif text-xl font-bold text-[#800F2F] mt-0.5">
-            Rishta Stock Inventory
+            {tr('Rishta Stock Inventory', 'رشتہ اسٹاک انوینٹری')}
           </h1>
         </div>
 
@@ -407,7 +409,7 @@ function InventoryContent() {
             onClick={() => setShowPdfModal(true)}
             icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Download PDF
+            {tr('Download PDF', 'پی ڈی ایف ڈاؤنلوڈ')}
           </Button>
 
           <Button
@@ -416,7 +418,7 @@ function InventoryContent() {
             onClick={exportSelectedCSV}
             icon={<Download className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Export CSV
+            {tr('Export CSV', 'سی ایس وی ایکسپورٹ')}
           </Button>
 
           <Link href="/import-export">
@@ -425,7 +427,7 @@ function InventoryContent() {
               variant="secondary"
               icon={<Upload className="w-3.5 h-3.5 text-[#800F2F]" />}
             >
-              Import CSV
+              {tr('Import CSV', 'سی ایس وی امپورٹ')}
             </Button>
           </Link>
 
@@ -435,7 +437,7 @@ function InventoryContent() {
               variant="primary"
               icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
             >
-              Add New Rishta
+              {tr('Add New Rishta', 'نیا رشتہ درج کریں')}
             </Button>
           </Link>
         </div>
@@ -443,16 +445,16 @@ function InventoryContent() {
 
       {/* Age Bucket Quick Filters */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-        <span className="text-[11px] font-bold text-[#6E6466] shrink-0 mr-1 uppercase">
-          Age in Stock:
+        <span className="text-[11px] font-bold text-[#6E6466] shrink-0 me-1 uppercase">
+          {tr('Age in Stock:', 'اسٹاک کی مدت:')}
         </span>
         {[
-          { key: 'all', label: 'All Stock' },
-          { key: 'new', label: 'New (0-7d)' },
-          { key: 'recent', label: 'Recent (8-30d)' },
-          { key: 'aging', label: 'Aging (31-90d)' },
-          { key: 'old', label: 'Old Stock (91-180d)' },
-          { key: 'very_old', label: 'Stale (180d+)' },
+          { key: 'all', label: tr('All Stock', 'تمام اسٹاک') },
+          { key: 'new', label: tr('New (0-7d)', 'نئے (0-7 دن)') },
+          { key: 'recent', label: tr('Recent (8-30d)', 'حالیہ (8-30 دن)') },
+          { key: 'aging', label: tr('Aging (31-90d)', 'درمیانی (31-90 دن)') },
+          { key: 'old', label: tr('Old Stock (91-180d)', 'پرانے (91-180 دن)') },
+          { key: 'very_old', label: tr('Stale (180d+)', 'انتہائی پرانے (+180 دن)') },
         ].map(b => (
           <button
             key={b.key}
@@ -473,13 +475,13 @@ function InventoryContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
           {/* Search bar */}
           <div className="col-span-1 sm:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-[#6E6466] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#6E6466] absolute start-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by Form No, Name, Phone, Caste, City..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:border-[#D4AF37] focus:outline-none placeholder-[#6E6466]"
+              placeholder={tr('Search by Form No, Name, Phone, Caste, City...', 'فارم نمبر، نام، فون، ذات یا شہر سے تلاش کریں...')}
+              className="w-full ps-8 pe-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:border-[#D4AF37] focus:outline-none placeholder-[#6E6466]"
             />
           </div>
 
@@ -490,9 +492,9 @@ function InventoryContent() {
               onChange={(e) => setFilterGender(e.target.value)}
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
-              <option value="All">All Genders</option>
-              <option value="Male">Male Candidates</option>
-              <option value="Female">Female Candidates</option>
+              <option value="All">{tr('All Genders', 'تمام اصناف')}</option>
+              <option value="Male">{tr('Male Candidates', 'مرد امیدوار')}</option>
+              <option value="Female">{tr('Female Candidates', 'خواتین امیدوار')}</option>
             </select>
           </div>
 
@@ -503,13 +505,13 @@ function InventoryContent() {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
-              <option value="All">All Statuses</option>
-              <option value="available">Available (In Stock)</option>
-              <option value="on_hold">On Hold</option>
-              <option value="engaged">Engaged</option>
-              <option value="married">Married</option>
-              <option value="pending_approval">Pending Approval</option>
-              <option value="rejected">Rejected</option>
+              <option value="All">{tr('All Statuses', 'تمام حیثیتیں')}</option>
+              <option value="available">{tr('Available (In Stock)', 'دستیاب')}</option>
+              <option value="on_hold">{tr('On Hold', 'ہولڈ پر')}</option>
+              <option value="engaged">{tr('Engaged', 'منگنی شدہ')}</option>
+              <option value="married">{tr('Married', 'شادی شدہ')}</option>
+              <option value="pending_approval">{tr('Pending Approval', 'زیرِ التواء منظوری')}</option>
+              <option value="rejected">{tr('Rejected', 'مسترد')}</option>
             </select>
           </div>
 
@@ -520,7 +522,7 @@ function InventoryContent() {
               onChange={(e) => setFilterCity(e.target.value)}
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
-              <option value="All">All Cities</option>
+              <option value="All">{tr('All Cities', 'تمام شہر')}</option>
               {COMMON_CITIES.map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -534,7 +536,7 @@ function InventoryContent() {
               onChange={(e) => setFilterCaste(e.target.value)}
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
-              <option value="All">All Castes</option>
+              <option value="All">{tr('All Castes', 'تمام ذاتیں')}</option>
               {COMMON_CASTES.map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -553,7 +555,7 @@ function InventoryContent() {
                 className="rounded accent-[#D4AF37]"
               />
               <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
-              <span>Premium Rishtay Only</span>
+              <span>{tr('Premium Rishtay Only', 'صرف پریمیم رشتے')}</span>
             </label>
 
             <label className="flex items-center gap-1.5 cursor-pointer text-[#800F2F] font-medium">
@@ -564,7 +566,7 @@ function InventoryContent() {
                 className="rounded accent-[#800F2F]"
               />
               <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-              <span>Has Matches Available</span>
+              <span>{tr('Has Matches Available', 'جن کے میچز موجود ہوں')}</span>
             </label>
 
             {/* Clear filters */}
@@ -583,7 +585,7 @@ function InventoryContent() {
                 className="text-[#A3182E] hover:underline font-semibold flex items-center gap-1"
               >
                 <X className="w-3 h-3" />
-                <span>Reset Filters</span>
+                <span>{tr('Reset Filters', 'فلٹرز صاف کریں')}</span>
               </button>
             )}
           </div>
@@ -591,21 +593,21 @@ function InventoryContent() {
           {/* Sort & Column Chooser */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 text-[11px] text-[#6E6466]">
-              <span>Sort:</span>
+              <span>{tr('Sort:', 'ترتیب:')}</span>
               <select
                 value={sortField}
                 onChange={(e) => setSortField(e.target.value as any)}
                 className="bg-[#F8F5F0] border border-[#E5DFD5] px-2 py-0.5 rounded text-[11px] text-[#2C2526]"
               >
-                <option value="daysInStock">Days in Stock</option>
-                <option value="entryDate">Entry Date</option>
-                <option value="name">Name</option>
-                <option value="income">Income</option>
+                <option value="daysInStock">{tr('Days in Stock', 'اسٹاک کے دن')}</option>
+                <option value="entryDate">{tr('Entry Date', 'تاریخ اندراج')}</option>
+                <option value="name">{tr('Name', 'نام')}</option>
+                <option value="income">{tr('Income', 'آمدنی')}</option>
               </select>
               <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
                 className="p-1 rounded hover:bg-[#F8F5F0] text-[#800F2F]"
-                title="Toggle sort direction"
+                title={tr('Toggle sort direction', 'ترتیب بدلیں')}
               >
                 <ArrowUpDown className="w-3 h-3" />
               </button>
@@ -616,7 +618,7 @@ function InventoryContent() {
               className="p-1 rounded border border-[#E5DFD5] hover:border-[#D4AF37] text-[#800F2F] flex items-center gap-1 text-[11px] px-2"
             >
               <SlidersHorizontal className="w-3 h-3" />
-              <span>Columns</span>
+              <span>{tr('Columns', 'کالمز')}</span>
             </button>
           </div>
         </div>
@@ -624,18 +626,37 @@ function InventoryContent() {
         {/* Column chooser popup */}
         {showColumnChooser && (
           <div className="p-3 bg-[#F8F5F0] border border-[#E5DFD5] rounded-lg flex items-center gap-4 flex-wrap text-xs text-[#2C2526]">
-            <span className="font-bold text-[#800F2F]">Visible Columns:</span>
-            {Object.keys(visibleColumns).map(col => (
-              <label key={col} className="flex items-center gap-1 cursor-pointer capitalize">
-                <input
-                  type="checkbox"
-                  checked={(visibleColumns as any)[col]}
-                  onChange={(e) => setVisibleColumns(prev => ({ ...prev, [col]: e.target.checked }))}
-                  className="rounded accent-[#800F2F]"
-                />
-                <span>{col.replace(/([A-Z])/g, ' $1')}</span>
-              </label>
-            ))}
+            <span className="font-bold text-[#800F2F]">{tr('Visible Columns:', 'ظاہر کالمز:')}</span>
+            {Object.keys(visibleColumns).map(col => {
+              const colLabels: Record<string, [string, string]> = {
+                formNo: ['Form No', 'فارم نمبر'],
+                name: ['Name', 'نام'],
+                gender: ['Gender', 'جنس'],
+                age: ['Age', 'عمر'],
+                city: ['City', 'شہر'],
+                caste: ['Caste', 'ذات'],
+                maslak: ['Maslak', 'مسلک'],
+                education: ['Education', 'تعلیم'],
+                profession: ['Profession', 'پیشہ'],
+                income: ['Income', 'آمدنی'],
+                status: ['Status', 'اسٹیٹس'],
+                daysInStock: ['Days In Stock', 'دن اسٹاک میں'],
+                matches: ['Matches', 'میچز'],
+                actions: ['Actions', 'کارروائی'],
+              };
+              const pair = colLabels[col];
+              return (
+                <label key={col} className="flex items-center gap-1 cursor-pointer capitalize">
+                  <input
+                    type="checkbox"
+                    checked={(visibleColumns as any)[col]}
+                    onChange={(e) => setVisibleColumns(prev => ({ ...prev, [col]: e.target.checked }))}
+                    className="rounded accent-[#800F2F]"
+                  />
+                  <span>{pair ? tr(pair[0], pair[1]) : col.replace(/([A-Z])/g, ' $1')}</span>
+                </label>
+              );
+            })}
           </div>
         )}
       </div>
@@ -644,39 +665,41 @@ function InventoryContent() {
       {selectedIds.length > 0 && (
         <div className="p-2.5 bg-[#800F2F] text-[#F8F5F0] rounded-xl flex items-center justify-between gap-4 text-xs shadow-md">
           <div className="flex items-center gap-3">
-            <span className="font-bold text-[#D4AF37]">{selectedIds.length} profiles selected</span>
+            <span className="font-bold text-[#D4AF37]">
+              {tr(`${selectedIds.length} profiles selected`, `${selectedIds.length} پروفائلز منتخب`)}
+            </span>
             <button
               onClick={() => setSelectedIds([])}
               className="text-xs text-[#E5DFD5] hover:underline"
             >
-              Deselect All
+              {tr('Deselect All', 'سب ختم کریں')}
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-[#E5DFD5]">Change Status:</span>
+            <span className="text-[11px] text-[#E5DFD5]">{tr('Change Status:', 'اسٹیٹس تبدیل کریں:')}</span>
             <select
               value={bulkStatus}
               onChange={(e) => setBulkStatus(e.target.value as StockStatus)}
               className="px-2 py-1 rounded bg-[#660A22] text-[#F8F5F0] border border-[#D4AF37] text-xs"
             >
-              <option value="available">Available</option>
-              <option value="on_hold">On Hold</option>
-              <option value="engaged">Engaged</option>
-              <option value="married">Married</option>
-              <option value="rejected">Rejected</option>
+              <option value="available">{tr('Available', 'دستیاب')}</option>
+              <option value="on_hold">{tr('On Hold', 'روکا گیا')}</option>
+              <option value="engaged">{tr('Engaged', 'منگنی شدہ')}</option>
+              <option value="married">{tr('Married', 'شادی شدہ')}</option>
+              <option value="rejected">{tr('Rejected', 'مسترد')}</option>
             </select>
             <Button size="sm" variant="accent" onClick={applyBulkStatus}>
-              Apply
+              {tr('Apply', 'لاگو کریں')}
             </Button>
 
             <Button size="sm" variant="secondary" onClick={exportSelectedCSV}>
-              Export Selected
+              {tr('Export Selected', 'منتخب ایکسپورٹ')}
             </Button>
 
             {isAdmin && (
               <Button size="sm" variant="danger" onClick={applyBulkDelete}>
-                Delete
+                {tr('Delete', 'حذف کریں')}
               </Button>
             )}
           </div>
@@ -701,26 +724,26 @@ function InventoryContent() {
                   )}
                 </button>
               </th>
-              {visibleColumns.formNo && <th className="p-2.5">Register / Form No</th>}
-              {visibleColumns.daysInStock && <th className="p-2.5">Stock Age</th>}
-              {visibleColumns.candidate && <th className="p-2.5">Candidate</th>}
-              {visibleColumns.ageHeight && <th className="p-2.5">Age / Height</th>}
-              {visibleColumns.maritalStatus && <th className="p-2.5">Marital Status</th>}
-              {visibleColumns.location && <th className="p-2.5">City / Area</th>}
-              {visibleColumns.educationJob && <th className="p-2.5">Education & Job</th>}
-              {visibleColumns.income && <th className="p-2.5">Monthly Income</th>}
-              {visibleColumns.casteMaslak && <th className="p-2.5">Caste / Maslak</th>}
-              {visibleColumns.status && <th className="p-2.5">Status</th>}
-              {visibleColumns.matches && <th className="p-2.5 text-center">Matches</th>}
-              {visibleColumns.lastActivity && <th className="p-2.5">Last Activity</th>}
-              {visibleColumns.actions && <th className="p-2.5 text-right">Actions</th>}
+              {visibleColumns.formNo && <th className="p-2.5">{tr('Register / Form No', 'رجسٹر / فارم نمبر')}</th>}
+              {visibleColumns.daysInStock && <th className="p-2.5">{tr('Stock Age', 'اسٹاک مدت')}</th>}
+              {visibleColumns.candidate && <th className="p-2.5">{tr('Candidate', 'امیدوار')}</th>}
+              {visibleColumns.ageHeight && <th className="p-2.5">{tr('Age / Height', 'عمر / قد')}</th>}
+              {visibleColumns.maritalStatus && <th className="p-2.5">{tr('Marital Status', 'ازدواجی حیثیت')}</th>}
+              {visibleColumns.location && <th className="p-2.5">{tr('City / Area', 'شہر / علاقہ')}</th>}
+              {visibleColumns.educationJob && <th className="p-2.5">{tr('Education & Job', 'تعلیم و پیشہ')}</th>}
+              {visibleColumns.income && <th className="p-2.5">{tr('Monthly Income', 'ماہانہ آمدنی')}</th>}
+              {visibleColumns.casteMaslak && <th className="p-2.5">{tr('Caste / Maslak', 'ذات / مسلک')}</th>}
+              {visibleColumns.status && <th className="p-2.5">{tr('Status', 'حیثیت')}</th>}
+              {visibleColumns.matches && <th className="p-2.5 text-center">{tr('Matches', 'میچز')}</th>}
+              {visibleColumns.lastActivity && <th className="p-2.5">{tr('Last Activity', 'آخری سرگرمی')}</th>}
+              {visibleColumns.actions && <th className="p-2.5 text-end">{tr('Actions', 'اعمال')}</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E5DFD5]/60">
             {filteredProfiles.length === 0 ? (
               <tr>
                 <td colSpan={14} className="p-8 text-center text-xs text-[#6E6466]">
-                  No rishtas found matching the selected inventory criteria.
+                  {tr('No rishtas found matching the selected inventory criteria.', 'منتخب کردہ شرائط کے مطابق کوئی رشتہ موجود نہیں۔')}
                 </td>
               </tr>
             ) : (
@@ -760,7 +783,7 @@ function InventoryContent() {
                         <div className="flex items-center gap-1.5">
                           <span>{p.formNo}</span>
                           {(p.isPremium || p.premiumMember) && (
-                            <span title="Premium Member">
+                            <span title={tr('Premium Member', 'پریمیم ممبر')}>
                               <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
                             </span>
                           )}
@@ -773,7 +796,7 @@ function InventoryContent() {
                       <td className="p-2.5 whitespace-nowrap">
                         <div className="flex flex-col">
                           <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] ${bucketInfo.badgeClass}`}>
-                            {daysInStock}d • {bucketInfo.label}
+                            {daysInStock}{tr('d', ' دن')} • {isUr ? bucketInfo.textUr : bucketInfo.label}
                           </span>
                           <span className="text-[9px] text-[#6E6466] mt-0.5">
                             {formatDate(p.entryDate || p.createdAt)}
@@ -795,7 +818,7 @@ function InventoryContent() {
                           <div className="font-semibold text-[#2C2526] flex items-center gap-1">
                             <span>{p.name}</span>
                             <span className={`text-[10px] px-1 rounded ${p.gender === 'Male' ? 'bg-[#800F2F]/10 text-[#800F2F]' : 'bg-[#D4AF37]/20 text-[#800F2F]'}`}>
-                              {p.gender === 'Male' ? 'M' : 'F'}
+                              {p.gender === 'Male' ? tr('M', 'لڑکا') : tr('F', 'لڑکی')}
                             </span>
                           </div>
                         </div>
@@ -805,7 +828,7 @@ function InventoryContent() {
                     {/* Age / Height */}
                     {visibleColumns.ageHeight && (
                       <td className="p-2.5 whitespace-nowrap text-[#6E6466]">
-                        {p.age} yrs • {p.height}
+                        {p.age} {tr('yrs', 'سال')} • {p.height}
                       </td>
                     )}
 
@@ -936,7 +959,7 @@ function InventoryContent() {
           onClick={() => setActiveDrawerProfile(null)}
         >
           <div 
-            className="w-full max-w-lg bg-[#FFFFFF] h-full shadow-2xl border-l border-[#E5DFD5] flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
+            className="w-full max-w-lg bg-[#FFFFFF] h-full shadow-2xl border-s border-[#E5DFD5] flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
@@ -975,33 +998,33 @@ function InventoryContent() {
                         {activeDrawerProfile.name}
                       </h2>
                       <p className="text-[#6E6466] text-xs">
-                        {activeDrawerProfile.gender} • {activeDrawerProfile.age} yrs • {activeDrawerProfile.height} • {activeDrawerProfile.maritalStatus}
+                        {activeDrawerProfile.gender === 'Male' ? tr('Male', 'مرد') : tr('Female', 'خاتون')} • {activeDrawerProfile.age} {tr('yrs', 'سال')} • {activeDrawerProfile.height} • {activeDrawerProfile.maritalStatus}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-[10px] text-[#6E6466] block">Days in Stock:</span>
+                  <div className="text-end shrink-0">
+                    <span className="text-[10px] text-[#6E6466] block">{tr('Days in Stock:', 'اسٹاک میں دن:')}</span>
                     <span className="font-bold text-[#800F2F] text-sm">
-                      {calculateDaysInStock(activeDrawerProfile.entryDate || activeDrawerProfile.createdAt)} days
+                      {calculateDaysInStock(activeDrawerProfile.entryDate || activeDrawerProfile.createdAt)} {tr('days', 'دن')}
                     </span>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-[#E5DFD5] grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-[#6E6466] block text-[10px]">Caste & Maslak</span>
+                    <span className="text-[#6E6466] block text-[10px]">{tr('Caste & Maslak', 'ذات اور مسلک')}</span>
                     <span className="font-semibold">{activeDrawerProfile.caste} ({activeDrawerProfile.maslak})</span>
                   </div>
                   <div>
-                    <span className="text-[#6E6466] block text-[10px]">City & Area</span>
+                    <span className="text-[#6E6466] block text-[10px]">{tr('City & Area', 'شہر اور علاقہ')}</span>
                     <span className="font-semibold">{activeDrawerProfile.city} {activeDrawerProfile.area ? `(${activeDrawerProfile.area})` : ''}</span>
                   </div>
                   <div>
-                    <span className="text-[#6E6466] block text-[10px]">Education</span>
+                    <span className="text-[#6E6466] block text-[10px]">{tr('Education', 'تعلیم')}</span>
                     <span className="font-semibold">{activeDrawerProfile.educationLevel}</span>
                   </div>
                   <div>
-                    <span className="text-[#6E6466] block text-[10px]">Monthly Income</span>
+                    <span className="text-[#6E6466] block text-[10px]">{tr('Monthly Income', 'ماہانہ آمدنی')}</span>
                     <span className="font-semibold text-[#800F2F]">{formatPKR(activeDrawerProfile.monthlyIncome || 0)}</span>
                   </div>
                 </div>
@@ -1011,32 +1034,32 @@ function InventoryContent() {
               <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#D4AF37]/40 space-y-2">
                 <div className="flex items-center gap-1.5 text-[#800F2F] font-bold">
                   <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Confidential Client Contact (Staff Only)</span>
+                  <span>{tr('Confidential Client Contact (Staff Only)', 'کلائنٹ کا خفیہ رابطہ (صرف عملہ)')}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-[#6E6466] text-[10px] block">Candidate Phone</span>
-                    <a href={`tel:${activeDrawerProfile.phone}`} className="font-bold text-[#800F2F] hover:underline">
+                    <span className="text-[#6E6466] text-[10px] block">{tr('Candidate Phone', 'امیدوار کا فون')}</span>
+                    <a href={`tel:${activeDrawerProfile.phone}`} className="font-bold text-[#800F2F] hover:underline" dir="ltr">
                       {activeDrawerProfile.phone}
                     </a>
                   </div>
                   {activeDrawerProfile.guardianPhone && (
                     <div>
-                      <span className="text-[#6E6466] text-[10px] block">Guardian Phone</span>
-                      <a href={`tel:${activeDrawerProfile.guardianPhone}`} className="font-bold text-[#800F2F] hover:underline">
+                      <span className="text-[#6E6466] text-[10px] block">{tr('Guardian Phone', 'سرپرست کا فون')}</span>
+                      <a href={`tel:${activeDrawerProfile.guardianPhone}`} className="font-bold text-[#800F2F] hover:underline" dir="ltr">
                         {activeDrawerProfile.guardianPhone}
                       </a>
                     </div>
                   )}
                   {activeDrawerProfile.cnic && (
                     <div>
-                      <span className="text-[#6E6466] text-[10px] block">CNIC</span>
-                      <span>{maskCNIC(activeDrawerProfile.cnic)}</span>
+                      <span className="text-[#6E6466] text-[10px] block">{tr('CNIC', 'شناختی کارڈ')}</span>
+                      <span dir="ltr">{maskCNIC(activeDrawerProfile.cnic)}</span>
                     </div>
                   )}
                   {activeDrawerProfile.address && (
                     <div>
-                      <span className="text-[#6E6466] text-[10px] block">Residential Address</span>
+                      <span className="text-[#6E6466] text-[10px] block">{tr('Residential Address', 'رہائشی پتہ')}</span>
                       <span className="truncate block" title={activeDrawerProfile.address}>{activeDrawerProfile.address}</span>
                     </div>
                   )}
@@ -1046,23 +1069,23 @@ function InventoryContent() {
               {/* Partner Preferences */}
               <div className="p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-1.5">
                 <span className="font-serif font-bold text-[#800F2F] block">
-                  Partner Preferences
+                  {tr('Partner Preferences', 'شریک حیات کی ترجیحات')}
                 </span>
                 <p className="text-xs text-[#6E6466]">
-                  Age: {activeDrawerProfile.preferences.ageMin} - {activeDrawerProfile.preferences.ageMax} yrs • Height: {activeDrawerProfile.preferences.heightMin} - {activeDrawerProfile.preferences.heightMax}
+                  {tr('Age:', 'عمر:')} {activeDrawerProfile.preferences.ageMin} - {activeDrawerProfile.preferences.ageMax} {tr('yrs', 'سال')} • {tr('Height:', 'قد:')} {activeDrawerProfile.preferences.heightMin} - {activeDrawerProfile.preferences.heightMax}
                 </p>
                 <p className="text-xs text-[#6E6466]">
-                  Cities: {activeDrawerProfile.preferences.cities.join(', ')} • Castes: {activeDrawerProfile.preferences.castes.join(', ')}
+                  {tr('Cities:', 'شہر:')} {activeDrawerProfile.preferences.cities.join(', ')} • {tr('Castes:', 'ذات:')} {activeDrawerProfile.preferences.castes.join(', ')}
                 </p>
                 <p className="text-xs text-[#6E6466]">
-                  Min Education: {activeDrawerProfile.preferences.educationMin} • Min Income: {formatPKR(activeDrawerProfile.preferences.minIncome || 0)}
+                  {tr('Min Education:', 'کم از کم تعلیم:')} {activeDrawerProfile.preferences.educationMin} • {tr('Min Income:', 'کم از کم آمدنی:')} {formatPKR(activeDrawerProfile.preferences.minIncome || 0)}
                 </p>
               </div>
 
               {/* Status Switcher in Drawer */}
               <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] space-y-2">
                 <span className="font-bold text-[#800F2F] block text-xs">
-                  Change Inventory Status:
+                  {tr('Change Inventory Status:', 'اسٹاک اسٹیٹس تبدیل کریں:')}
                 </span>
                 <div className="flex items-center gap-2">
                   <select
@@ -1076,11 +1099,11 @@ function InventoryContent() {
                     }}
                     className="flex-1 px-3 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs font-semibold text-[#800F2F]"
                   >
-                    <option value="available">Available (In Stock)</option>
-                    <option value="on_hold">On Hold</option>
-                    <option value="engaged">Engaged</option>
-                    <option value="married">Married</option>
-                    <option value="rejected">Rejected</option>
+                    <option value="available">{tr('Available (In Stock)', 'دستیاب (اسٹاک میں)')}</option>
+                    <option value="on_hold">{tr('On Hold', 'روکا گیا')}</option>
+                    <option value="engaged">{tr('Engaged', 'منگنی شدہ')}</option>
+                    <option value="married">{tr('Married', 'شادی شدہ')}</option>
+                    <option value="rejected">{tr('Rejected', 'مسترد')}</option>
                   </select>
                 </div>
               </div>
@@ -1092,7 +1115,7 @@ function InventoryContent() {
                   className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#800F2F] text-[#F8F5F0] font-bold text-xs hover:bg-[#660A22] transition-colors"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>View Compatibility Matches</span>
+                  <span>{tr('View Compatibility Matches', 'موزوں رشتے دیکھیں')}</span>
                 </Link>
 
                 <Link
@@ -1100,7 +1123,7 @@ function InventoryContent() {
                   className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#FFFFFF] text-[#800F2F] border border-[#800F2F] font-bold text-xs hover:bg-[#F8F5F0] transition-colors"
                 >
                   <Edit className="w-3.5 h-3.5" />
-                  <span>Edit Full Profile</span>
+                  <span>{tr('Edit Full Profile', 'مکمل پروفائل ایڈٹ کریں')}</span>
                 </Link>
 
                 <button
@@ -1109,7 +1132,7 @@ function InventoryContent() {
                   className="col-span-2 w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#D4AF37] text-[#800F2F] font-bold text-xs hover:bg-[#C09B2A] transition-colors cursor-pointer"
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Download Biodata PDF ({activeDrawerProfile.formNo})</span>
+                  <span>{tr('Download Biodata PDF', 'بائیوڈیٹا پی ڈی ایف ڈاؤنلوڈ کریں')} ({activeDrawerProfile.formNo})</span>
                 </button>
               </div>
             </div>
@@ -1130,10 +1153,10 @@ function InventoryContent() {
             <div className="bg-[#800F2F] text-[#F8F5F0] px-5 py-4 flex items-center justify-between border-b border-[#D4AF37]">
               <div>
                 <h2 className="font-serif text-lg font-bold text-[#D4AF37]">
-                  Download Rishtay PDF Directory
+                  {tr('Download Rishtay PDF Directory', 'رشتوں کی پی ڈی ایف فہرست ڈاؤنلوڈ کریں')}
                 </h2>
                 <p className="text-[11px] text-[#E5DFD5]">
-                  Exports all matching rishtas with separate Male &amp; Female sections, Real Names, Photos &amp; Register Numbers
+                  {tr('Exports all matching rishtas with separate Male & Female sections, Real Names, Photos & Register Numbers', 'منتخب رشتوں کی پی ڈی ایف الگ مرد و خواتین سیکشن، اصل نام، تصویر اور رجسٹر نمبر کے ساتھ ڈاؤنلوڈ کریں')}
                 </p>
               </div>
               <button
@@ -1156,7 +1179,7 @@ function InventoryContent() {
                       : 'bg-[#F8F5F0] text-[#800F2F] border-[#E5DFD5]'
                   }`}
                 >
-                  All Rishtay ({profiles.length})
+                  {tr(`All Rishtay (${profiles.length})`, `تمام رشتے (${profiles.length})`)}
                 </button>
                 <button
                   type="button"
@@ -1167,7 +1190,7 @@ function InventoryContent() {
                       : 'bg-[#F8F5F0] text-[#800F2F] border-[#E5DFD5]'
                   }`}
                 >
-                  Custom Date Range (From – To)
+                  {tr('Custom Date Range (From – To)', 'مخصوص تاریخوں کے مطابق (سے – تک)')}
                 </button>
               </div>
 
@@ -1176,7 +1199,7 @@ function InventoryContent() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5]">
                   <div>
                     <label className="block text-[11px] font-bold text-[#800F2F] mb-1">
-                      From Date
+                      {tr('From Date', 'کس تاریخ سے')}
                     </label>
                     <input
                       type="date"
@@ -1187,7 +1210,7 @@ function InventoryContent() {
                   </div>
                   <div>
                     <label className="block text-[11px] font-bold text-[#800F2F] mb-1">
-                      To Date
+                      {tr('To Date', 'کس تاریخ تک')}
                     </label>
                     <input
                       type="date"
@@ -1204,7 +1227,7 @@ function InventoryContent() {
                 <div className="p-3 rounded-xl bg-[#F8F5F0] border border-[#E5DFD5]">
                   <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-1.5 mb-2">
                     <span className="font-serif font-bold text-[#800F2F]">
-                      Section A: Male Rishtay
+                      {tr('Section A: Male Rishtay', 'حصہ اول: مردانہ رشتے')}
                     </span>
                     <span className="px-2 py-0.5 rounded-full bg-[#800F2F] text-[#D4AF37] font-bold text-[10px]">
                       {pdfPreviewList.male.length}
@@ -1212,12 +1235,12 @@ function InventoryContent() {
                   </div>
                   <div className="max-h-36 overflow-y-auto space-y-1">
                     {pdfPreviewList.male.length === 0 ? (
-                      <p className="text-[11px] text-[#6E6466] italic">No male rishtay in range</p>
+                      <p className="text-[11px] text-[#6E6466] italic">{tr('No male rishtay in range', 'ان تاریخوں میں کوئی مردانہ رشتہ نہیں')}</p>
                     ) : (
                       pdfPreviewList.male.map((p) => (
                         <div key={p.id} className="flex items-center justify-between text-[11px] py-1 border-b border-[#E5DFD5]/50 last:border-0">
                           <span className="font-semibold text-[#2C2526] truncate">
-                            <span className="text-[#800F2F] font-mono mr-1.5">{p.formNo}</span>
+                            <span className="text-[#800F2F] font-mono me-1.5">{p.formNo}</span>
                             {p.name}
                           </span>
                           <span className="text-[10px] text-[#6E6466] shrink-0">{p.entryDate || p.createdAt.split('T')[0]}</span>
@@ -1230,7 +1253,7 @@ function InventoryContent() {
                 <div className="p-3 rounded-xl bg-[#F8F5F0] border border-[#E5DFD5]">
                   <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-1.5 mb-2">
                     <span className="font-serif font-bold text-[#800F2F]">
-                      Section B: Female Rishtay
+                      {tr('Section B: Female Rishtay', 'حصہ دوم: خواتین کے رشتے')}
                     </span>
                     <span className="px-2 py-0.5 rounded-full bg-[#D4AF37] text-[#800F2F] font-bold text-[10px]">
                       {pdfPreviewList.female.length}
@@ -1238,12 +1261,12 @@ function InventoryContent() {
                   </div>
                   <div className="max-h-36 overflow-y-auto space-y-1">
                     {pdfPreviewList.female.length === 0 ? (
-                      <p className="text-[11px] text-[#6E6466] italic">No female rishtay in range</p>
+                      <p className="text-[11px] text-[#6E6466] italic">{tr('No female rishtay in range', 'ان تاریخوں میں کوئی خاتون رشتہ نہیں')}</p>
                     ) : (
                       pdfPreviewList.female.map((p) => (
                         <div key={p.id} className="flex items-center justify-between text-[11px] py-1 border-b border-[#E5DFD5]/50 last:border-0">
                           <span className="font-semibold text-[#2C2526] truncate">
-                            <span className="text-[#800F2F] font-mono mr-1.5">{p.formNo}</span>
+                            <span className="text-[#800F2F] font-mono me-1.5">{p.formNo}</span>
                             {p.name}
                           </span>
                           <span className="text-[10px] text-[#6E6466] shrink-0">{p.entryDate || p.createdAt.split('T')[0]}</span>
@@ -1256,11 +1279,11 @@ function InventoryContent() {
 
               <div className="pt-2 border-t border-[#E5DFD5] flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-[#6E6466]">
-                  Ready to export <strong className="text-[#800F2F]">{pdfPreviewList.all.length}</strong> rishtay ({pdfPreviewList.male.length} Male, {pdfPreviewList.female.length} Female)
+                  {tr('Ready to export', 'ایکسپورٹ کے لیے تیار')}: <strong className="text-[#800F2F]">{pdfPreviewList.all.length}</strong> ({pdfPreviewList.male.length} {tr('Male', 'مرد')}, {pdfPreviewList.female.length} {tr('Female', 'خواتین')})
                 </span>
                 <div className="flex items-center gap-2">
                   <Button size="sm" variant="secondary" onClick={() => setShowPdfModal(false)}>
-                    Cancel
+                    {tr('Cancel', 'منسوخ')}
                   </Button>
                   <Button
                     size="sm"
@@ -1269,7 +1292,7 @@ function InventoryContent() {
                     onClick={handleDownloadDirectoryPDF}
                     icon={<FileText className="w-3.5 h-3.5 text-[#D4AF37]" />}
                   >
-                    {isExportingPdf ? 'Generating PDF...' : 'Download PDF'}
+                    {isExportingPdf ? tr('Generating PDF...', 'پی ڈی ایف تیار ہو رہی ہے...') : tr('Download PDF', 'پی ڈی ایف ڈاؤنلوڈ')}
                   </Button>
                 </div>
               </div>

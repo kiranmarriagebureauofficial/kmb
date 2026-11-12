@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '../brand/BrandLogo';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { 
   LayoutDashboard, 
   Boxes, 
@@ -30,6 +31,7 @@ import {
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const { tr } = useLanguage();
   const [pendingCount, setPendingCount] = useState(0);
   const [copied, setCopied] = useState(false);
   const [currentUser, setCurrentUser] = useState(store.getCurrentUser());
@@ -63,83 +65,83 @@ export function DashboardSidebar() {
 
   const navGroups: NavGroup[] = [
     {
-      group: 'STOCK & INVENTORY',
+      group: tr('STOCK & INVENTORY', 'اسٹاک اور انوینٹری'),
       items: [
         {
           href: '/dashboard',
-          label: 'Dashboard',
+          label: tr('Dashboard', 'ڈیش بورڈ'),
           icon: LayoutDashboard,
         },
         {
           href: '/inventory',
-          label: 'Rishta Inventory',
+          label: tr('Rishta Inventory', 'رشتہ انوینٹری'),
           icon: Boxes,
         },
         {
           href: '/profiles/new',
-          label: '+ Add Rishta',
+          label: tr('+ Add Rishta', '+ نیا رشتہ درج کریں'),
           icon: UserPlus,
         },
         {
           href: '/matches',
-          label: 'Match Central',
+          label: tr('Match Central', 'میچ سینٹرل'),
           icon: Sparkles,
         },
         {
           href: '/premium',
-          label: 'Premium Rishtay',
+          label: tr('Premium Rishtay', 'پریمیم رشتے'),
           icon: Star,
           isPremium: true,
         },
       ]
     },
     {
-      group: 'PROPOSALS & INBOX',
+      group: tr('PROPOSALS & INBOX', 'تجاویز اور درخواستیں'),
       items: [
         {
           href: '/requests',
-          label: 'Online Requests',
+          label: tr('Online Requests', 'آن لائن درخواستیں'),
           icon: Inbox,
           badge: pendingCount > 0 ? pendingCount : null,
         },
         {
           href: '/proposals',
-          label: 'Proposals Log',
+          label: tr('Proposals Log', 'تجاویز کا ریکارڈ'),
           icon: HeartHandshake,
         },
       ]
     },
     {
-      group: 'FINANCE & BILLING',
+      group: tr('FINANCE & BILLING', 'فیس اور بلنگ'),
       items: [
         {
           href: '/invoices',
-          label: 'Invoices & Payments',
+          label: tr('Invoices & Payments', 'رسیدیں اور ادائیگیاں'),
           icon: Receipt,
         },
       ]
     },
     {
-      group: 'ERP TOOLS',
+      group: tr('ERP TOOLS', 'دفتری ٹولز'),
       items: [
         {
           href: '/reports',
-          label: 'Reports & Analytics',
+          label: tr('Reports & Analytics', 'رپورٹس اور تجزیات'),
           icon: BarChart3,
         },
         {
           href: '/import-export',
-          label: 'Import / Export',
+          label: tr('Import / Export', 'امپورٹ / ایکسپورٹ'),
           icon: FileSpreadsheet,
         },
         {
           href: '/activity',
-          label: 'Activity Ledger',
+          label: tr('Activity Ledger', 'سرگرمیوں کا ریکارڈ'),
           icon: History,
         },
         {
           href: '/settings',
-          label: 'Bureau Settings',
+          label: tr('Bureau Settings', 'بیورو سیٹنگز'),
           icon: Settings,
           adminOnly: true,
         },
@@ -178,7 +180,7 @@ export function DashboardSidebar() {
             <div className="flex flex-col items-center">
               <BrandLogo variant="full" width={140} height={140} priority />
               <span className="text-[9px] tracking-widest text-[#D4AF37] uppercase font-serif mt-1 font-semibold">
-                Rishta ERP & Inventory
+                {tr('Rishta ERP & Inventory', 'رشتہ ای آر پی اور انوینٹری')}
               </span>
             </div>
           )}
@@ -187,8 +189,8 @@ export function DashboardSidebar() {
         {/* Collapse toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute right-2 top-3 p-1 rounded hover:bg-[#660A22] text-[#D4AF37] transition-colors"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="absolute end-2 top-3 p-1 rounded hover:bg-[#660A22] text-[#D4AF37] transition-colors"
+          title={collapsed ? tr('Expand sidebar', 'سائیڈبار کھولیں') : tr('Collapse sidebar', 'سائیڈبار بند کریں')}
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
@@ -202,7 +204,7 @@ export function DashboardSidebar() {
             className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#D4AF37] hover:bg-[#F0D58A] text-[#660A22] font-bold text-xs uppercase tracking-wider shadow-sm transition-all border border-[#B88B22]"
           >
             <UserPlus className="w-4 h-4 text-[#660A22]" />
-            <span>+ Add New Rishta</span>
+            <span>{tr('+ Add New Rishta', '+ نیا رشتہ درج کریں')}</span>
           </Link>
         </div>
       )}
@@ -230,7 +232,7 @@ export function DashboardSidebar() {
                     collapsed ? 'justify-center py-2.5 px-0' : 'justify-between px-3 py-2'
                   } rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-[#660A22] text-[#D4AF37] font-semibold border-l-4 border-[#D4AF37] shadow-sm'
+                      ? 'bg-[#660A22] text-[#D4AF37] font-semibold border-s-4 border-[#D4AF37] shadow-sm'
                       : 'text-[#F8F5F0] hover:bg-[#660A22]/60 hover:text-[#D4AF37]'
                   }`}
                 >
@@ -264,10 +266,10 @@ export function DashboardSidebar() {
         <div className="px-3 py-2.5 border-t border-[#660A22] bg-[#660A22]/40 space-y-1.5">
           <div className="flex items-center justify-between text-[10px]">
             <span className="tracking-wider uppercase text-[#E5DFD5] font-semibold">
-              Online Form Link
+              {tr('Online Form Link', 'آن لائن فارم لنک')}
             </span>
             <span className={`text-[9px] px-1.5 py-0.2 rounded ${regEnabled ? 'bg-[#D4AF37]/20 text-[#D4AF37]' : 'bg-[#A3182E]/40 text-[#E5DFD5]'}`}>
-              {regEnabled ? 'Active' : 'Paused'}
+              {regEnabled ? tr('Active', 'فعال') : tr('Paused', 'معطل')}
             </span>
           </div>
 
@@ -276,17 +278,17 @@ export function DashboardSidebar() {
               onClick={copyRegistrationLink}
               type="button"
               className="flex-1 flex items-center justify-center gap-1.5 py-1 px-2 rounded text-xs bg-[#800F2F] hover:bg-[#96163A] text-[#E5DFD5] border border-[#D4AF37]/30 transition-colors"
-              title="Copy Public Registration Form Link"
+              title={tr('Copy Public Registration Form Link', 'آن لائن فارم لنک کاپی کریں')}
             >
               {copied ? (
                 <>
                   <Check className="w-3 h-3 text-[#D4AF37]" />
-                  <span className="text-[#D4AF37] font-bold text-[11px]">Copied!</span>
+                  <span className="text-[#D4AF37] font-bold text-[11px]">{tr('Copied!', 'کاپی ہو گیا!')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3 h-3 text-[#D4AF37]" />
-                  <span className="text-[11px]">Copy Link</span>
+                  <span className="text-[11px]">{tr('Copy Link', 'لنک کاپی کریں')}</span>
                 </>
               )}
             </button>

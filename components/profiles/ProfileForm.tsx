@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Profile, PartnerPreferences, Gender, MaritalStatus, EducationLevel, Maslak, Religion } from '@/lib/types';
 import { store } from '@/lib/db/store';
 import { t, GENDER_OPTIONS, MARITAL_STATUS_OPTIONS, EDUCATION_LEVEL_OPTIONS, RELIGION_OPTIONS, MASLAK_OPTIONS, COMMON_CASTES, COMMON_CITIES } from '@/lib/i18n';
+import { useLanguage } from '@/lib/useLanguage';
 import { Button } from '../ui/Button';
 import { EntrySidePanel } from './EntrySidePanel';
 import { ProfileAvatar, compressImageToDataUrl } from '../ui/ProfileAvatar';
@@ -22,7 +23,7 @@ export function ProfileForm({
   onSuccess,
 }: ProfileFormProps) {
   const router = useRouter();
-  const lang = store.getLanguage();
+  const { lang, tr } = useLanguage();
   const currentUser = store.getCurrentUser();
   const isAdmin = currentUser?.role === 'admin';
 
@@ -102,7 +103,7 @@ export function ProfileForm({
       setHasInteracted(true);
       setFormData(prev => ({ ...prev, photoUrl: dataUrl }));
     } catch (err: any) {
-      setPhotoError(err?.message || 'Could not process selected image.');
+      setPhotoError(err?.message || tr('Could not process selected image.', 'منتخب کردہ تصویر پراسیس نہیں ہو سکی۔'));
     } finally {
       e.target.value = '';
     }
@@ -118,7 +119,10 @@ export function ProfileForm({
       const match = store.checkDuplicatePhone(value, initialData?.id);
       if (match) {
         setDuplicateWarning(
-          `Phone number already registered with profile ${match.formNo} (${match.name}). Staff will review.`
+          tr(
+            `Phone number already registered with profile ${match.formNo} (${match.name}). Staff will review.`,
+            `یہ فون نمبر پہلے سے پروفائل ${match.formNo} (${match.name}) کے ساتھ رجسٹرڈ ہے۔ عملہ جائزہ لے گا۔`
+          )
         );
       } else {
         setDuplicateWarning(null);
@@ -186,16 +190,18 @@ export function ProfileForm({
 
         <div className="space-y-2">
           <h2 className="font-serif text-2xl font-bold text-[#800F2F]">
-            Registration Submitted Successfully!
+            {tr('Registration Submitted Successfully!', 'آپ کا رشتہ رجسٹریشن فارم کامیابی سے موصول ہو چکا ہے۔')}
           </h2>
-          <p className="text-sm font-urdu text-[#6E6466]">
-            آپ کا رشتہ رجسٹریشن فارم کامیابی سے موصول ہو چکا ہے۔
-          </p>
+          {!lang || lang === 'en' ? (
+            <p className="text-sm font-urdu text-[#6E6466]">
+              آپ کا رشتہ رجسٹریشن فارم کامیابی سے موصول ہو چکا ہے۔
+            </p>
+          ) : null}
         </div>
 
         <div className="p-4 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] inline-block">
           <span className="text-xs uppercase tracking-wider text-[#6E6466] font-medium block">
-            Your Official Registration Reference
+            {tr('Your Official Registration Reference', 'آپ کا سرکاری رجسٹریشن ریفرنس نمبر')}
           </span>
           <span className="font-serif text-3xl font-bold text-[#800F2F] tracking-widest">
             {savedSuccess.formNo}
@@ -203,7 +209,10 @@ export function ProfileForm({
         </div>
 
         <p className="text-xs text-[#6E6466] max-w-md mx-auto leading-relaxed">
-          Our senior coordinator will verify your information and contact you within 24–48 hours. Your contact details remain 100% confidential.
+          {tr(
+            'Our senior coordinator will verify your information and contact you within 24–48 hours. Your contact details remain 100% confidential.',
+            'ہمارے سینئر کوآرڈینیٹر آپ کی معلومات کی تصدیق کے بعد 24 سے 48 گھنٹوں میں آپ سے رابطہ کریں گے۔ آپ کی ذاتی معلومات 100٪ خفیہ رہیں گی۔'
+          )}
         </p>
 
         <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
@@ -212,7 +221,7 @@ export function ProfileForm({
             onClick={() => window.print()}
             icon={<Printer className="w-4 h-4 text-[#D4AF37]" />}
           >
-            Print Submitted Form
+            {tr('Print Submitted Form', 'جمع شدہ فارم پرنٹ کریں')}
           </Button>
 
           <Button
@@ -223,7 +232,7 @@ export function ProfileForm({
             }}
             icon={<Share2 className="w-4 h-4 text-[#800F2F]" />}
           >
-            Save Reference to WhatsApp
+            {tr('Save Reference to WhatsApp', 'ریفرنس نمبر واٹس ایپ پر محفوظ کریں')}
           </Button>
         </div>
       </div>
@@ -271,7 +280,7 @@ export function ProfileForm({
 
           <div className="flex items-center gap-4 text-xs">
             <div>
-              <span className="text-[#E5DFD5] block text-[10px]">Register / Form No:</span>
+              <span className="text-[#E5DFD5] block text-[10px]">{tr('Register / Form No:', 'رجسٹر / فارم نمبر:')}</span>
               {isAdmin && !isPublic ? (
                 <input
                   type="text"
@@ -281,12 +290,12 @@ export function ProfileForm({
                 />
               ) : (
                 <span className="font-bold text-[#D4AF37] text-sm tracking-wider">
-                  {formData.formNo || 'Auto (KMB-XXXX)'}
+                  {formData.formNo || tr('Auto (KMB-XXXX)', 'خودکار (KMB-XXXX)')}
                 </span>
               )}
             </div>
             <div>
-              <span className="text-[#E5DFD5] block text-[10px]">Date:</span>
+              <span className="text-[#E5DFD5] block text-[10px]">{tr('Date:', 'تاریخ:')}</span>
               <span className="font-medium">{formData.dateApplied}</span>
             </div>
           </div>
@@ -304,12 +313,12 @@ export function ProfileForm({
               />
               <div className="space-y-1.5">
                 <span className="block text-xs font-bold text-[#800F2F]">
-                  Client Photo (Optional)
+                  {tr('Client Photo (Optional)', 'کلائنٹ کی تصویر (اختیاری)')}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
                   <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#800F2F] text-[#F8F5F0] hover:bg-[#660A22] text-[11px] font-semibold cursor-pointer transition-colors">
                     <Camera className="w-3.5 h-3.5 text-[#D4AF37]" />
-                    <span>{formData.photoUrl ? 'Change Photo' : 'Upload Photo'}</span>
+                    <span>{formData.photoUrl ? tr('Change Photo', 'تصویر تبدیل کریں') : tr('Upload Photo', 'تصویر اپلوڈ کریں')}</span>
                     <input
                       type="file"
                       accept="image/png,image/jpeg,image/webp"
@@ -324,7 +333,7 @@ export function ProfileForm({
                       className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#A3182E]/30 text-[#A3182E] hover:bg-[#A3182E]/10 text-[11px] font-semibold cursor-pointer"
                     >
                       <Trash2 className="w-3 h-3" />
-                      <span>Remove</span>
+                      <span>{tr('Remove', 'ختم کریں')}</span>
                     </button>
                   )}
                 </div>
@@ -344,7 +353,7 @@ export function ProfileForm({
                   required
                   value={formData.appliedBy}
                   onChange={(e) => handleChange('appliedBy', e.target.value)}
-                  placeholder="e.g. Father, Mother, Self, Brother"
+                  placeholder={tr('e.g. Father, Mother, Self, Brother', 'مثلاً والد، والدہ، خود، بھائی')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#FFFFFF] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -358,7 +367,7 @@ export function ProfileForm({
                       className="w-4 h-4 text-[#D4AF37] rounded border-[#E5DFD5] focus:ring-[#D4AF37]"
                     />
                     <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
-                    <span>Premium Membership</span>
+                    <span>{tr('Premium Membership', 'پریمیم ممبرشپ')}</span>
                   </label>
                 </div>
               )}
@@ -384,7 +393,7 @@ export function ProfileForm({
                   required
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Full Candidate Name"
+                  placeholder={tr('Full Candidate Name', 'امیدوار کا مکمل نام')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -442,7 +451,7 @@ export function ProfileForm({
                   required
                   value={formData.height}
                   onChange={(e) => handleChange('height', e.target.value)}
-                  placeholder="e.g. 5'10&quot; or 178 cm"
+                  placeholder={tr('e.g. 5\'10" or 178 cm', 'مثلاً 5 فٹ 10 انچ یا 178 سینٹی میٹر')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -487,7 +496,7 @@ export function ProfileForm({
                   type="text"
                   value={formData.societyName}
                   onChange={(e) => handleChange('societyName', e.target.value)}
-                  placeholder="e.g. DHA Phase 5, Model Town, Bahria Town"
+                  placeholder={tr('e.g. DHA Phase 5, Model Town, Bahria Town', 'مثلاً ڈی ایچ اے فیز 5، ماڈل ٹاؤن، بحریہ ٹاؤن')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -514,8 +523,8 @@ export function ProfileForm({
                       }
                       className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#FFFFFF]"
                     >
-                      <option value="no">No Children</option>
-                      <option value="yes">Yes, Has Children</option>
+                      <option value="no">{tr('No Children', 'کوئی اولاد نہیں')}</option>
+                      <option value="yes">{tr('Yes, Has Children', 'جی ہاں، اولاد ہے')}</option>
                     </select>
                   </div>
 
@@ -551,7 +560,7 @@ export function ProfileForm({
                               custody: e.target.value,
                             })
                           }
-                          placeholder="e.g. Lives with mother"
+                          placeholder={tr('e.g. Lives with mother', 'مثلاً والدہ کے ساتھ رہائش')}
                           className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#FFFFFF]"
                         />
                       </div>
@@ -581,7 +590,7 @@ export function ProfileForm({
                   required
                   value={formData.degree}
                   onChange={(e) => handleChange('degree', e.target.value)}
-                  placeholder="e.g. BS Computer Science (FAST), MBBS (KEMU)"
+                  placeholder={tr('e.g. BS Computer Science (FAST), MBBS (KEMU)', 'مثلاً بی ایس کمپیوٹر سائنس، ایم بی بی ایس')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -612,7 +621,7 @@ export function ProfileForm({
                   required
                   value={formData.profession}
                   onChange={(e) => handleChange('profession', e.target.value)}
-                  placeholder="e.g. Software Engineer, Doctor, Chartered Accountant"
+                  placeholder={tr('e.g. Software Engineer, Doctor, Chartered Accountant', 'مثلاً سافٹ ویئر انجینئر، ڈاکٹر، چارٹرڈ اکاؤنٹنٹ')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -625,7 +634,7 @@ export function ProfileForm({
                   type="text"
                   value={formData.designation}
                   onChange={(e) => handleChange('designation', e.target.value)}
-                  placeholder="e.g. Senior Manager, Principal Architect"
+                  placeholder={tr('e.g. Senior Manager, Principal Architect', 'مثلاً سینئر مینیجر، پرنسپل آرکیٹیکٹ')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -652,7 +661,7 @@ export function ProfileForm({
                   type="text"
                   value={formData.businessNameAddress}
                   onChange={(e) => handleChange('businessNameAddress', e.target.value)}
-                  placeholder="Company name / Business premises"
+                  placeholder={tr('Company name / Business premises', 'کمپنی کا نام / کاروباری پتہ')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -691,7 +700,7 @@ export function ProfileForm({
                   required
                   value={formData.fatherOccupation}
                   onChange={(e) => handleChange('fatherOccupation', e.target.value)}
-                  placeholder="e.g. Govt Officer, Businessman, Landlord"
+                  placeholder={tr('e.g. Govt Officer, Businessman, Landlord', 'مثلاً سرکاری افسر، کاروباری، زمیندار')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -717,7 +726,7 @@ export function ProfileForm({
                   type="text"
                   value={formData.motherOccupation}
                   onChange={(e) => handleChange('motherOccupation', e.target.value)}
-                  placeholder="e.g. Homemaker, Teacher, Doctor"
+                  placeholder={tr('e.g. Homemaker, Teacher, Doctor', 'مثلاً گھریلو خاتون، استاد، ڈاکٹر')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
@@ -794,7 +803,7 @@ export function ProfileForm({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('prefAgeRange', lang)} (Min - Max)
+                  {t('prefAgeRange', lang)} ({tr('Min - Max', 'کم از کم - زیادہ سے زیادہ')})
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -805,7 +814,7 @@ export function ProfileForm({
                     onChange={(e) => handlePrefChange('ageMin', parseInt(e.target.value, 10))}
                     className="w-1/2 px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
                   />
-                  <span>to</span>
+                  <span>{tr('to', 'سے')}</span>
                   <input
                     type="number"
                     min={18}
@@ -874,7 +883,7 @@ export function ProfileForm({
                   rows={2}
                   value={formData.preferences?.otherNotes || ''}
                   onChange={(e) => handlePrefChange('otherNotes', e.target.value)}
-                  placeholder="Describe your family values, relocation flexibility, expectations..."
+                  placeholder={tr('Describe your family values, relocation flexibility, expectations...', 'اپنی خاندانی اقدار، شہر کی تبدیلی یا دیگر توقعات بیان کریں...')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
                 />
               </div>
@@ -888,7 +897,7 @@ export function ProfileForm({
                 5. {t('secContact', lang)}
               </h3>
               <span className="text-[11px] text-[#D4AF37]">
-                {isPublic ? 'Kept 100% Confidential' : 'Internal Staff Only'}
+                {isPublic ? tr('Kept 100% Confidential', '100٪ خفیہ رکھا جاتا ہے') : tr('Internal Staff Only', 'صرف عملے کے لیے')}
               </span>
             </div>
 
@@ -954,7 +963,7 @@ export function ProfileForm({
                   required
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
-                  placeholder="House number, Street, Sector, City"
+                  placeholder={tr('House number, Street, Sector, City', 'مکان نمبر، گلی، سیکٹر، شہر')}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
                 />
               </div>
@@ -962,7 +971,7 @@ export function ProfileForm({
               {!isPublic && (
                 <div>
                   <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                    {t('cnic', lang)} (Admin Eyes Only)
+                    {t('cnic', lang)} ({tr('Admin Eyes Only', 'صرف ایڈمن کے لیے')})
                   </label>
                   <input
                     type="text"
@@ -984,7 +993,7 @@ export function ProfileForm({
                   6. {t('secRemarks', lang)}
                 </h3>
                 <span className="text-[11px] text-[#E5DFD5]">
-                  Never shown to clients or in WhatsApp summaries
+                  {tr('Never shown to clients or in WhatsApp summaries', 'کلائنٹس یا واٹس ایپ خلاصے میں کبھی ظاہر نہیں کیا جاتا')}
                 </span>
               </div>
 
@@ -992,7 +1001,7 @@ export function ProfileForm({
                 rows={3}
                 value={formData.remarks || ''}
                 onChange={(e) => handleChange('remarks', e.target.value)}
-                placeholder="Internal verification notes, family status, financial assessment..."
+                placeholder={tr('Internal verification notes, family status, financial assessment...', 'اندرونی تصدیقی نوٹس، خاندانی حیثیت، مالی جائزہ...')}
                 className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526]"
               />
             </div>
@@ -1015,12 +1024,12 @@ export function ProfileForm({
               icon={<Save className="w-4 h-4 text-[#D4AF37]" />}
             >
               {submitting
-                ? 'Saving...'
+                ? tr('Saving...', 'محفوظ ہو رہا ہے...')
                 : isPublic
-                ? 'Submit Online Registration'
+                ? tr('Submit Online Registration', 'آن لائن رجسٹریشن جمع کرائیں')
                 : initialData?.id
-                ? 'Save Profile Changes'
-                : 'Save & Enter Matching Engine'}
+                ? tr('Save Profile Changes', 'تبدیلیاں محفوظ کریں')
+                : tr('Save & Enter Matching Engine', 'محفوظ کریں اور میچنگ میں شامل کریں')}
             </Button>
           </div>
         </div>

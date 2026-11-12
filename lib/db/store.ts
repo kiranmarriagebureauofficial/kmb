@@ -80,6 +80,10 @@ class DataStore {
 
       const lang = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
       this.language = (lang === 'ur' ? 'ur' : 'en');
+      if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('dir', this.language === 'ur' ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('lang', this.language);
+      }
 
       this.initialized = true;
     } catch (e) {

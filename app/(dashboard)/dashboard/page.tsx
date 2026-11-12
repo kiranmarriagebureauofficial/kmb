@@ -1,8 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { store } from '@/lib/db/store';
+import { useLanguage } from '@/lib/useLanguage';
 import { Profile, Invoice, Proposal } from '@/lib/types';
 import { formatPKR, formatDate, calculateDaysInStock, getAgeBucket, getAgeBucketLabel } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -40,6 +41,7 @@ import {
 } from 'lucide-react';
 
 function DashboardContent() {
+  const { tr } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -87,20 +89,20 @@ function DashboardContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs">
         <div>
           <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-[#B88B22]">
-            Bureau Operations Control & ERP Ledger
+            {tr('Bureau Operations Control & ERP Ledger', 'بیورو آپریشنز کنٹرول اور ای آر پی لیجر')}
           </span>
           <h1 className="font-serif text-2xl font-bold text-[#800F2F] mt-0.5">
-            Rishta Stock & Matchmaking Central
+            {tr('Rishta Stock & Matchmaking Central', 'رشتہ اسٹاک اور میچ میکنگ سینٹرل')}
           </h1>
           <p className="text-xs text-[#6E6466]">
-            Verified matchmaking, real-time compatibility audit, and fee management for Lahore.
+            {tr('Verified matchmaking, real-time compatibility audit, and fee management for Lahore.', 'لاہور کے لیے تصدیق شدہ میچ میکنگ، لائیو مطابقت اور فیس کا نظام۔')}
           </p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           <Link href="/profiles/new">
             <Button size="sm" variant="primary" icon={<Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}>
-              Add Rishta
+              {tr('Add Rishta', 'نیا رشتہ درج کریں')}
             </Button>
           </Link>
 
@@ -110,12 +112,12 @@ function DashboardContent() {
             onClick={copyRegLink}
             icon={copied ? <Check className="w-3.5 h-3.5 text-[#D4AF37]" /> : <Copy className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            {copied ? 'Link Copied!' : 'Copy Online Form Link'}
+            {copied ? tr('Link Copied!', 'لنک کاپی ہو گیا!') : tr('Copy Online Form Link', 'آن لائن فارم لنک کاپی کریں')}
           </Button>
 
           <Link href="/invoices?new=1">
             <Button size="sm" variant="accent" icon={<Receipt className="w-3.5 h-3.5 text-[#800F2F]" />}>
-              New Invoice
+              {tr('New Invoice', 'نئی رسید')}
             </Button>
           </Link>
         </div>
@@ -130,7 +132,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
-              Total Available Stock
+              {tr('Total Available Stock', 'موجودہ دستیاب رشتے')}
             </span>
             <Boxes className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
@@ -139,11 +141,11 @@ function DashboardContent() {
               {stats.totalStock}
             </span>
             <span className="text-xs text-[#6E6466] font-medium">
-              ({stats.maleStock}M / {stats.femaleStock}F)
+              ({stats.maleStock}{tr('M', 'مرد')} / {stats.femaleStock}{tr('F', 'خواتین')})
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            Click to inspect active inventory →
+            {tr('Click to inspect active inventory →', 'انوینٹری دیکھنے کے لیے کلک کریں ←')}
           </span>
         </Link>
 
@@ -154,7 +156,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
-              New Arrivals (0-7d)
+              {tr('New Arrivals (0-7d)', 'نئے آنے والے رشتے (0-7 دن)')}
             </span>
             <Clock className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
@@ -163,11 +165,11 @@ function DashboardContent() {
               {stats.newThisWeek}
             </span>
             <span className="text-xs text-[#6E6466]">
-              +{stats.newThisMonth} this month
+              +{stats.newThisMonth} {tr('this month', 'اس ماہ')}
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            View recent intake →
+            {tr('View recent intake →', 'حالیہ اندراجات دیکھیں ←')}
           </span>
         </Link>
 
@@ -182,7 +184,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#A3182E]">
-              Old Stock Alert (91+d)
+              {tr('Old Stock Alert (91+d)', 'پرانا اسٹاک الرٹ (+91 دن)')}
             </span>
             <AlertCircle className="w-4 h-4 text-[#A3182E]" />
           </div>
@@ -191,11 +193,11 @@ function DashboardContent() {
               {stats.totalOldStock}
             </span>
             <span className="text-xs text-[#6E6466]">
-              ({stats.veryOldStock} stale 180d+)
+              ({stats.veryOldStock} {tr('stale 180d+', 'پرانے +180 دن')})
             </span>
           </div>
           <span className="text-[10px] text-[#A3182E] font-medium mt-1 block">
-            Action required: follow-up →
+            {tr('Action required: follow-up →', 'توجہ درکار: فالو اپ کریں ←')}
           </span>
         </Link>
 
@@ -207,7 +209,7 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#B88B22] flex items-center gap-1">
               <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
-              Premium Members
+              {tr('Premium Members', 'پریمیم ممبران')}
             </span>
             <Star className="w-4 h-4 text-[#D4AF37]" />
           </div>
@@ -216,11 +218,11 @@ function DashboardContent() {
               {stats.premiumProfilesCount}
             </span>
             <span className="text-xs text-[#D4AF37] font-bold">
-              Priority matching
+              {tr('Priority matching', 'ترجیحی میچنگ')}
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            Inspect VIP candidates →
+            {tr('Inspect VIP candidates →', 'وی آئی پی امیدوار دیکھیں ←')}
           </span>
         </Link>
 
@@ -231,7 +233,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
-              Pending Online Requests
+              {tr('Pending Online Requests', 'زیرِ التواء آن لائن درخواستیں')}
             </span>
             <Inbox className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
@@ -240,11 +242,11 @@ function DashboardContent() {
               {stats.pendingRequestsCount}
             </span>
             <span className="text-xs text-[#6E6466]">
-              Awaiting review
+              {tr('Awaiting review', 'منظوری کے منتظر')}
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            Review online submissions →
+            {tr('Review online submissions →', 'آن لائن درخواستیں چیک کریں ←')}
           </span>
         </Link>
 
@@ -255,7 +257,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
-              Rishta Done & Engaged
+              {tr('Rishta Done & Engaged', 'مکمل و منگنی شدہ رشتے')}
             </span>
             <HeartHandshake className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
@@ -264,11 +266,11 @@ function DashboardContent() {
               {stats.finalizedRishtay}
             </span>
             <span className="text-xs text-[#6E6466]">
-              {stats.engagedCount} currently engaged
+              {stats.engagedCount} {tr('currently engaged', 'فی الحال منگنی شدہ')}
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            View completed marriages →
+            {tr('View completed marriages →', 'طے شدہ رشتے دیکھیں ←')}
           </span>
         </Link>
 
@@ -279,7 +281,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E6466]">
-              Revenue Collected
+              {tr('Revenue Collected', 'وصول شدہ رقم')}
             </span>
             <Receipt className="w-4 h-4 text-[#800F2F] group-hover:text-[#D4AF37]" />
           </div>
@@ -289,7 +291,7 @@ function DashboardContent() {
             </span>
           </div>
           <span className="text-[10px] text-[#B88B22] font-medium mt-1 block">
-            View payment history →
+            {tr('View payment history →', 'ادائیگیوں کا ریکارڈ دیکھیں ←')}
           </span>
         </Link>
 
@@ -300,7 +302,7 @@ function DashboardContent() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#A3182E]">
-              Receivables Outstanding
+              {tr('Receivables Outstanding', 'واجب الادا بقایا جات')}
             </span>
             <Receipt className="w-4 h-4 text-[#A3182E]" />
           </div>
@@ -310,7 +312,7 @@ function DashboardContent() {
             </span>
           </div>
           <span className="text-[10px] text-[#A3182E] font-medium mt-1 block">
-            Unpaid client invoices →
+            {tr('Unpaid client invoices →', 'بقایا انوائسز دیکھیں ←')}
           </span>
         </Link>
       </div>
@@ -322,17 +324,17 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-serif text-lg font-bold text-[#800F2F]">
-                Stock Breakdown by Age in Inventory
+                {tr('Stock Breakdown by Age in Inventory', 'مدت کے لحاظ سے رشتہ اسٹاک کی تفصیل')}
               </h2>
               <p className="text-xs text-[#6E6466]">
-                Distribution of available proposals across shelf-life buckets (Male in Maroon, Female in Gold).
+                {tr('Distribution of available proposals across shelf-life buckets (Male in Maroon, Female in Gold).', 'دستیاب رشتوں کی مدت کے مطابق تقسیم (مرد میرون رنگ، خواتین گولڈ رنگ)۔')}
               </p>
             </div>
             <Link
               href="/reports"
               className="text-xs font-semibold text-[#800F2F] hover:underline flex items-center gap-1"
             >
-              <span>Detailed Report</span>
+              <span>{tr('Detailed Report', 'تفصیلی رپورٹ')}</span>
               <ArrowRight className="w-3 h-3 text-[#D4AF37]" />
             </Link>
           </div>
@@ -348,13 +350,13 @@ function DashboardContent() {
                     itemStyle={{ color: '#800F2F' }}
                   />
                   <Legend wrapperStyle={{ fontSize: '11px', color: '#800F2F' }} />
-                  <Bar dataKey="male" name="Male Stock" stackId="a" fill="#800F2F" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="female" name="Female Stock" stackId="a" fill="#D4AF37" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="male" name={tr('Male Stock', 'مردانہ رشتے')} stackId="a" fill="#800F2F" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="female" name={tr('Female Stock', 'خواتین رشتے')} stackId="a" fill="#D4AF37" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className="h-full flex items-center justify-center text-xs text-[#6E6466]">
-                Loading inventory visualization...
+                {tr('Loading inventory visualization...', 'اسٹاک کا گراف لوڈ ہو رہا ہے...')}
               </div>
             )}
           </div>
@@ -364,10 +366,10 @@ function DashboardContent() {
         <div className="lg:col-span-4 bg-[#FFFFFF] p-5 rounded-xl border border-[#E5DFD5] shadow-xs space-y-4 flex flex-col justify-between">
           <div>
             <h2 className="font-serif text-lg font-bold text-[#800F2F]">
-              Top Castes in Circulation
+              {tr('Top Castes in Circulation', 'موجودہ نمایاں ذاتیں / برادریاں')}
             </h2>
             <p className="text-xs text-[#6E6466]">
-              Current stock volume grouped by family clan/caste.
+              {tr('Current stock volume grouped by family clan/caste.', 'برادری / ذات کے لحاظ سے رشتوں کی تعداد۔')}
             </p>
           </div>
 
@@ -392,9 +394,9 @@ function DashboardContent() {
           </div>
 
           <div className="pt-2 border-t border-[#E5DFD5] flex items-center justify-between text-[11px] text-[#6E6466]">
-            <span>Lahore Bureau Database</span>
+            <span>{tr('Lahore Bureau Database', 'لاہور بیورو ڈیٹابیس')}</span>
             <Link href="/inventory" className="font-bold text-[#800F2F] hover:underline">
-              Filter by caste →
+              {tr('Filter by caste →', 'ذات کے مطابق دیکھیں ←')}
             </Link>
           </div>
         </div>
@@ -408,33 +410,33 @@ function DashboardContent() {
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-[#A3182E]" />
               <h2 className="font-serif text-base font-bold text-[#A3182E]">
-                Oldest Rishtas Sitting Unmatched
+                {tr('Oldest Rishtas Sitting Unmatched', 'پرانے رشتے جن پر ابھی میچنگ نہیں ہوئی')}
               </h2>
             </div>
             <Link
               href="/reports"
               className="text-xs font-semibold text-[#A3182E] hover:underline"
             >
-              View all old stock →
+              {tr('View all old stock →', 'تمام پرانا اسٹاک دیکھیں ←')}
             </Link>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#6E6466]">
-                  <th className="py-2">Form No</th>
-                  <th className="py-2">Candidate</th>
-                  <th className="py-2">Days in Stock</th>
-                  <th className="py-2 text-center">Matches</th>
-                  <th className="py-2 text-right">Action</th>
+                  <th className="py-2">{tr('Form No', 'فارم نمبر')}</th>
+                  <th className="py-2">{tr('Candidate', 'امیدوار')}</th>
+                  <th className="py-2">{tr('Days in Stock', 'اسٹاک کے دن')}</th>
+                  <th className="py-2 text-center">{tr('Matches', 'میچز')}</th>
+                  <th className="py-2 text-end">{tr('Action', 'عمل')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]/60">
                 {oldStockList.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="py-6 text-center text-[#6E6466]">
-                      No profiles currently exceed 90 days in stock. Stock velocity is optimal!
+                      {tr('No profiles currently exceed 90 days in stock. Stock velocity is optimal!', 'اس وقت 90 دن سے پرانا کوئی رشتہ موجود نہیں۔')}
                     </td>
                   </tr>
                 ) : (
@@ -447,18 +449,18 @@ function DashboardContent() {
                       </td>
                       <td className="py-2">
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#A3182E] text-[#F8F5F0]">
-                          {item.daysInStock} days
+                          {item.daysInStock} {tr('days', 'دن')}
                         </span>
                       </td>
                       <td className="py-2 text-center font-bold text-[#800F2F]">
                         {item.matchCount}
                       </td>
-                      <td className="py-2 text-right">
+                      <td className="py-2 text-end">
                         <Link
                           href={`/profiles/${item.profile.id}/matches`}
                           className="px-2 py-1 rounded bg-[#800F2F] text-[#F8F5F0] text-[10px] font-semibold hover:bg-[#660A22]"
                         >
-                          Find Match
+                          {tr('Find Match', 'میچ تلاش کریں')}
                         </Link>
                       </td>
                     </tr>
@@ -475,30 +477,36 @@ function DashboardContent() {
             <div className="flex items-center gap-2">
               <Boxes className="w-4 h-4 text-[#800F2F]" />
               <h2 className="font-serif text-base font-bold text-[#800F2F]">
-                Recently Added Rishtas
+                {tr('Recently Added Rishtas', 'حالیہ شامل کیے گئے رشتے')}
               </h2>
             </div>
             <Link
               href="/inventory"
               className="text-xs font-semibold text-[#800F2F] hover:underline"
             >
-              View all stock →
+              {tr('View all stock →', 'مکمل اسٹاک دیکھیں ←')}
             </Link>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-start text-xs border-collapse">
               <thead>
                 <tr className="border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#6E6466]">
-                  <th className="py-2">Form No</th>
-                  <th className="py-2">Candidate</th>
-                  <th className="py-2">City</th>
-                  <th className="py-2">Status</th>
-                  <th className="py-2 text-right">Action</th>
+                  <th className="py-2">{tr('Form No', 'فارم نمبر')}</th>
+                  <th className="py-2">{tr('Candidate', 'امیدوار')}</th>
+                  <th className="py-2">{tr('City', 'شہر')}</th>
+                  <th className="py-2">{tr('Status', 'حیثیت')}</th>
+                  <th className="py-2 text-end">{tr('Action', 'عمل')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]/60">
-                {recentStockList.map(p => (
+                {recentStockList.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-[#6E6466]">
+                      {tr('No rishtas added yet. Click "Add Rishta" to begin.', 'ابھی کوئی رشتہ شامل نہیں کیا گیا۔ شروع کرنے کے لیے "نیا رشتہ درج کریں" پر کلک کریں۔')}
+                    </td>
+                  </tr>
+                ) : recentStockList.map(p => (
                   <tr key={p.id} className="hover:bg-[#F8F5F0]">
                     <td className="py-2 font-serif font-bold text-[#800F2F]">
                       <div className="flex items-center gap-1">
@@ -518,12 +526,12 @@ function DashboardContent() {
                         {p.status}
                       </span>
                     </td>
-                    <td className="py-2 text-right">
+                    <td className="py-2 text-end">
                       <Link
                         href={`/profiles/${p.id}`}
                         className="px-2 py-1 rounded border border-[#800F2F] text-[#800F2F] text-[10px] font-semibold hover:bg-[#F8F5F0]"
                       >
-                        Inspect
+                        {tr('Inspect', 'تفصیل')}
                       </Link>
                     </td>
                   </tr>
