@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { store } from '@/lib/db/store';
 import { MatchRing } from '../ui/MatchRing';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { ProfileAvatar } from '../ui/ProfileAvatar';
 import { buildWhatsAppShareSummary, generateWhatsAppLink } from '@/lib/utils';
 import { 
   Check, 
@@ -52,18 +53,22 @@ export function MatchCard({ match, sourceProfile, onSendProposal }: MatchCardPro
           {/* Header Row */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              {/* Avatar */}
-              <div className="w-12 h-12 rounded-full bg-[#800F2F] text-[#D4AF37] border-2 border-[#D4AF37] flex items-center justify-center font-serif font-bold text-lg shrink-0 shadow-sm">
-                {partner.name.charAt(0)}
-              </div>
+              {/* Avatar / Photo */}
+              <ProfileAvatar
+                name={partner.name}
+                photoUrl={partner.photoUrl}
+                size="md"
+                isPremium={Boolean(partner.premiumMember)}
+                className="shadow-sm"
+              />
 
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-serif text-base font-bold text-[#2C2526]">
                     {partner.name}
                   </h3>
-                  <span className="text-xs font-mono text-[#6E6466] bg-[#F8F5F0] px-1.5 py-0.5 rounded">
-                    {partner.formNo}
+                  <span className="text-xs font-mono font-semibold text-[#800F2F] bg-[#F8F5F0] px-1.5 py-0.5 rounded border border-[#E5DFD5]">
+                    Reg: {partner.formNo}
                   </span>
                   {partner.premiumMember && (
                     <Badge variant="premium">Premium Member</Badge>

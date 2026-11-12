@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -16,6 +16,9 @@ interface InvoiceReceiptProps {
 export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
   const [layoutMode, setLayoutMode] = useState<'a4' | 'a5' | 'thermal'>('a4');
   const settings = store.getSettings();
+  const linkedProfile = invoice.profileId ? store.getProfileById(invoice.profileId) : undefined;
+  const resolvedFormNo = invoice.formNo || linkedProfile?.formNo;
+  const resolvedClientName = linkedProfile?.name || invoice.clientName;
 
   const handlePrint = () => {
     window.print();
@@ -89,13 +92,19 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
                   <span>RECEIPT NO:</span>
                   <span className="font-bold">{invoice.invoiceNumber}</span>
                 </div>
+                {resolvedFormNo && (
+                  <div className="flex justify-between">
+                    <span>FORM NO:</span>
+                    <span className="font-bold">{resolvedFormNo}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>DATE:</span>
                   <span>{formatDate(invoice.date)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>CLIENT:</span>
-                  <span className="font-bold truncate max-w-[150px]">{invoice.clientName}</span>
+                  <span className="font-bold truncate max-w-[150px]">{resolvedClientName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>PHONE:</span>
@@ -204,7 +213,12 @@ export function InvoiceReceipt({ invoice, onClose }: InvoiceReceiptProps) {
               <div className="grid grid-cols-2 gap-4 p-3 bg-[#F8F5F0] rounded-lg border border-[#E5DFD5] mb-6 text-xs">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Billed To / Client:</span>
-                  <p className="font-bold text-[#2C2526] text-sm">{invoice.clientName}</p>
+                  <p className="font-bold text-[#2C2526] text-sm">{resolvedClientName}</p>
+                  {resolvedFormNo && (
+                    <p className="text-[#800F2F] font-mono font-bold text-[11px]">
+                      Register / Form No: {resolvedFormNo}
+                    </p>
+                  )}
                   <p className="text-[#6E6466]">Phone: {invoice.clientPhone}</p>
                 </div>
                 <div className="text-right">

@@ -1,4 +1,4 @@
-﻿import { type ClassValue, clsx } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Profile, AgeBucket, AgeBucketConfig } from "./types";
 
@@ -121,7 +121,8 @@ export function generateWhatsAppLink(phone: string, text: string): string {
 
 export function buildWhatsAppShareSummary(profile: Profile, bureauInfo: { name: string; phone: string }): string {
   return `*Proposal Profile - ${bureauInfo.name}*
-*Inventory Ref:* ${profile.formNo}
+*Register / Form No:* ${profile.formNo}
+*Candidate Name:* ${profile.name}
 
 *Candidate Details:*
 • *Gender:* ${profile.gender}

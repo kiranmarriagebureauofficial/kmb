@@ -222,6 +222,7 @@ export interface Invoice {
   id: string;
   invoiceNumber: string; // e.g. "INV-2026-0001"
   profileId: string;
+  formNo?: string; // e.g. "KMB-0001" (Register / Form No)
   clientName: string;
   clientPhone: string;
   proposalId?: string;

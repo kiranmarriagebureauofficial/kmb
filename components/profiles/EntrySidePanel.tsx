@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -7,23 +7,34 @@ import { calculateMatchesForProfile } from '@/lib/matching-engine';
 import { store } from '@/lib/db/store';
 import { MatchRing } from '../ui/MatchRing';
 import { Badge } from '../ui/Badge';
+import { ProfileAvatar } from '../ui/ProfileAvatar';
 import { Star, Sparkles, ExternalLink, Users, ChevronRight, AlertCircle } from 'lucide-react';
 
 interface EntrySidePanelProps {
   currentFormValues: Partial<Profile>;
   savedProfileId?: string;
+  hasEnteredData?: boolean;
   className?: string;
 }
 
 export function EntrySidePanel({
   currentFormValues,
   savedProfileId,
+  hasEnteredData = true,
   className = '',
 }: EntrySidePanelProps) {
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
 
+  const prefsKey = JSON.stringify(currentFormValues.preferences || {});
+
   useEffect(() => {
+    if (!savedProfileId && !hasEnteredData) {
+      setMatches([]);
+      setIsCalculating(false);
+      return;
+    }
+
     // Debounce calculation
     const timer = setTimeout(() => {
       setIsCalculating(true);
@@ -96,14 +107,22 @@ export function EntrySidePanel({
 
     return () => clearTimeout(timer);
   }, [
+    currentFormValues.name,
     currentFormValues.gender,
     currentFormValues.age,
+    currentFormValues.height,
+    currentFormValues.maritalStatus,
+    currentFormValues.religion,
     currentFormValues.caste,
     currentFormValues.maslak,
     currentFormValues.educationLevel,
+    currentFormValues.degree,
+    currentFormValues.profession,
+    currentFormValues.monthlyIncome,
     currentFormValues.city,
-    currentFormValues.preferences,
+    prefsKey,
     savedProfileId,
+    hasEnteredData,
   ]);
 
   const premiumCount = matches.filter(m => m.tier === 'premium').length;
@@ -149,12 +168,22 @@ export function EntrySidePanel({
 
       {/* Matches List */}
       <div className="flex-1 overflow-y-auto py-3 space-y-2.5">
-        {matches.length === 0 ? (
+        {!savedProfileId && !hasEnteredData ? (
+          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6E6466]">
+            <Sparkles className="w-8 h-8 text-[#D4AF37]/70 mb-2" />
+            <p className="text-xs font-semibold text-[#800F2F]">
+              Live Matching Ready
+            </p>
+            <p className="text-[11px] text-[#6E6466] mt-1 leading-relaxed">
+              Matches will appear live here as you enter candidate details (gender, age, caste, city &amp; preferences).
+            </p>
+          </div>
+        ) : matches.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6E6466]">
             <Users className="w-8 h-8 text-[#D8D0C3] mb-2" />
             <p className="text-xs font-medium">No 50%+ compatible rishtas found yet.</p>
             <p className="text-[11px] text-[#6E6466]/80 mt-1">
-              Verify opposite gender, religion, caste & sect preferences.
+              Verify opposite gender, religion, caste &amp; sect preferences.
             </p>
           </div>
         ) : (
@@ -166,21 +195,24 @@ export function EntrySidePanel({
                 className="p-3 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] hover:border-[#D4AF37] transition-all flex items-center justify-between gap-3 group"
               >
                 {/* Photo / Avatar */}
-                <div className="w-10 h-10 rounded-full bg-[#800F2F] text-[#D4AF37] border border-[#D4AF37] flex items-center justify-center font-serif font-bold text-sm shrink-0">
-                  {partner.name.charAt(0)}
-                </div>
+                <ProfileAvatar
+                  name={partner.name}
+                  photoUrl={partner.photoUrl}
+                  size="sm"
+                  isPremium={partner.premiumMember}
+                />
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 truncate">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#800F2F]/10 text-[#800F2F]">
+                      {partner.formNo}
+                    </span>
                     <h4 className="text-xs font-bold text-[#2C2526] truncate group-hover:text-[#800F2F]">
                       {partner.name}
                     </h4>
-                    {partner.premiumMember && (
-                      <Star className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37] shrink-0" />
-                    )}
                   </div>
-                  <p className="text-[11px] text-[#6E6466] truncate">
+                  <p className="text-[11px] text-[#6E6466] truncate mt-0.5">
                     {partner.age} yrs • {partner.caste} • {partner.city}
                   </p>
                   <p className="text-[10px] text-[#2C2526]/70 truncate">

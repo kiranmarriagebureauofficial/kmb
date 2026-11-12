@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -6,7 +6,8 @@ import { Profile } from '@/lib/types';
 import { store } from '@/lib/db/store';
 import { formatPKR, formatDate, maskCNIC, maskPhone } from '@/lib/utils';
 import { Button } from '../ui/Button';
-import { Printer, Download, Eye, EyeOff, Globe } from 'lucide-react';
+import { exportSingleProfilePDF } from '@/lib/pdf-export';
+import { Printer, Download, Eye, EyeOff, Globe, FileText } from 'lucide-react';
 
 interface ProfilePrintViewProps {
   profile: Profile;
@@ -38,11 +39,20 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
 
           <Button
             size="sm"
+            variant="accent"
+            onClick={() => exportSingleProfilePDF(profile, settings)}
+            icon={<FileText className="w-4 h-4 text-[#800F2F]" />}
+          >
+            Download Biodata PDF
+          </Button>
+
+          <Button
+            size="sm"
             variant="secondary"
             onClick={handlePrint}
             icon={<Download className="w-4 h-4 text-[#800F2F]" />}
           >
-            Save as PDF
+            Print / Browser PDF
           </Button>
         </div>
 
@@ -114,23 +124,34 @@ export function ProfilePrintView({ profile, onClose }: ProfilePrintViewProps) {
             </div>
           </div>
 
-          <div className="text-right">
-            <div className="border border-[#800F2F] px-3 py-1.5 rounded bg-[#F8F5F0] text-center">
-              <span className="text-[10px] uppercase font-bold text-[#6E6466] block">
-                Form Number / فارم نمبر
-              </span>
-              <span className="font-serif text-xl font-bold text-[#800F2F]">
-                {profile.formNo}
-              </span>
-            </div>
-            <div className="text-[10px] text-[#6E6466] mt-1">
-              Date: {formatDate(profile.dateApplied)}
-            </div>
-            {profile.premiumMember && (
-              <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4AF37] text-[#660A22]">
-                ★ PREMIUM RISHTA
-              </span>
+          <div className="flex items-center gap-3 text-right">
+            {profile.photoUrl && (
+              <div className="w-20 h-20 rounded-lg border-2 border-[#800F2F] overflow-hidden shrink-0 bg-[#F8F5F0]">
+                <img
+                  src={profile.photoUrl}
+                  alt={profile.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             )}
+            <div>
+              <div className="border border-[#800F2F] px-3 py-1.5 rounded bg-[#F8F5F0] text-center">
+                <span className="text-[10px] uppercase font-bold text-[#6E6466] block">
+                  Register / Form No / فارم نمبر
+                </span>
+                <span className="font-serif text-xl font-bold text-[#800F2F]">
+                  {profile.formNo}
+                </span>
+              </div>
+              <div className="text-[10px] text-[#6E6466] mt-1">
+                Date: {formatDate(profile.dateApplied)}
+              </div>
+              {profile.premiumMember && (
+                <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-[#D4AF37] text-[#660A22]">
+                  ★ PREMIUM RISHTA
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

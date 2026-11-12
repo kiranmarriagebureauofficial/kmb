@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { store } from '@/lib/db/store';
@@ -6,6 +6,8 @@ import { Profile, Invoice, Proposal, StockStatus, AgeBucket } from '@/lib/types'
 import { formatPKR, formatDate, calculateDaysInStock, getAgeBucket, getAgeBucketLabel } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
+import { exportRishtayPDF, filterProfilesByDateRange, getProfileDateKey } from '@/lib/pdf-export';
 import { 
   BarChart3, 
   Printer, 
@@ -29,7 +31,14 @@ function ReportsContent() {
   const [activeTab, setActiveTab] = useState<'stock' | 'new_entries' | 'old_stock' | 'closed' | 'proposals' | 'financial'>('stock');
 
   // Date Range filter
-  const [dateRangePreset, setDateRangePreset] = useState<'all' | '7days' | '30days' | '90days' | 'this_month'>('30days');
+  const [dateRangePreset, setDateRangePreset] = useState<'all' | '7days' | '30days' | '90days' | 'this_month' | 'custom'>('all');
+  const [customFromDate, setCustomFromDate] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(1);
+    return d.toISOString().split('T')[0];
+  });
+  const [customToDate, setCustomToDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -42,35 +51,45 @@ function ReportsContent() {
     return unsub;
   }, []);
 
-  // Compute cutoff date from preset
-  const cutoffDate = useMemo(() => {
+  // Resolve effective fromDate / toDate YYYY-MM-DD strings
+  const { effectiveFromDate, effectiveToDate } = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    if (dateRangePreset === 'custom') {
+      return { effectiveFromDate: customFromDate || undefined, effectiveToDate: customToDate || undefined };
+    }
     const now = Date.now();
     switch (dateRangePreset) {
-      case '7days': return new Date(now - 7 * 86400000).toISOString();
-      case '30days': return new Date(now - 30 * 86400000).toISOString();
-      case '90days': return new Date(now - 90 * 86400000).toISOString();
+      case '7days':
+        return { effectiveFromDate: new Date(now - 7 * 86400000).toISOString().split('T')[0], effectiveToDate: today };
+      case '30days':
+        return { effectiveFromDate: new Date(now - 30 * 86400000).toISOString().split('T')[0], effectiveToDate: today };
+      case '90days':
+        return { effectiveFromDate: new Date(now - 90 * 86400000).toISOString().split('T')[0], effectiveToDate: today };
       case 'this_month': {
         const d = new Date();
         d.setDate(1);
-        d.setHours(0,0,0,0);
-        return d.toISOString();
+        return { effectiveFromDate: d.toISOString().split('T')[0], effectiveToDate: today };
       }
-      default: return '1970-01-01T00:00:00.000Z';
+      default:
+        return { effectiveFromDate: undefined, effectiveToDate: undefined };
     }
-  }, [dateRangePreset]);
+  }, [dateRangePreset, customFromDate, customToDate]);
 
   // Tab 1: Stock data
   const availableStock = useMemo(() => {
     return profiles.filter(p => p.status === 'available' || (p.status as any) === 'active');
   }, [profiles]);
 
+  const maleAvailableStock = useMemo(() => availableStock.filter(p => p.gender === 'Male'), [availableStock]);
+  const femaleAvailableStock = useMemo(() => availableStock.filter(p => p.gender === 'Female'), [availableStock]);
+
   // Tab 2: New entries in range
   const newEntries = useMemo(() => {
-    return profiles.filter(p => {
-      const entryTime = new Date(p.entryDate || p.createdAt).toISOString();
-      return entryTime >= cutoffDate;
-    });
-  }, [profiles, cutoffDate]);
+    return filterProfilesByDateRange(profiles, effectiveFromDate, effectiveToDate);
+  }, [profiles, effectiveFromDate, effectiveToDate]);
+
+  const maleNewEntries = useMemo(() => newEntries.filter(p => p.gender === 'Male'), [newEntries]);
+  const femaleNewEntries = useMemo(() => newEntries.filter(p => p.gender === 'Female'), [newEntries]);
 
   // Tab 3: Old stock (91+ days sitting available)
   const oldStock = useMemo(() => {
@@ -84,13 +103,23 @@ function ReportsContent() {
 
   // Tab 5: Proposals in range
   const rangeProposals = useMemo(() => {
-    return proposals.filter(pr => pr.createdAt >= cutoffDate);
-  }, [proposals, cutoffDate]);
+    return proposals.filter(pr => {
+      const k = pr.createdAt.slice(0, 10);
+      if (effectiveFromDate && k < effectiveFromDate) return false;
+      if (effectiveToDate && k > effectiveToDate) return false;
+      return true;
+    });
+  }, [proposals, effectiveFromDate, effectiveToDate]);
 
   // Tab 6: Invoices in range
   const rangeInvoices = useMemo(() => {
-    return invoices.filter(inv => inv.createdAt >= cutoffDate);
-  }, [invoices, cutoffDate]);
+    return invoices.filter(inv => {
+      const k = (inv.date || inv.createdAt).slice(0, 10);
+      if (effectiveFromDate && k < effectiveFromDate) return false;
+      if (effectiveToDate && k > effectiveToDate) return false;
+      return true;
+    });
+  }, [invoices, effectiveFromDate, effectiveToDate]);
 
   const totalRevenue = rangeInvoices.reduce((s, i) => s + (i.amountPaid || 0), 0);
   const totalOutstanding = rangeInvoices
@@ -183,6 +212,24 @@ function ReportsContent() {
     window.print();
   };
 
+  const handleDownloadPDF = async () => {
+    setIsExportingPdf(true);
+    try {
+      const sourceProfiles = activeTab === 'stock' ? availableStock : profiles;
+      await exportRishtayPDF(sourceProfiles, {
+        fromDate: activeTab === 'stock' ? undefined : effectiveFromDate,
+        toDate: activeTab === 'stock' ? undefined : effectiveToDate,
+        title:
+          activeTab === 'stock'
+            ? 'Available Rishta Stock (Male & Female)'
+            : 'Rishtay Report (Date Range)',
+        bureauSettings: store.getSettings(),
+      });
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
@@ -208,13 +255,43 @@ function ReportsContent() {
               onChange={(e) => setDateRangePreset(e.target.value as any)}
               className="bg-transparent font-semibold text-[#800F2F] focus:outline-none"
             >
+              <option value="all">All Time</option>
               <option value="7days">Last 7 Days</option>
               <option value="30days">Last 30 Days</option>
               <option value="90days">Last 90 Days</option>
               <option value="this_month">This Month</option>
-              <option value="all">All Time</option>
+              <option value="custom">Custom Date Range</option>
             </select>
           </div>
+
+          {dateRangePreset === 'custom' && (
+            <div className="flex items-center gap-1.5 text-xs bg-[#F8F5F0] px-2.5 py-1 rounded-lg border border-[#D4AF37]">
+              <span className="text-[10px] font-bold text-[#800F2F]">From:</span>
+              <input
+                type="date"
+                value={customFromDate}
+                onChange={(e) => setCustomFromDate(e.target.value)}
+                className="bg-[#FFFFFF] border border-[#E5DFD5] rounded px-1.5 py-0.5 text-[11px] text-[#2C2526]"
+              />
+              <span className="text-[10px] font-bold text-[#800F2F]">To:</span>
+              <input
+                type="date"
+                value={customToDate}
+                onChange={(e) => setCustomToDate(e.target.value)}
+                className="bg-[#FFFFFF] border border-[#E5DFD5] rounded px-1.5 py-0.5 text-[11px] text-[#2C2526]"
+              />
+            </div>
+          )}
+
+          <Button
+            size="sm"
+            variant="accent"
+            disabled={isExportingPdf}
+            onClick={handleDownloadPDF}
+            icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
+          >
+            {isExportingPdf ? 'Generating PDF...' : 'Download PDF (Male/Female)'}
+          </Button>
 
           <Button
             size="sm"
@@ -299,88 +376,131 @@ function ReportsContent() {
             </div>
           </div>
 
-          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Form No</th>
-                  <th className="p-2.5">Candidate Name</th>
-                  <th className="p-2.5">Gender</th>
-                  <th className="p-2.5">Age</th>
-                  <th className="p-2.5">Caste</th>
-                  <th className="p-2.5">Maslak</th>
-                  <th className="p-2.5">City</th>
-                  <th className="p-2.5">Profession</th>
-                  <th className="p-2.5">Stock Age</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E5DFD5]">
-                {availableStock.map((p, idx) => {
-                  const days = calculateDaysInStock(p.entryDate || p.createdAt);
-                  const b = getAgeBucketLabel(getAgeBucket(days));
-                  return (
-                    <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
-                      <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
-                      <td className="p-2.5 font-semibold text-[#2C2526]">{p.name}</td>
-                      <td className="p-2.5">{p.gender}</td>
-                      <td className="p-2.5">{p.age}</td>
-                      <td className="p-2.5">{p.caste}</td>
-                      <td className="p-2.5">{p.maslak}</td>
-                      <td className="p-2.5">{p.city}</td>
-                      <td className="p-2.5">{p.profession}</td>
-                      <td className="p-2.5">
-                        <span className={`px-1.5 py-0.5 rounded text-[10px] ${b.badgeClass}`}>
-                          {days}d ({b.label})
-                        </span>
-                      </td>
+          {[
+            { title: 'Section A: Male Rishtay (Grooms)', list: maleAvailableStock, emptyMsg: 'No male rishtay currently available in stock.' },
+            { title: 'Section B: Female Rishtay (Brides)', list: femaleAvailableStock, emptyMsg: 'No female rishtay currently available in stock.' },
+          ].map((sec) => (
+            <div key={sec.title} className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
+              <div className="bg-[#660A22] text-[#D4AF37] px-4 py-2.5 flex items-center justify-between border-b border-[#D4AF37]">
+                <h3 className="font-serif font-bold text-sm">{sec.title}</h3>
+                <span className="text-[11px] bg-[#D4AF37] text-[#660A22] px-2 py-0.5 rounded-full font-bold">
+                  {sec.list.length} Profiles
+                </span>
+              </div>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
+                    <th className="p-2.5">Register / Form No</th>
+                    <th className="p-2.5">Candidate Name</th>
+                    <th className="p-2.5">Age</th>
+                    <th className="p-2.5">Caste</th>
+                    <th className="p-2.5">Maslak</th>
+                    <th className="p-2.5">City</th>
+                    <th className="p-2.5">Profession</th>
+                    <th className="p-2.5">Stock Age</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E5DFD5]">
+                  {sec.list.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="p-6 text-center text-xs text-[#6E6466]">{sec.emptyMsg}</td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                  ) : (
+                    sec.list.map((p, idx) => {
+                      const days = calculateDaysInStock(p.entryDate || p.createdAt);
+                      const b = getAgeBucketLabel(getAgeBucket(days));
+                      return (
+                        <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                          <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
+                          <td className="p-2.5 font-semibold text-[#2C2526]">
+                            <div className="flex items-center gap-2">
+                              <ProfileAvatar name={p.name} photoUrl={p.photoUrl} size="xs" isPremium={Boolean(p.isPremium || p.premiumMember)} />
+                              <span>{p.name}</span>
+                            </div>
+                          </td>
+                          <td className="p-2.5">{p.age}</td>
+                          <td className="p-2.5">{p.caste}</td>
+                          <td className="p-2.5">{p.maslak}</td>
+                          <td className="p-2.5">{p.city}</td>
+                          <td className="p-2.5">{p.profession}</td>
+                          <td className="p-2.5">
+                            <span className={`px-1.5 py-0.5 rounded text-[10px] ${b.badgeClass}`}>
+                              {days}d ({b.label})
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ))}
         </div>
       )}
 
       {/* Tab 2: New Entries Report */}
       {activeTab === 'new_entries' && (
         <div className="space-y-4">
-          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5]">
+          <div className="p-4 bg-[#FFFFFF] rounded-xl border border-[#E5DFD5] flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-bold text-[#800F2F]">
-              {newEntries.length} rishtas entered into inventory in the selected timeframe ({dateRangePreset}).
+              {newEntries.length} rishtas entered ({maleNewEntries.length} Male, {femaleNewEntries.length} Female)
+              {effectiveFromDate || effectiveToDate ? ` from ${effectiveFromDate || 'start'} to ${effectiveToDate || 'today'}` : ' across all dates'}.
             </span>
           </div>
 
-          <div className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Form No</th>
-                  <th className="p-2.5">Entry Date</th>
-                  <th className="p-2.5">Candidate Name</th>
-                  <th className="p-2.5">Gender / Age</th>
-                  <th className="p-2.5">Caste</th>
-                  <th className="p-2.5">City</th>
-                  <th className="p-2.5">Applied By</th>
-                  <th className="p-2.5">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E5DFD5]">
-                {newEntries.map((p, idx) => (
-                  <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
-                    <td className="p-2.5">{formatDate(p.entryDate || p.createdAt)}</td>
-                    <td className="p-2.5 font-semibold text-[#2C2526]">{p.name}</td>
-                    <td className="p-2.5">{p.gender}, {p.age}y</td>
-                    <td className="p-2.5">{p.caste}</td>
-                    <td className="p-2.5">{p.city}</td>
-                    <td className="p-2.5 text-[#6E6466]">{p.appliedBy || 'Bureau Staff'}</td>
-                    <td className="p-2.5">{p.status}</td>
+          {[
+            { title: 'Section A: Male Rishtay (New Entries)', list: maleNewEntries, emptyMsg: 'No male rishtay entered in this date range.' },
+            { title: 'Section B: Female Rishtay (New Entries)', list: femaleNewEntries, emptyMsg: 'No female rishtay entered in this date range.' },
+          ].map((sec) => (
+            <div key={sec.title} className="bg-[#FFFFFF] border border-[#E5DFD5] rounded-xl overflow-x-auto shadow-xs">
+              <div className="bg-[#660A22] text-[#D4AF37] px-4 py-2.5 flex items-center justify-between border-b border-[#D4AF37]">
+                <h3 className="font-serif font-bold text-sm">{sec.title}</h3>
+                <span className="text-[11px] bg-[#D4AF37] text-[#660A22] px-2 py-0.5 rounded-full font-bold">
+                  {sec.list.length} Profiles
+                </span>
+              </div>
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
+                    <th className="p-2.5">Register / Form No</th>
+                    <th className="p-2.5">Entry Date</th>
+                    <th className="p-2.5">Candidate Name</th>
+                    <th className="p-2.5">Age / Height</th>
+                    <th className="p-2.5">Caste</th>
+                    <th className="p-2.5">City</th>
+                    <th className="p-2.5">Phone</th>
+                    <th className="p-2.5">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-[#E5DFD5]">
+                  {sec.list.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="p-6 text-center text-xs text-[#6E6466]">{sec.emptyMsg}</td>
+                    </tr>
+                  ) : (
+                    sec.list.map((p, idx) => (
+                      <tr key={p.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                        <td className="p-2.5 font-bold font-serif text-[#800F2F]">{p.formNo}</td>
+                        <td className="p-2.5">{getProfileDateKey(p)}</td>
+                        <td className="p-2.5 font-semibold text-[#2C2526]">
+                          <div className="flex items-center gap-2">
+                            <ProfileAvatar name={p.name} photoUrl={p.photoUrl} size="xs" isPremium={Boolean(p.isPremium || p.premiumMember)} />
+                            <span>{p.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-2.5">{p.age}y • {p.height}</td>
+                        <td className="p-2.5">{p.caste}</td>
+                        <td className="p-2.5">{p.city}</td>
+                        <td className="p-2.5 text-[#6E6466]">{p.phone}</td>
+                        <td className="p-2.5 capitalize">{p.status.replace(/_/g, ' ')}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ))}
         </div>
       )}
 
@@ -458,25 +578,33 @@ function ReportsContent() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Proposal ID</th>
-                  <th className="p-2.5">Groom Candidate</th>
-                  <th className="p-2.5">Bride Candidate</th>
+                  <th className="p-2.5">#</th>
+                  <th className="p-2.5">Candidate 1 (Name &amp; Form No)</th>
+                  <th className="p-2.5">Candidate 2 (Name &amp; Form No)</th>
                   <th className="p-2.5">Compatibility Score</th>
                   <th className="p-2.5">Finalized Date</th>
                   <th className="p-2.5">Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
-                {finalizedList.map((pr, idx) => (
-                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{pr.id}</td>
-                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileAName}</td>
-                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileBName}</td>
-                    <td className="p-2.5 font-bold text-[#D4AF37]">{pr.matchScore}%</td>
-                    <td className="p-2.5">{formatDate(pr.updatedAt)}</td>
-                    <td className="p-2.5 text-[#6E6466] truncate max-w-xs">{pr.notes || 'Rishta finalized.'}</td>
-                  </tr>
-                ))}
+                {finalizedList.map((pr, idx) => {
+                  const pA = store.getProfileById(pr.profileAId);
+                  const pB = store.getProfileById(pr.profileBId);
+                  return (
+                    <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                      <td className="p-2.5 font-bold font-serif text-[#800F2F]">{idx + 1}</td>
+                      <td className="p-2.5 font-semibold text-[#2C2526]">
+                        {pr.profileAName} {pA?.formNo ? <span className="text-[10px] text-[#800F2F] font-mono">({pA.formNo})</span> : ''}
+                      </td>
+                      <td className="p-2.5 font-semibold text-[#2C2526]">
+                        {pr.profileBName} {pB?.formNo ? <span className="text-[10px] text-[#800F2F] font-mono">({pB.formNo})</span> : ''}
+                      </td>
+                      <td className="p-2.5 font-bold text-[#D4AF37]">{pr.matchScore}%</td>
+                      <td className="p-2.5">{formatDate(pr.updatedAt)}</td>
+                      <td className="p-2.5 text-[#6E6466] truncate max-w-xs">{pr.notes || 'Rishta finalized.'}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -496,29 +624,37 @@ function ReportsContent() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-[#800F2F] text-[#F8F5F0] text-[11px] uppercase font-semibold">
-                  <th className="p-2.5">Proposal ID</th>
-                  <th className="p-2.5">Candidate A</th>
-                  <th className="p-2.5">Candidate B</th>
+                  <th className="p-2.5">#</th>
+                  <th className="p-2.5">Candidate A (Name &amp; Form No)</th>
+                  <th className="p-2.5">Candidate B (Name &amp; Form No)</th>
                   <th className="p-2.5">Match Score</th>
                   <th className="p-2.5">Status</th>
                   <th className="p-2.5">Date Created</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5DFD5]">
-                {rangeProposals.map((pr, idx) => (
-                  <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
-                    <td className="p-2.5 font-bold font-serif text-[#800F2F]">{pr.id}</td>
-                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileAName}</td>
-                    <td className="p-2.5 font-semibold text-[#2C2526]">{pr.profileBName}</td>
-                    <td className="p-2.5 font-bold text-[#800F2F]">{pr.matchScore}%</td>
-                    <td className="p-2.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] border border-[#E5DFD5] capitalize">
-                        {pr.status}
-                      </span>
-                    </td>
-                    <td className="p-2.5">{formatDate(pr.createdAt)}</td>
-                  </tr>
-                ))}
+                {rangeProposals.map((pr, idx) => {
+                  const pA = store.getProfileById(pr.profileAId);
+                  const pB = store.getProfileById(pr.profileBId);
+                  return (
+                    <tr key={pr.id} className={idx % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF7F2]'}>
+                      <td className="p-2.5 font-bold font-serif text-[#800F2F]">{idx + 1}</td>
+                      <td className="p-2.5 font-semibold text-[#2C2526]">
+                        {pr.profileAName} {pA?.formNo ? <span className="text-[10px] text-[#800F2F] font-mono">({pA.formNo})</span> : ''}
+                      </td>
+                      <td className="p-2.5 font-semibold text-[#2C2526]">
+                        {pr.profileBName} {pB?.formNo ? <span className="text-[10px] text-[#800F2F] font-mono">({pB.formNo})</span> : ''}
+                      </td>
+                      <td className="p-2.5 font-bold text-[#800F2F]">{pr.matchScore}%</td>
+                      <td className="p-2.5">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F8F5F0] border border-[#E5DFD5] capitalize">
+                          {pr.status}
+                        </span>
+                      </td>
+                      <td className="p-2.5">{formatDate(pr.createdAt)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

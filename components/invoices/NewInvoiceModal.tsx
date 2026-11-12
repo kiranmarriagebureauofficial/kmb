@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { InvoiceType, PaymentMethod } from '@/lib/types';
@@ -91,7 +91,8 @@ export function NewInvoiceModal({
     try {
       store.createInvoice({
         profileId: selectedProfile.id,
-        clientName: `${selectedProfile.name} (${selectedProfile.formNo})`,
+        formNo: selectedProfile.formNo,
+        clientName: selectedProfile.name,
         clientPhone: selectedProfile.phone,
         invoiceType,
         items,

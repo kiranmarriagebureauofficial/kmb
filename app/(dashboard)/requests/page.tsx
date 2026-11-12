@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { Profile } from '@/lib/types';
 import { formatDate } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { 
   Inbox, 
   Check, 
@@ -112,12 +113,20 @@ export default function RequestsInboxPage() {
 
                 {/* Candidate Content Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Candidate</span>
-                    <h3 className="font-bold text-sm text-[#2C2526]">{item.name}</h3>
-                    <p className="text-[#6E6466]">
-                      {item.gender} • {item.age} Yrs • {item.height} • {item.maritalStatus}
-                    </p>
+                  <div className="flex items-start gap-3">
+                    <ProfileAvatar
+                      name={item.name}
+                      photoUrl={item.photoUrl}
+                      size="md"
+                      isPremium={Boolean(item.premiumMember)}
+                    />
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-[#6E6466] block">Candidate</span>
+                      <h3 className="font-bold text-sm text-[#2C2526]">{item.name}</h3>
+                      <p className="text-[#6E6466]">
+                        {item.gender} • {item.age} Yrs • {item.height} • {item.maritalStatus}
+                      </p>
+                    </div>
                   </div>
 
                   <div>

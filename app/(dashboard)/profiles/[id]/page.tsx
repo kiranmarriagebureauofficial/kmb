@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -8,10 +8,13 @@ import { Profile, Proposal } from '@/lib/types';
 import { formatPKR, formatDate, maskCNIC } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { ProfilePrintView } from '@/components/profiles/ProfilePrintView';
+import { exportSingleProfilePDF } from '@/lib/pdf-export';
 import { 
   Sparkles, 
   Printer, 
+  FileText,
   Edit, 
   Trash2, 
   Star, 
@@ -93,9 +96,13 @@ function ProfileDetailContent() {
       {/* Top Header Card */}
       <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E5DFD5] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-full bg-[#800F2F] text-[#D4AF37] border-2 border-[#D4AF37] flex items-center justify-center font-serif font-bold text-2xl shrink-0 shadow-md">
-            {profile.name.charAt(0)}
-          </div>
+          <ProfileAvatar
+            name={profile.name}
+            photoUrl={profile.photoUrl}
+            size="xl"
+            isPremium={Boolean(profile.premiumMember)}
+            className="shadow-md"
+          />
 
           <div className="space-y-1">
             <div className="flex items-center gap-2.5 flex-wrap">
@@ -103,7 +110,7 @@ function ProfileDetailContent() {
                 {profile.name}
               </h1>
               <span className="px-2.5 py-0.5 rounded font-mono font-bold text-xs bg-[#F8F5F0] text-[#800F2F] border border-[#D8D0C3]">
-                {profile.formNo}
+                Reg: {profile.formNo}
               </span>
               <Badge status={profile.status} />
               {profile.premiumMember && (
@@ -134,11 +141,20 @@ function ProfileDetailContent() {
 
           <Button
             size="sm"
+            variant="accent"
+            onClick={() => exportSingleProfilePDF(profile, store.getSettings())}
+            icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
+          >
+            Download Biodata PDF
+          </Button>
+
+          <Button
+            size="sm"
             variant="secondary"
             onClick={() => setIsPrintView(true)}
             icon={<Printer className="w-3.5 h-3.5 text-[#800F2F]" />}
           >
-            Print / PDF Form
+            Print Form
           </Button>
 
           <Link href={`/profiles/${profile.id}/edit`}>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { Profile, MatchResult } from '@/lib/types';
 import { formatPKR, formatDate } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { 
   Sparkles, 
   Star, 
@@ -135,9 +136,12 @@ function MatchesContent() {
           {/* Candidate Summary Bar */}
           <div className="p-4 bg-[#800F2F] text-[#F8F5F0] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D4AF37]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#660A22] text-[#D4AF37] font-serif font-bold text-base flex items-center justify-center border border-[#D4AF37]/50">
-                {selectedProfile.name.charAt(0)}
-              </div>
+              <ProfileAvatar
+                name={selectedProfile.name}
+                photoUrl={selectedProfile.photoUrl}
+                size="md"
+                isPremium={Boolean(selectedProfile.isPremium || selectedProfile.premiumMember)}
+              />
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="font-serif text-lg font-bold">

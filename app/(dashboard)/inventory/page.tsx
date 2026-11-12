@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -24,6 +24,8 @@ import {
 } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
+import { exportRishtayPDF, exportSingleProfilePDF, filterProfilesByDateRange } from '@/lib/pdf-export';
 import { 
   Search, 
   Filter, 
@@ -83,6 +85,43 @@ function InventoryContent() {
 
   // Detail Drawer
   const [activeDrawerProfile, setActiveDrawerProfile] = useState<Profile | null>(null);
+
+  // PDF Export Modal (All or Custom Date Range with Male/Female split)
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [pdfMode, setPdfMode] = useState<'all' | 'range'>('all');
+  const [pdfFromDate, setPdfFromDate] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(1);
+    return d.toISOString().split('T')[0];
+  });
+  const [pdfToDate, setPdfToDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  const pdfPreviewList = useMemo(() => {
+    const baseList = pdfMode === 'range'
+      ? filterProfilesByDateRange(profiles, pdfFromDate, pdfToDate)
+      : profiles;
+    return {
+      all: baseList,
+      male: baseList.filter(p => p.gender === 'Male'),
+      female: baseList.filter(p => p.gender === 'Female'),
+    };
+  }, [profiles, pdfMode, pdfFromDate, pdfToDate]);
+
+  const handleDownloadDirectoryPDF = async () => {
+    setIsExportingPdf(true);
+    try {
+      await exportRishtayPDF(profiles, {
+        fromDate: pdfMode === 'range' ? pdfFromDate : undefined,
+        toDate: pdfMode === 'range' ? pdfToDate : undefined,
+        title: pdfMode === 'range' ? 'Rishta Inventory (Date Range Report)' : 'Complete Rishta Inventory',
+        bureauSettings: store.getSettings(),
+      });
+      setShowPdfModal(false);
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
 
   // Column Visibility
   const [visibleColumns, setVisibleColumns] = useState({
@@ -362,6 +401,15 @@ function InventoryContent() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            size="sm"
+            variant="accent"
+            onClick={() => setShowPdfModal(true)}
+            icon={<FileText className="w-3.5 h-3.5 text-[#800F2F]" />}
+          >
+            Download PDF
+          </Button>
+
           <Button
             size="sm"
             variant="secondary"
@@ -653,7 +701,7 @@ function InventoryContent() {
                   )}
                 </button>
               </th>
-              {visibleColumns.formNo && <th className="p-2.5">Form No</th>}
+              {visibleColumns.formNo && <th className="p-2.5">Register / Form No</th>}
               {visibleColumns.daysInStock && <th className="p-2.5">Stock Age</th>}
               {visibleColumns.candidate && <th className="p-2.5">Candidate</th>}
               {visibleColumns.ageHeight && <th className="p-2.5">Age / Height</th>}
@@ -737,11 +785,19 @@ function InventoryContent() {
                     {/* Candidate Name & Gender */}
                     {visibleColumns.candidate && (
                       <td className="p-2.5">
-                        <div className="font-semibold text-[#2C2526] flex items-center gap-1">
-                          <span>{p.name}</span>
-                          <span className={`text-[10px] px-1 rounded ${p.gender === 'Male' ? 'bg-[#800F2F]/10 text-[#800F2F]' : 'bg-[#D4AF37]/20 text-[#800F2F]'}`}>
-                            {p.gender === 'Male' ? 'M' : 'F'}
-                          </span>
+                        <div className="flex items-center gap-2">
+                          <ProfileAvatar
+                            name={p.name}
+                            photoUrl={p.photoUrl}
+                            size="xs"
+                            isPremium={Boolean(p.isPremium || p.premiumMember)}
+                          />
+                          <div className="font-semibold text-[#2C2526] flex items-center gap-1">
+                            <span>{p.name}</span>
+                            <span className={`text-[10px] px-1 rounded ${p.gender === 'Male' ? 'bg-[#800F2F]/10 text-[#800F2F]' : 'bg-[#D4AF37]/20 text-[#800F2F]'}`}>
+                              {p.gender === 'Male' ? 'M' : 'F'}
+                            </span>
+                          </div>
                         </div>
                       </td>
                     )}
@@ -906,16 +962,24 @@ function InventoryContent() {
             <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs text-[#2C2526]">
               {/* Profile Main Overview */}
               <div className="p-4 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5] space-y-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h2 className="font-serif text-xl font-bold text-[#800F2F]">
-                      {activeDrawerProfile.name}
-                    </h2>
-                    <p className="text-[#6E6466] text-xs">
-                      {activeDrawerProfile.gender} • {activeDrawerProfile.age} yrs • {activeDrawerProfile.height} • {activeDrawerProfile.maritalStatus}
-                    </p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <ProfileAvatar
+                      name={activeDrawerProfile.name}
+                      photoUrl={activeDrawerProfile.photoUrl}
+                      size="lg"
+                      isPremium={Boolean(activeDrawerProfile.isPremium || activeDrawerProfile.premiumMember)}
+                    />
+                    <div>
+                      <h2 className="font-serif text-xl font-bold text-[#800F2F]">
+                        {activeDrawerProfile.name}
+                      </h2>
+                      <p className="text-[#6E6466] text-xs">
+                        {activeDrawerProfile.gender} • {activeDrawerProfile.age} yrs • {activeDrawerProfile.height} • {activeDrawerProfile.maritalStatus}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <span className="text-[10px] text-[#6E6466] block">Days in Stock:</span>
                     <span className="font-bold text-[#800F2F] text-sm">
                       {calculateDaysInStock(activeDrawerProfile.entryDate || activeDrawerProfile.createdAt)} days
@@ -1038,6 +1102,176 @@ function InventoryContent() {
                   <Edit className="w-3.5 h-3.5" />
                   <span>Edit Full Profile</span>
                 </Link>
+
+                <button
+                  type="button"
+                  onClick={() => exportSingleProfilePDF(activeDrawerProfile, store.getSettings())}
+                  className="col-span-2 w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#D4AF37] text-[#800F2F] font-bold text-xs hover:bg-[#C09B2A] transition-colors cursor-pointer"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Download Biodata PDF ({activeDrawerProfile.formNo})</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PDF Export Modal with All vs Custom Date Range & Separate Male/Female Preview */}
+      {showPdfModal && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+          onClick={() => setShowPdfModal(false)}
+        >
+          <div
+            className="bg-[#FFFFFF] border border-[#D4AF37] rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-[#800F2F] text-[#F8F5F0] px-5 py-4 flex items-center justify-between border-b border-[#D4AF37]">
+              <div>
+                <h2 className="font-serif text-lg font-bold text-[#D4AF37]">
+                  Download Rishtay PDF Directory
+                </h2>
+                <p className="text-[11px] text-[#E5DFD5]">
+                  Exports all matching rishtas with separate Male &amp; Female sections, Real Names, Photos &amp; Register Numbers
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPdfModal(false)}
+                className="p-1 text-[#E5DFD5] hover:text-[#D4AF37]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4 text-xs">
+              {/* Mode Toggle */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPdfMode('all')}
+                  className={`flex-1 py-2 px-3 rounded-lg font-bold border transition-colors ${
+                    pdfMode === 'all'
+                      ? 'bg-[#800F2F] text-[#F8F5F0] border-[#800F2F]'
+                      : 'bg-[#F8F5F0] text-[#800F2F] border-[#E5DFD5]'
+                  }`}
+                >
+                  All Rishtay ({profiles.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPdfMode('range')}
+                  className={`flex-1 py-2 px-3 rounded-lg font-bold border transition-colors ${
+                    pdfMode === 'range'
+                      ? 'bg-[#800F2F] text-[#F8F5F0] border-[#800F2F]'
+                      : 'bg-[#F8F5F0] text-[#800F2F] border-[#E5DFD5]'
+                  }`}
+                >
+                  Custom Date Range (From – To)
+                </button>
+              </div>
+
+              {/* Date Pickers */}
+              {pdfMode === 'range' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#F8F5F0] rounded-xl border border-[#E5DFD5]">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#800F2F] mb-1">
+                      From Date
+                    </label>
+                    <input
+                      type="date"
+                      value={pdfFromDate}
+                      onChange={(e) => setPdfFromDate(e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg bg-[#FFFFFF] border border-[#E5DFD5] text-xs text-[#2C2526]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#800F2F] mb-1">
+                      To Date
+                    </label>
+                    <input
+                      type="date"
+                      value={pdfToDate}
+                      onChange={(e) => setPdfToDate(e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg bg-[#FFFFFF] border border-[#E5DFD5] text-xs text-[#2C2526]"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Separate Male / Female Live Preview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-[#F8F5F0] border border-[#E5DFD5]">
+                  <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-1.5 mb-2">
+                    <span className="font-serif font-bold text-[#800F2F]">
+                      Section A: Male Rishtay
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-[#800F2F] text-[#D4AF37] font-bold text-[10px]">
+                      {pdfPreviewList.male.length}
+                    </span>
+                  </div>
+                  <div className="max-h-36 overflow-y-auto space-y-1">
+                    {pdfPreviewList.male.length === 0 ? (
+                      <p className="text-[11px] text-[#6E6466] italic">No male rishtay in range</p>
+                    ) : (
+                      pdfPreviewList.male.map((p) => (
+                        <div key={p.id} className="flex items-center justify-between text-[11px] py-1 border-b border-[#E5DFD5]/50 last:border-0">
+                          <span className="font-semibold text-[#2C2526] truncate">
+                            <span className="text-[#800F2F] font-mono mr-1.5">{p.formNo}</span>
+                            {p.name}
+                          </span>
+                          <span className="text-[10px] text-[#6E6466] shrink-0">{p.entryDate || p.createdAt.split('T')[0]}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#F8F5F0] border border-[#E5DFD5]">
+                  <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-1.5 mb-2">
+                    <span className="font-serif font-bold text-[#800F2F]">
+                      Section B: Female Rishtay
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-[#D4AF37] text-[#800F2F] font-bold text-[10px]">
+                      {pdfPreviewList.female.length}
+                    </span>
+                  </div>
+                  <div className="max-h-36 overflow-y-auto space-y-1">
+                    {pdfPreviewList.female.length === 0 ? (
+                      <p className="text-[11px] text-[#6E6466] italic">No female rishtay in range</p>
+                    ) : (
+                      pdfPreviewList.female.map((p) => (
+                        <div key={p.id} className="flex items-center justify-between text-[11px] py-1 border-b border-[#E5DFD5]/50 last:border-0">
+                          <span className="font-semibold text-[#2C2526] truncate">
+                            <span className="text-[#800F2F] font-mono mr-1.5">{p.formNo}</span>
+                            {p.name}
+                          </span>
+                          <span className="text-[10px] text-[#6E6466] shrink-0">{p.entryDate || p.createdAt.split('T')[0]}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-[#E5DFD5] flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-[#6E6466]">
+                  Ready to export <strong className="text-[#800F2F]">{pdfPreviewList.all.length}</strong> rishtay ({pdfPreviewList.male.length} Male, {pdfPreviewList.female.length} Female)
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="secondary" onClick={() => setShowPdfModal(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    disabled={isExportingPdf || pdfPreviewList.all.length === 0}
+                    onClick={handleDownloadDirectoryPDF}
+                    icon={<FileText className="w-3.5 h-3.5 text-[#D4AF37]" />}
+                  >
+                    {isExportingPdf ? 'Generating PDF...' : 'Download PDF'}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

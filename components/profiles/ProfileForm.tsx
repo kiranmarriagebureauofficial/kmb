@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,7 +7,8 @@ import { store } from '@/lib/db/store';
 import { t, GENDER_OPTIONS, MARITAL_STATUS_OPTIONS, EDUCATION_LEVEL_OPTIONS, RELIGION_OPTIONS, MASLAK_OPTIONS, COMMON_CASTES, COMMON_CITIES } from '@/lib/i18n';
 import { Button } from '../ui/Button';
 import { EntrySidePanel } from './EntrySidePanel';
-import { AlertCircle, CheckCircle, Save, Printer, Share2, Star } from 'lucide-react';
+import { ProfileAvatar, compressImageToDataUrl } from '../ui/ProfileAvatar';
+import { AlertCircle, CheckCircle, Save, Printer, Share2, Star, Camera, Trash2 } from 'lucide-react';
 
 interface ProfileFormProps {
   initialData?: Partial<Profile>;
@@ -67,6 +68,7 @@ export function ProfileForm({
     guardianPhone: initialData?.guardianPhone || '',
     address: initialData?.address || '',
     cnic: initialData?.cnic || '',
+    photoUrl: initialData?.photoUrl || '',
     remarks: initialData?.remarks || '',
     premiumMember: initialData?.premiumMember || false,
     preferences: initialData?.preferences || {
@@ -86,11 +88,29 @@ export function ProfileForm({
 
   const [honeypot, setHoneypot] = useState(''); // Anti-spam for public
   const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = useState(Boolean(initialData?.id));
   const [submitting, setSubmitting] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState<Profile | null>(null);
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoError(null);
+    try {
+      const dataUrl = await compressImageToDataUrl(file, 420, 0.82);
+      setHasInteracted(true);
+      setFormData(prev => ({ ...prev, photoUrl: dataUrl }));
+    } catch (err: any) {
+      setPhotoError(err?.message || 'Could not process selected image.');
+    } finally {
+      e.target.value = '';
+    }
+  };
+
   // Field change handler
   const handleChange = (field: keyof Profile, value: any) => {
+    setHasInteracted(true);
     setFormData(prev => ({ ...prev, [field]: value }));
 
     // Check duplicate phone if phone changes
@@ -107,6 +127,7 @@ export function ProfileForm({
   };
 
   const handlePrefChange = (prefField: keyof PartnerPreferences, value: any) => {
+    setHasInteracted(true);
     setFormData(prev => ({
       ...prev,
       preferences: {
@@ -250,7 +271,7 @@ export function ProfileForm({
 
           <div className="flex items-center gap-4 text-xs">
             <div>
-              <span className="text-[#E5DFD5] block text-[10px]">Form No:</span>
+              <span className="text-[#E5DFD5] block text-[10px]">Register / Form No:</span>
               {isAdmin && !isPublic ? (
                 <input
                   type="text"
@@ -272,35 +293,76 @@ export function ProfileForm({
         </div>
 
         <div className="p-6 space-y-8">
-          {/* Applied By */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                {t('appliedBy', lang)} *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.appliedBy}
-                onChange={(e) => handleChange('appliedBy', e.target.value)}
-                placeholder="e.g. Father, Mother, Self, Brother"
-                className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
+          {/* Client Photo & Applied By */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 rounded-xl bg-[#F8F5F0] border border-[#E5DFD5]">
+            <div className="md:col-span-5 flex items-center gap-4">
+              <ProfileAvatar
+                name={formData.name || 'Client'}
+                photoUrl={formData.photoUrl}
+                size="xl"
+                isPremium={Boolean(formData.premiumMember)}
               />
-            </div>
-            {!isPublic && (
-              <div className="flex items-center gap-2 pt-6">
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#800F2F]">
-                  <input
-                    type="checkbox"
-                    checked={formData.premiumMember}
-                    onChange={(e) => handleChange('premiumMember', e.target.checked)}
-                    className="w-4 h-4 text-[#D4AF37] rounded border-[#E5DFD5] focus:ring-[#D4AF37]"
-                  />
-                  <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
-                  <span>Grant Premium Membership (Highlighted in Matches)</span>
-                </label>
+              <div className="space-y-1.5">
+                <span className="block text-xs font-bold text-[#800F2F]">
+                  Client Photo (Optional)
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#800F2F] text-[#F8F5F0] hover:bg-[#660A22] text-[11px] font-semibold cursor-pointer transition-colors">
+                    <Camera className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>{formData.photoUrl ? 'Change Photo' : 'Upload Photo'}</span>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  {formData.photoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => handleChange('photoUrl', '')}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#A3182E]/30 text-[#A3182E] hover:bg-[#A3182E]/10 text-[11px] font-semibold cursor-pointer"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Remove</span>
+                    </button>
+                  )}
+                </div>
+                {photoError && (
+                  <p className="text-[11px] text-[#A3182E] font-medium">{photoError}</p>
+                )}
               </div>
-            )}
+            </div>
+
+            <div className="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
+                  {t('appliedBy', lang)} *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.appliedBy}
+                  onChange={(e) => handleChange('appliedBy', e.target.value)}
+                  placeholder="e.g. Father, Mother, Self, Brother"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#FFFFFF] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
+                />
+              </div>
+              {!isPublic && (
+                <div className="flex items-center gap-2 sm:pt-5">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#800F2F]">
+                    <input
+                      type="checkbox"
+                      checked={formData.premiumMember}
+                      onChange={(e) => handleChange('premiumMember', e.target.checked)}
+                      className="w-4 h-4 text-[#D4AF37] rounded border-[#E5DFD5] focus:ring-[#D4AF37]"
+                    />
+                    <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
+                    <span>Premium Membership</span>
+                  </label>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Section 2: Personal Details */}
@@ -969,6 +1031,7 @@ export function ProfileForm({
         <EntrySidePanel
           currentFormValues={formData}
           savedProfileId={initialData?.id}
+          hasEnteredData={hasInteracted || Boolean(formData.name?.trim() || formData.phone?.trim() || formData.degree?.trim())}
         />
       </div>
     </div>

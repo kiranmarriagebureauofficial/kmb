@@ -12,24 +12,20 @@ import {
   ProfileStatus 
 } from '../types';
 import { 
-  SEED_PROFILES, 
   INITIAL_SETTINGS, 
-  INITIAL_INVOICES, 
-  INITIAL_PROPOSALS, 
-  INITIAL_STAFF, 
-  INITIAL_AUDIT_LOGS 
+  INITIAL_STAFF 
 } from './seed-data';
 import { calculateMatchesForProfile } from '../matching-engine';
 
 const STORAGE_KEYS = {
-  PROFILES: 'kmb_profiles_v1',
-  SETTINGS: 'kmb_settings_v1',
-  INVOICES: 'kmb_invoices_v1',
-  PROPOSALS: 'kmb_proposals_v1',
-  STAFF: 'kmb_staff_v1',
-  AUDIT: 'kmb_audit_v1',
-  CURRENT_USER: 'kmb_current_user_v1',
-  LANGUAGE: 'kmb_lang_v1',
+  PROFILES: 'kmb_profiles_v2',
+  SETTINGS: 'kmb_settings_v2',
+  INVOICES: 'kmb_invoices_v2',
+  PROPOSALS: 'kmb_proposals_v2',
+  STAFF: 'kmb_staff_v2',
+  AUDIT: 'kmb_audit_v2',
+  CURRENT_USER: 'kmb_current_user_v2',
+  LANGUAGE: 'kmb_lang_v2',
 };
 
 class DataStore {
@@ -38,7 +34,7 @@ class DataStore {
   private invoices: Invoice[] = [];
   private proposals: Proposal[] = [];
   private staff: StaffUser[] = INITIAL_STAFF;
-  private auditLogs: AuditLogEntry[] = INITIAL_AUDIT_LOGS;
+  private auditLogs: AuditLogEntry[] = [];
   private currentUser: StaffUser | null = INITIAL_STAFF[0]; // default admin
   private language: 'en' | 'ur' = 'en';
   private listeners: Set<() => void> = new Set();
@@ -50,34 +46,34 @@ class DataStore {
 
   private init() {
     if (typeof window === 'undefined') {
-      this.profiles = [...SEED_PROFILES];
+      this.profiles = [];
       this.settings = { ...INITIAL_SETTINGS };
-      this.invoices = [...INITIAL_INVOICES];
-      this.proposals = [...INITIAL_PROPOSALS];
+      this.invoices = [];
+      this.proposals = [];
       this.staff = [...INITIAL_STAFF];
-      this.auditLogs = [...INITIAL_AUDIT_LOGS];
+      this.auditLogs = [];
       this.currentUser = INITIAL_STAFF[0];
       return;
     }
 
     try {
       const p = localStorage.getItem(STORAGE_KEYS.PROFILES);
-      this.profiles = p ? JSON.parse(p) : [...SEED_PROFILES];
+      this.profiles = p ? JSON.parse(p) : [];
 
       const s = localStorage.getItem(STORAGE_KEYS.SETTINGS);
       this.settings = s ? JSON.parse(s) : { ...INITIAL_SETTINGS };
 
       const inv = localStorage.getItem(STORAGE_KEYS.INVOICES);
-      this.invoices = inv ? JSON.parse(inv) : [...INITIAL_INVOICES];
+      this.invoices = inv ? JSON.parse(inv) : [];
 
       const prop = localStorage.getItem(STORAGE_KEYS.PROPOSALS);
-      this.proposals = prop ? JSON.parse(prop) : [...INITIAL_PROPOSALS];
+      this.proposals = prop ? JSON.parse(prop) : [];
 
       const st = localStorage.getItem(STORAGE_KEYS.STAFF);
       this.staff = st ? JSON.parse(st) : [...INITIAL_STAFF];
 
       const al = localStorage.getItem(STORAGE_KEYS.AUDIT);
-      this.auditLogs = al ? JSON.parse(al) : [...INITIAL_AUDIT_LOGS];
+      this.auditLogs = al ? JSON.parse(al) : [];
 
       const cu = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
       this.currentUser = cu ? JSON.parse(cu) : INITIAL_STAFF[0];
@@ -87,13 +83,13 @@ class DataStore {
 
       this.initialized = true;
     } catch (e) {
-      console.warn('Failed to load from localStorage, using seed defaults', e);
-      this.profiles = [...SEED_PROFILES];
+      console.warn('Failed to load from localStorage, starting with empty bureau store', e);
+      this.profiles = [];
       this.settings = { ...INITIAL_SETTINGS };
-      this.invoices = [...INITIAL_INVOICES];
-      this.proposals = [...INITIAL_PROPOSALS];
+      this.invoices = [];
+      this.proposals = [];
       this.staff = [...INITIAL_STAFF];
-      this.auditLogs = [...INITIAL_AUDIT_LOGS];
+      this.auditLogs = [];
       this.currentUser = INITIAL_STAFF[0];
     }
   }
@@ -492,7 +488,7 @@ class DataStore {
   }
 
   public addProfile(profileData: Omit<Profile, 'id' | 'formNo' | 'createdAt' | 'updatedAt'> & { formNo?: string }): Profile {
-    const formNo = profileData.formNo || this.getNextFormNo();
+    const formNo = (profileData.formNo && profileData.formNo.trim()) ? profileData.formNo.trim() : this.getNextFormNo();
     const id = `prof-${Date.now()}`;
     const nowIso = new Date().toISOString();
     const todayDate = nowIso.split('T')[0];
@@ -649,8 +645,11 @@ class DataStore {
       }
     ] : [];
 
+    const resolvedFormNo = data.formNo || (data.profileId ? this.getProfileById(data.profileId)?.formNo : undefined);
+
     const newInvoice: Invoice = {
       ...data,
+      formNo: resolvedFormNo,
       id,
       invoiceNumber,
       amountPaid: initialPay,
@@ -807,7 +806,8 @@ class DataStore {
     const billedProfile = this.getProfileById(billedProfileId) || this.getProfileById(prop.profileAId);
     const invoice = this.createInvoice({
       profileId: billedProfile ? billedProfile.id : prop.profileAId,
-      clientName: billedProfile ? `${billedProfile.name} (${billedProfile.formNo})` : prop.profileAName,
+      formNo: billedProfile?.formNo,
+      clientName: billedProfile ? billedProfile.name : prop.profileAName,
       clientPhone: billedProfile ? billedProfile.phone : '+92 300 0000000',
       proposalId,
       invoiceType: 'success',
@@ -908,18 +908,25 @@ class DataStore {
     this.save(STORAGE_KEYS.AUDIT, this.auditLogs.slice(0, 100)); // retain latest 100
   }
 
-  // Reset to seed defaults
+  // Clear all bureau data (fresh start)
   public resetToDefaults() {
-    this.profiles = [...SEED_PROFILES];
+    this.profiles = [];
     this.settings = { ...INITIAL_SETTINGS };
-    this.invoices = [...INITIAL_INVOICES];
-    this.proposals = [...INITIAL_PROPOSALS];
+    this.invoices = [];
+    this.proposals = [];
     this.staff = [...INITIAL_STAFF];
-    this.auditLogs = [...INITIAL_AUDIT_LOGS];
+    this.auditLogs = [];
     this.currentUser = INITIAL_STAFF[0];
     
     if (typeof window !== 'undefined') {
-      localStorage.clear();
+      localStorage.removeItem(STORAGE_KEYS.PROFILES);
+      localStorage.removeItem(STORAGE_KEYS.INVOICES);
+      localStorage.removeItem(STORAGE_KEYS.PROPOSALS);
+      localStorage.removeItem(STORAGE_KEYS.AUDIT);
+      localStorage.removeItem('kmb_profiles_v1');
+      localStorage.removeItem('kmb_invoices_v1');
+      localStorage.removeItem('kmb_proposals_v1');
+      localStorage.removeItem('kmb_audit_v1');
     }
     this.notify();
   }

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { store } from '@/lib/db/store';
@@ -486,14 +486,14 @@ export default function AdminSettingsPage() {
             type="button"
             variant="ghost"
             onClick={() => {
-              if (confirm('Reset all demo data back to default seed?')) {
+              if (confirm('Clear all rishtas, proposals, and invoices for a clean fresh start?')) {
                 store.resetToDefaults();
-                alert('Database reset to fresh Pakistani seed profiles.');
+                alert('All bureau data cleared cleanly.');
               }
             }}
             icon={<RotateCcw className="w-3.5 h-3.5 text-[#A3182E]" />}
           >
-            Reset to Seed Defaults
+            Clear All Bureau Data (Fresh Start)
           </Button>
 
           <Button
