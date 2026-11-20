@@ -31,7 +31,7 @@ export const DEFAULT_MATCHING_SETTINGS: MatchingSettings = {
   },
 };
 
-const EDUCATION_RANKS: Record<EducationLevel, number> = {
+const EDUCATION_RANKS: Record<string, number> = {
   'Matric': 1,
   'Intermediate': 2,
   'Bachelors': 3,
@@ -39,6 +39,20 @@ const EDUCATION_RANKS: Record<EducationLevel, number> = {
   'Professional/Other': 4,
   'MPhil/PhD': 5,
 };
+
+export function getEducationRank(level: string | undefined): number {
+  if (!level) return 3;
+  if (EDUCATION_RANKS[level]) return EDUCATION_RANKS[level];
+  
+  const clean = level.toLowerCase().trim();
+  if (clean.includes('phd') || clean.includes('doctor') || clean.includes('mphil') || clean.includes('m.phil')) return 5;
+  if (clean.includes('master') || clean.includes('ms') || clean.includes('msc') || clean.includes('mba') || clean.includes('ma ') || clean.endsWith(' ma')) return 4;
+  if (clean.includes('bachelor') || clean.includes('bs') || clean.includes('bsc') || clean.includes('bba') || clean.includes('b.com') || clean.includes('mbbs') || clean.includes('bds') || clean.includes('llb') || clean.includes('ca') || clean.includes('acca') || clean.includes('engineer') || clean.includes('dars') || clean.includes('alim')) return 3;
+  if (clean.includes('inter') || clean.includes('fa') || clean.includes('fsc') || clean.includes('ics') || clean.includes('dae') || clean.includes('diploma') || clean.includes('a level')) return 2;
+  if (clean.includes('matric') || clean.includes('o level')) return 1;
+
+  return 3;
+}
 
 export function parseHeightInInches(heightStr: string): number {
   if (!heightStr) return 66; // default 5'6"
@@ -128,10 +142,10 @@ export function checkHardFilters(
 
   // 6. Minimum Education
   if (filters.minimumEducation) {
-    const bRank = EDUCATION_RANKS[b.educationLevel] || 1;
-    const aReqRank = EDUCATION_RANKS[a.preferences.educationMin] || 1;
-    const aRank = EDUCATION_RANKS[a.educationLevel] || 1;
-    const bReqRank = EDUCATION_RANKS[b.preferences.educationMin] || 1;
+    const bRank = getEducationRank(b.educationLevel);
+    const aReqRank = getEducationRank(a.preferences.educationMin);
+    const aRank = getEducationRank(a.educationLevel);
+    const bReqRank = getEducationRank(b.preferences.educationMin);
 
     if (bRank < aReqRank || aRank < bReqRank) {
       failures.push('Minimum education requirement not met');
@@ -348,8 +362,8 @@ export function computeDirectionalScore(
   let eduScore = 0;
   let eduMatched = false;
 
-  const seekerEduRank = EDUCATION_RANKS[seeker.educationLevel] || 1;
-  const candEduRank = EDUCATION_RANKS[candidate.educationLevel] || 1;
+  const seekerEduRank = getEducationRank(seeker.educationLevel);
+  const candEduRank = getEducationRank(candidate.educationLevel);
 
   if (candEduRank >= seekerEduRank) {
     eduScore = eduMaxWeight;

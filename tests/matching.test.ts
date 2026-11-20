@@ -99,6 +99,42 @@ export function runMatchingEngineTests() {
   const distantMatch = calculateMatch(maleA, distantCandidate);
   assert(distantMatch === null, 'Pairs scoring below 50% must return null (never displayed)');
 
+  // Test 8: Custom Manually-Entered Caste, Education and Maslak Compatibility
+  console.log('\nTest 8: Custom / Manual Entry Compatibility');
+  const customCandidateMale: Profile = {
+    ...maleA,
+    id: 'custom-male-001',
+    caste: 'Bajwa',
+    educationLevel: 'Dars-e-Nizami (Alim Course)',
+    city: 'Kasur',
+    maslak: 'Sunni / Hanafi',
+    preferences: {
+      ...maleA.preferences,
+      castes: ['Bajwa', 'Any'],
+      cities: ['Kasur', 'Lahore'],
+    }
+  };
+
+  const customCandidateFemale: Profile = {
+    ...femaleA,
+    id: 'custom-female-001',
+    caste: 'Bajwa',
+    educationLevel: 'Bachelors',
+    city: 'Kasur',
+    maslak: 'Sunni / Hanafi',
+    preferences: {
+      ...femaleA.preferences,
+      castes: ['Bajwa'],
+      cities: ['Kasur'],
+    }
+  };
+
+  const customMatch = calculateMatch(customCandidateMale, customCandidateFemale);
+  assert(customMatch !== null, 'Custom manually entered caste "Bajwa" must match when acceptable to both sides');
+  if (customMatch) {
+    assert(customMatch.finalScore >= 50, `Custom pair should score above 50% threshold (got ${customMatch.finalScore}%)`);
+  }
+
   console.log('\n=============================================');
   console.log('ALL MATCHING ENGINE TESTS PASSED SUCCESSFULLY!');
   console.log('=============================================\n');

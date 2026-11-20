@@ -1,6 +1,6 @@
-export type Gender = 'Male' | 'Female';
+export type Gender = 'Male' | 'Female' | (string & {});
 
-export type MaritalStatus = 'Never Married' | 'Divorced' | 'Widowed' | 'Separated';
+export type MaritalStatus = 'Never Married' | 'Divorced' | 'Widowed' | 'Separated' | (string & {});
 
 export type EducationLevel = 
   | 'Matric'
@@ -8,9 +8,10 @@ export type EducationLevel =
   | 'Bachelors'
   | 'Masters'
   | 'MPhil/PhD'
-  | 'Professional/Other';
+  | 'Professional/Other'
+  | (string & {});
 
-export type Religion = 'Islam' | 'Christianity' | 'Hinduism' | 'Other';
+export type Religion = 'Islam' | 'Christianity' | 'Hinduism' | 'Other' | (string & {});
 
 export type Maslak = 
   | 'Sunni / Hanafi'
@@ -18,7 +19,8 @@ export type Maslak =
   | 'Sunni / Barelvi'
   | 'Ahl-e-Hadith'
   | 'Shia'
-  | 'Any / No Preference';
+  | 'Any / No Preference'
+  | (string & {});
 
 // Stock Status (Inventory ERP Lifecycle)
 export type StockStatus = 

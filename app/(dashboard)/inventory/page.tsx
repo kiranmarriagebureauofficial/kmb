@@ -533,7 +533,7 @@ function InventoryContent() {
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">{tr('All Cities', 'تمام شہر')}</option>
-              {COMMON_CITIES.map(c => (
+              {Array.from(new Set([...COMMON_CITIES, ...profiles.map(p => p.city).filter(Boolean)])).map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
@@ -547,7 +547,7 @@ function InventoryContent() {
               className="w-full px-2.5 py-1.5 rounded-lg bg-[#F8F5F0] border border-[#E5DFD5] text-xs text-[#2C2526] focus:outline-none"
             >
               <option value="All">{tr('All Castes', 'تمام ذاتیں')}</option>
-              {COMMON_CASTES.map(c => (
+              {Array.from(new Set([...COMMON_CASTES, ...profiles.map(p => p.caste).filter(Boolean)])).map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>

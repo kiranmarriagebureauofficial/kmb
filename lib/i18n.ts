@@ -349,6 +349,16 @@ export function t(key: keyof typeof translations['en'], lang: Language = 'en'): 
 }
 
 // Dropdown translation mappings
+export const APPLIED_BY_OPTIONS: { value: string; labelEn: string; labelUr: string }[] = [
+  { value: 'Father', labelEn: 'Father', labelUr: 'والد' },
+  { value: 'Mother', labelEn: 'Mother', labelUr: 'والدہ' },
+  { value: 'Self', labelEn: 'Self (Candidate)', labelUr: 'امیدوار خود' },
+  { value: 'Brother', labelEn: 'Brother', labelUr: 'بھائی' },
+  { value: 'Sister', labelEn: 'Sister', labelUr: 'بہن' },
+  { value: 'Guardian', labelEn: 'Guardian / Relative', labelUr: 'سرپرست / رشتہ دار' },
+  { value: 'Bureau Staff', labelEn: 'Bureau Staff', labelUr: 'بیورو عملہ' },
+];
+
 export const GENDER_OPTIONS: { value: string; labelEn: string; labelUr: string }[] = [
   { value: 'Male', labelEn: 'Male', labelUr: 'مرد' },
   { value: 'Female', labelEn: 'Female', labelUr: 'عورت' },

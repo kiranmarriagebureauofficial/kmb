@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Profile, PartnerPreferences, Gender, MaritalStatus, EducationLevel, Maslak, Religion } from '@/lib/types';
 import { store } from '@/lib/db/store';
-import { t, GENDER_OPTIONS, MARITAL_STATUS_OPTIONS, EDUCATION_LEVEL_OPTIONS, RELIGION_OPTIONS, MASLAK_OPTIONS, COMMON_CASTES, COMMON_CITIES } from '@/lib/i18n';
+import { t, GENDER_OPTIONS, MARITAL_STATUS_OPTIONS, EDUCATION_LEVEL_OPTIONS, RELIGION_OPTIONS, MASLAK_OPTIONS, COMMON_CASTES, COMMON_CITIES, APPLIED_BY_OPTIONS } from '@/lib/i18n';
 import { useLanguage } from '@/lib/useLanguage';
 import { Button } from '../ui/Button';
+import { ManualSelect } from '../ui/ManualSelect';
 import { EntrySidePanel } from './EntrySidePanel';
 import { ProfileAvatar, compressImageToDataUrl } from '../ui/ProfileAvatar';
 import { AlertCircle, CheckCircle, Save, Printer, Share2, Star, Camera, Trash2 } from 'lucide-react';
@@ -345,16 +346,14 @@ export function ProfileForm({
 
             <div className="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('appliedBy', lang)} *
-                </label>
-                <input
-                  type="text"
+                <ManualSelect
+                  label={t('appliedBy', lang)}
                   required
                   value={formData.appliedBy}
-                  onChange={(e) => handleChange('appliedBy', e.target.value)}
-                  placeholder={tr('e.g. Father, Mother, Self, Brother', 'مثلاً والد، والدہ، خود، بھائی')}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#FFFFFF] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
+                  onChange={(val) => handleChange('appliedBy', val)}
+                  options={APPLIED_BY_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Type who brought the rishta (e.g. Father, Uncle, Self)', 'رشتہ کس کے ذریعے آیا (مثلاً والد، چچا، خالہ)')}
                 />
               </div>
               {!isPublic && (
@@ -399,20 +398,15 @@ export function ProfileForm({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('gender', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('gender', lang)}
+                  required
                   value={formData.gender}
-                  onChange={(e) => handleChange('gender', e.target.value as Gender)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
-                >
-                  {GENDER_OPTIONS.map(g => (
-                    <option key={g.value} value={g.value}>
-                      {lang === 'ur' ? g.labelUr : g.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('gender', val as Gender)}
+                  options={GENDER_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Custom gender', 'جنس خود درج کریں')}
+                />
               </div>
 
               <div>
@@ -457,35 +451,27 @@ export function ProfileForm({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('maritalStatus', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('maritalStatus', lang)}
+                  required
                   value={formData.maritalStatus}
-                  onChange={(e) => handleChange('maritalStatus', e.target.value as MaritalStatus)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
-                >
-                  {MARITAL_STATUS_OPTIONS.map(ms => (
-                    <option key={ms.value} value={ms.value}>
-                      {lang === 'ur' ? ms.labelUr : ms.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('maritalStatus', val as MaritalStatus)}
+                  options={MARITAL_STATUS_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('e.g. Khula, Nikah Only, Annulled', 'مثلاً خلع، صرف نکاح ہوا، فسخ نکاح')}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('city', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('city', lang)}
+                  required
                   value={formData.city}
-                  onChange={(e) => handleChange('city', e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
-                >
-                  {COMMON_CITIES.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('city', val)}
+                  options={COMMON_CITIES}
+                  lang={lang}
+                  manualPlaceholder={tr('Type city (e.g. Okara, Kasur, Sargodha, London)', 'شہر کا نام خود درج کریں (مثلاً قصور، اوکاڑہ، سرگودھا)')}
+                />
               </div>
 
               <div>
@@ -596,20 +582,15 @@ export function ProfileForm({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('educationLevel', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('educationLevel', lang)}
+                  required
                   value={formData.educationLevel}
-                  onChange={(e) => handleChange('educationLevel', e.target.value as EducationLevel)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
-                >
-                  {EDUCATION_LEVEL_OPTIONS.map(ed => (
-                    <option key={ed.value} value={ed.value}>
-                      {lang === 'ur' ? ed.labelUr : ed.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('educationLevel', val as EducationLevel)}
+                  options={EDUCATION_LEVEL_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('e.g. Dars-e-Nizami, DAE, Hafiz-e-Quran, ACCA', 'تعلیمی درجہ خود لکھیں (مثلاً درسِ نظامی، ڈپلومہ)')}
+                />
               </div>
 
               <div>
@@ -732,35 +713,39 @@ export function ProfileForm({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('caste', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('caste', lang)}
+                  required
                   value={formData.caste}
-                  onChange={(e) => handleChange('caste', e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none font-medium"
-                >
-                  {COMMON_CASTES.filter(c => c !== 'Any').map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('caste', val)}
+                  options={COMMON_CASTES.filter(c => c !== 'Any')}
+                  lang={lang}
+                  manualPlaceholder={tr('Type custom caste / برادری خود لکھیں (e.g. Bajwa, Alvi, Ghuman, Warraich)', 'برادری خود لکھیں مثلاً باجوہ، علوی، گھمن، وڑائچ')}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('maslak', lang)} *
-                </label>
-                <select
+                <ManualSelect
+                  label={t('maslak', lang)}
+                  required
                   value={formData.maslak}
-                  onChange={(e) => handleChange('maslak', e.target.value as Maslak)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0] text-[#2C2526] focus:border-[#D4AF37] focus:outline-none"
-                >
-                  {MASLAK_OPTIONS.map(m => (
-                    <option key={m.value} value={m.value}>
-                      {lang === 'ur' ? m.labelUr : m.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleChange('maslak', val as Maslak)}
+                  options={MASLAK_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Type custom sect / مسلک خود درج کریں', 'مسلک خود درج کریں')}
+                />
+              </div>
+
+              <div>
+                <ManualSelect
+                  label={t('religion', lang)}
+                  required
+                  value={formData.religion}
+                  onChange={(val) => handleChange('religion', val as Religion)}
+                  options={RELIGION_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Type religion / مذہب خود لکھیں', 'مذہب خود درج کریں')}
+                />
               </div>
 
               <div>
@@ -827,52 +812,47 @@ export function ProfileForm({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('prefEducationMin', lang)}
-                </label>
-                <select
+                <ManualSelect
+                  label={t('prefEducationMin', lang)}
                   value={formData.preferences?.educationMin}
-                  onChange={(e) => handlePrefChange('educationMin', e.target.value as EducationLevel)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
-                >
-                  {EDUCATION_LEVEL_OPTIONS.map(ed => (
-                    <option key={ed.value} value={ed.value}>
-                      {lang === 'ur' ? ed.labelUr : ed.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handlePrefChange('educationMin', val as EducationLevel)}
+                  options={EDUCATION_LEVEL_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Minimum education requirement / کم از کم تعلیم', 'کم از کم مطلوبہ تعلیم')}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('prefCastes', lang)}
-                </label>
-                <select
+                <ManualSelect
+                  label={t('prefCastes', lang)}
                   value={formData.preferences?.castes?.[0] || 'Any'}
-                  onChange={(e) => handlePrefChange('castes', [e.target.value])}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
-                >
-                  {COMMON_CASTES.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  onChange={(val) => handlePrefChange('castes', [val])}
+                  options={COMMON_CASTES}
+                  lang={lang}
+                  manualPlaceholder={tr('Type preferred caste / پسندیدہ برادری خود لکھیں (e.g. Bajwa, Any)', 'پسندیدہ برادری خود لکھیں')}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#800F2F] mb-1">
-                  {t('prefMaslak', lang)}
-                </label>
-                <select
+                <ManualSelect
+                  label={t('prefMaslak', lang)}
                   value={formData.preferences?.maslak}
-                  onChange={(e) => handlePrefChange('maslak', e.target.value as Maslak)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-[#E5DFD5] bg-[#F8F5F0]"
-                >
-                  {MASLAK_OPTIONS.map(m => (
-                    <option key={m.value} value={m.value}>
-                      {lang === 'ur' ? m.labelUr : m.labelEn}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handlePrefChange('maslak', val as Maslak)}
+                  options={MASLAK_OPTIONS}
+                  lang={lang}
+                  manualPlaceholder={tr('Type preferred sect / پسندیدہ مسلک خود لکھیں', 'پسندیدہ مسلک خود لکھیں')}
+                />
+              </div>
+
+              <div>
+                <ManualSelect
+                  label={t('prefCities', lang)}
+                  value={formData.preferences?.cities?.[0] || 'Any'}
+                  onChange={(val) => handlePrefChange('cities', [val])}
+                  options={['Any', ...COMMON_CITIES]}
+                  lang={lang}
+                  manualPlaceholder={tr('Preferred city (e.g. Lahore, Islamabad, Abroad)', 'پسندیدہ شہر خود لکھیں')}
+                />
               </div>
 
               <div className="sm:col-span-2">
